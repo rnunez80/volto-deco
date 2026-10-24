@@ -1,11 +1,11 @@
 # Changelog
 
-All notable changes to `volto-mosaic` will be documented in this file.
+All notable changes to `volto-deco` will be documented in this file.
 
 ## 1.0.0 (2026-10-23)
 
 ### Features
-- Initial standalone release of **Volto Mosaic (Deco)**.
+- Initial standalone release of **Volto Deco**.
 - **2D Canvas Interactions**: Drag-and-drop to split blocks into multi-column rows, reorder within columns, or insert into columns.
 - **Column Drop Zone**: Support dragging blocks into columns above, between, or below current items with narrow edge detection (max 28px) so inner drops are natural and fluid.
 - **Interactive Column Resizing**: Grab between columns with live percentage tooltip and magnetic snap points (50/50, 60/40, 40/60, 67/33, 33/67, 75/25, 25/75, 80/20, 20/80).

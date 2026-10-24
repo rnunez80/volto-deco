@@ -8,7 +8,7 @@ import {
 } from './components/Widgets';
 import installRowMigrationMiddleware from './middleware/rowMigrationMiddleware';
 
-import './theme/mosaic.css';
+import './theme/deco.css';
 
 export function applyConfig(config: ConfigType) {
   // 1. Register Row Widgets

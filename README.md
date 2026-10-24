@@ -1,6 +1,6 @@
-# Volto Mosaic (Deco)
+# Volto Deco
 
-[![npm version](https://img.shields.io/npm/v/volto-mosaic.svg)](https://www.npmjs.com/package/volto-mosaic)
+[![npm version](https://img.shields.io/npm/v/volto-deco.svg)](https://www.npmjs.com/package/volto-deco)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Volto](https://img.shields.io/badge/Volto-17%20%7C%2018%20%7C%2019-blue)](https://github.com/plone/volto)
 
@@ -11,7 +11,7 @@
 
 ## Overview
 
-**Volto Mosaic** (`volto-mosaic`, also known as `volto-deco`) brings true fluid 2D canvas layout editing to Plone Volto. It replaces rigid and legacy column systems (`@eeacms/volto-columns-block`, legacy `gridBlock`) with an intuitive, unified **Row** block (`@type: 'row'`).
+**Volto Deco** (`volto-deco`) brings true fluid 2D canvas layout editing to Plone Volto. It replaces rigid and legacy column systems (`@eeacms/volto-columns-block`, legacy `gridBlock`) with an intuitive, unified **Row** block (`@type: 'row'`).
 
 Content editors can split blocks into multi-column rows simply by dragging them side-by-side, resize columns interactively with magnetic snapping, and drag blocks directly into existing columns above or below other blocks.
 
@@ -80,23 +80,23 @@ A visual sidebar selector displaying miniature SVG preview cards organized ascen
 
 Using `pnpm`:
 ```bash
-pnpm add volto-mosaic
+pnpm add volto-deco
 ```
 
 Using `yarn`:
 ```bash
-yarn add volto-mosaic
+yarn add volto-deco
 ```
 
 ### 2. Configure `volto.config.js`
 
-Add `volto-mosaic` to your project's `addons` list:
+Add `volto-deco` to your project's `addons` list:
 
 ```js
 // volto.config.js
 module.exports = {
   addons: [
-    'volto-mosaic',
+    'volto-deco',
     // ...other addons
   ],
 };
@@ -106,7 +106,7 @@ module.exports = {
 
 ## Block Data Structure
 
-A Volto Mosaic Row block stores its columns as sub-containers in standard Volto container format:
+A Volto Deco Row block stores its columns as sub-containers in standard Volto container format:
 
 ```json
 {
@@ -147,13 +147,13 @@ A Volto Mosaic Row block stores its columns as sub-containers in standard Volto 
 Run unit tests with Vitest:
 
 ```bash
-pnpm --filter volto-mosaic test
+pnpm --filter volto-deco test
 ```
 
 Lint code:
 
 ```bash
-pnpm --filter volto-mosaic prettier
+pnpm --filter volto-deco prettier
 ```
 
 ---
