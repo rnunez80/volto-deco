@@ -1,0 +1,753 @@
+/* ==========================================================================
+   Volto Mosaic (Deco): Standalone Multi-Column Row & 2D Canvas Grid System
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Drag Handles (Root, Row Tab, and Nested Column Handles)
+   -------------------------------------------------------------------------- */
+.drag.handle.wrapper,
+.drag.handle.wrapper:hover {
+  cursor: grab !important;
+  cursor: -webkit-grab !important;
+}
+
+.drag.handle.wrapper:active,
+body.is-dragging-volto-block .drag.handle.wrapper {
+  cursor: grabbing !important;
+  cursor: -webkit-grabbing !important;
+  background-color: #e2e8f0 !important;
+}
+
+.drag.handle.wrapper svg,
+.drag.handle.wrapper .icon {
+  pointer-events: none !important;
+  cursor: inherit !important;
+  fill: #64748b !important;
+  width: 15px !important;
+  height: 15px !important;
+  transition: fill 0.15s ease !important;
+}
+
+.drag.handle.wrapper.is-selected,
+[class*='block-editor-']:hover > div > .drag.handle.wrapper,
+[class*='block-editor-'].is-selected > div > .drag.handle.wrapper,
+.row-column [class*='block-editor-']:hover .drag.handle.wrapper,
+.row-column [class*='block-editor-'].is-selected .drag.handle.wrapper {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+.drag.handle.wrapper:hover {
+  background-color: #f0f9ff !important;
+  border-color: #007bc1 !important;
+  color: #007bc1 !important;
+  box-shadow: 0 2px 8px rgba(0, 123, 193, 0.2) !important;
+  transform: scale(1.08) !important;
+}
+
+.drag.handle.wrapper:hover svg,
+.drag.handle.wrapper:hover .icon {
+  fill: #007bc1 !important;
+}
+
+/* Container-level Row Drag Handle (Tabbed ABOVE the row so it never overlaps inner items) */
+.drag.handle.wrapper.is-row-handle,
+.block-editor-row > div > .drag.handle.wrapper {
+  position: absolute !important;
+  top: -26px !important;
+  left: 0 !important;
+  margin-left: 0 !important;
+  height: 24px !important;
+  width: auto !important;
+  min-width: 58px !important;
+  padding: 0 8px !important;
+  border-radius: 4px 4px 0 0 !important;
+  background: #1e293b !important;
+  border: 1px solid #0f172a !important;
+  border-bottom: none !important;
+  color: #ffffff !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.3px !important;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.12) !important;
+  z-index: 160 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 5px !important;
+  cursor: grab !important;
+  cursor: -webkit-grab !important;
+}
+
+.drag.handle.wrapper.is-row-handle svg,
+.block-editor-row > div > .drag.handle.wrapper svg {
+  fill: #94a3b8 !important;
+  width: 12px !important;
+  height: 12px !important;
+  transition: fill 0.15s ease !important;
+}
+
+.drag.handle.wrapper.is-row-handle .row-handle-label,
+.block-editor-row > div > .drag.handle.wrapper .row-handle-label {
+  font-size: 11px !important;
+  line-height: 1 !important;
+  color: #f1f5f9 !important;
+  user-select: none !important;
+}
+
+.drag.handle.wrapper.is-row-handle:hover,
+.block-editor-row > div > .drag.handle.wrapper:hover {
+  background: #007bc1 !important;
+  border-color: #007bc1 !important;
+  color: #ffffff !important;
+  transform: translateY(-1px) !important;
+}
+
+.drag.handle.wrapper.is-row-handle:hover svg,
+.block-editor-row > div > .drag.handle.wrapper:hover svg {
+  fill: #ffffff !important;
+}
+
+.block-editor-row:hover > div > .drag.handle.wrapper,
+.block-editor-row.is-selected > div > .drag.handle.wrapper {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+/* Positioning inside row columns */
+.row-column .drag.handle.wrapper {
+  position: absolute !important;
+  left: 8px !important;
+  top: 8px !important;
+  margin-left: 0 !important;
+  z-index: 140 !important;
+  width: 24px !important;
+  height: 24px !important;
+  border-radius: 4px !important;
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12) !important;
+}
+
+.row-column .block-delete-button.delete-button,
+.row-column .ui.drag.block.inner .delete-button {
+  right: 8px !important;
+  top: 8px !important;
+  margin-right: 0 !important;
+  z-index: 140 !important;
+}
+
+/* --------------------------------------------------------------------------
+   2. Dragging Pointer Events Isolation
+   -------------------------------------------------------------------------- */
+body.is-dragging-volto-block .slate-editor,
+body.is-dragging-volto-block [contenteditable='true'] {
+  pointer-events: none !important;
+  user-select: none !important;
+}
+
+body.is-dragging-volto-block .ui.drag.block.inner.row,
+body.is-dragging-volto-block .row-edit-container,
+body.is-dragging-volto-block .row-inner-container,
+body.is-dragging-volto-block .row-column,
+body.is-dragging-volto-block .row-column [class*='block-editor-'],
+body.is-dragging-volto-block .row-column .ui.drag.block.inner {
+  pointer-events: auto !important;
+}
+
+/* --------------------------------------------------------------------------
+   3. Row Grid & Columns Layout
+   -------------------------------------------------------------------------- */
+.row-inner-container {
+  display: grid;
+  width: 100%;
+  box-sizing: border-box;
+  align-items: stretch;
+}
+
+.row-inner-container.gap--small {
+  gap: 0.75rem;
+}
+
+.row-inner-container.gap--large {
+  gap: 2.5rem;
+}
+
+.row-inner-container.gap--none {
+  gap: 0;
+}
+
+.row-inner-container:not(.gap--small):not(.gap--large):not(.gap--none) {
+  gap: 1.5rem;
+}
+
+.row-inner-container.align--stretch {
+  align-items: stretch;
+}
+
+.row-inner-container.align--top {
+  align-items: flex-start;
+}
+
+.row-inner-container.align--middle {
+  align-items: center;
+}
+
+.row-inner-container.align--bottom {
+  align-items: flex-end;
+}
+
+.row-column {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.row-column .block,
+.row-column [class*='block-editor-'] {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.row-edit-container {
+  position: relative;
+  border: none;
+  padding: 0;
+  background: transparent;
+}
+
+.row-edit-container .row-column-edit {
+  position: relative;
+  min-height: 2.5rem;
+  border-radius: 2px;
+  outline: 1px dashed transparent;
+  outline-offset: 4px;
+  transition: outline-color 0.15s ease;
+}
+
+.row-edit-container.is-selected .row-column-edit,
+.row-edit-container:hover .row-column-edit,
+.row-edit-container.is-dragging-over .row-column-edit {
+  outline-color: rgba(0, 123, 193, 0.25);
+}
+
+/* --------------------------------------------------------------------------
+   4. Empty Column UI & Quick Type Chooser
+   -------------------------------------------------------------------------- */
+.row-empty-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: 4.5rem;
+  height: 100%;
+  padding: 0.75rem;
+  box-sizing: border-box;
+}
+
+.empty-col-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-empty-col-add,
+.btn-empty-col-delete {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #64748b;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0.85;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.btn-empty-col-add {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.row-edit-container:hover .btn-empty-col-add,
+.btn-empty-col-add:hover {
+  opacity: 1;
+  border-color: #007bc1;
+  color: #007bc1;
+  background: #f0f9ff;
+  transform: scale(1.08);
+}
+
+.row-edit-container:hover .btn-empty-col-delete,
+.btn-empty-col-delete:hover {
+  opacity: 1;
+  border-color: #ef4444;
+  color: #dc2626;
+  background: #fee2e2;
+  transform: scale(1.08);
+}
+
+.btn-empty-col-delete svg {
+  fill: #dc2626;
+  width: 15px;
+  height: 15px;
+  display: block;
+}
+
+.empty-col-hint {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  font-weight: 500;
+  user-select: none;
+}
+
+.row-col-chooser {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  margin-top: 6px;
+  padding: 0.5rem;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  min-width: 280px;
+}
+
+.quick-block-types {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+}
+
+.btn-quick-type {
+  background: #fff;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  color: #374151;
+  cursor: pointer;
+}
+
+.btn-quick-type:hover {
+  border-color: #007bc1;
+  color: #007bc1;
+  background: #f0f9ff;
+}
+
+/* --------------------------------------------------------------------------
+   5. Mosaic Drop Lines (Vertical for Column Splits, Horizontal for Reorder)
+   -------------------------------------------------------------------------- */
+.has-horizontal-drop-zone {
+  position: relative;
+}
+
+.mosaic-drop-line {
+  position: absolute;
+  z-index: 1000;
+  background: #007bc1;
+  border-radius: 2px;
+  pointer-events: none;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.8);
+}
+
+.mosaic-drop-line.vertical {
+  top: 0;
+  bottom: 0;
+  width: 4px;
+}
+
+.mosaic-drop-line.vertical.left,
+.mosaic-drop-line.vertical.before {
+  left: -10px;
+}
+
+.mosaic-drop-line.vertical.right,
+.mosaic-drop-line.vertical.after {
+  right: -10px;
+}
+
+.mosaic-drop-line.horizontal {
+  left: 0;
+  right: 0;
+  height: 4px;
+  margin-top: -2px;
+}
+
+.mosaic-drop-line.horizontal.top {
+  top: 0;
+}
+
+.mosaic-drop-line.horizontal.bottom {
+  top: 100%;
+}
+
+/* --------------------------------------------------------------------------
+   6. Interactive Column Resizer & Snapping Tooltip
+   -------------------------------------------------------------------------- */
+body.is-resizing-columns,
+body.is-resizing-columns * {
+  cursor: col-resize !important;
+  user-select: none !important;
+}
+
+.row-col-resizer {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: -12px;
+  width: 24px;
+  cursor: col-resize;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: none;
+  user-select: none;
+}
+
+.row-col-resizer-line {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  background: transparent;
+  transition: background 0.15s ease;
+  border-radius: 1px;
+}
+
+.row-col-resizer-handle {
+  position: relative;
+  width: 14px;
+  height: 28px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: scale(0.85);
+  transition: opacity 0.15s ease, transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+  user-select: none;
+}
+
+.row-col-resizer-handle .resizer-dots {
+  font-size: 11px;
+  line-height: 1;
+  color: #64748b;
+  letter-spacing: -1px;
+}
+
+.row-edit-container:hover .row-col-resizer-handle,
+.row-edit-container.is-selected .row-col-resizer-handle,
+.row-col-resizer:hover .row-col-resizer-handle,
+.row-col-resizer.is-resizing .row-col-resizer-handle {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.row-col-resizer:hover .row-col-resizer-line,
+.row-col-resizer.is-resizing .row-col-resizer-line {
+  background: #007bc1;
+}
+
+.row-col-resizer:hover .row-col-resizer-handle,
+.row-col-resizer.is-resizing .row-col-resizer-handle {
+  border-color: #007bc1;
+  background: #007bc1;
+}
+
+.row-col-resizer:hover .row-col-resizer-handle .resizer-dots,
+.row-col-resizer.is-resizing .row-col-resizer-handle .resizer-dots {
+  color: #ffffff;
+}
+
+.row-col-resizer-tooltip {
+  position: fixed;
+  z-index: 10000;
+  background: #0f172a;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 6px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+  transform: translate(-50%, -100%);
+  margin-top: -10px;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.row-col-resizer-tooltip.is-snapped {
+  background: #007bc1;
+  box-shadow: 0 4px 16px rgba(0, 123, 193, 0.5);
+}
+
+/* --------------------------------------------------------------------------
+   7. Sidebar Row Tab (#sidebar-row) & Columns Panel
+   -------------------------------------------------------------------------- */
+#sidebar-row,
+#sidebar-row.tab-wrapper {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  height: calc(100% - 61px) !important;
+  max-height: calc(100% - 61px) !important;
+  box-sizing: border-box !important;
+}
+
+#sidebar-row [role='form'],
+#sidebar-row [role='presentation'] {
+  height: auto !important;
+  min-height: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.sidebar-row-scroll-wrapper {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 8rem !important;
+  box-sizing: border-box !important;
+}
+
+.row-columns-panel {
+  padding: 1.15rem 1rem 1.25rem 1rem !important;
+  border-bottom: 2px solid #e2e8f0;
+  background: #f8fafc;
+  margin-bottom: 1.25rem;
+}
+
+.row-columns-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.row-columns-panel-header h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.row-columns-panel-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.btn-add-col-toolbar {
+  background: transparent;
+  border: 1px dashed #007bc1;
+  border-radius: 4px;
+  padding: 3px 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #007bc1;
+  cursor: pointer;
+}
+
+.btn-add-col-toolbar:hover {
+  background: #eff6ff;
+  border-style: solid;
+}
+
+.col-badge {
+  background: #f3f4f6;
+  color: #374151;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+.col-actions {
+  display: flex;
+  gap: 0.2rem;
+}
+
+.btn-col-action {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 0.72rem;
+  color: #6b7280;
+  cursor: pointer;
+}
+
+.btn-col-action:hover:not(:disabled) {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+.btn-col-action.active {
+  border-color: #007bc1;
+  color: #007bc1;
+}
+
+.btn-col-action:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.btn-col-delete:hover:not(:disabled) {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+/* --------------------------------------------------------------------------
+   8. Column Reversal & Responsive Stacking
+   -------------------------------------------------------------------------- */
+.row-inner-container.is-reversed {
+  direction: rtl;
+}
+
+.row-inner-container.is-reversed > .row-column,
+.row-inner-container.is-reversed > div {
+  direction: ltr;
+}
+
+@media (max-width: 768px) {
+  .row-inner-container {
+    grid-template-columns: 1fr !important;
+  }
+
+  .row-inner-container.reverse-mobile {
+    display: flex !important;
+    flex-direction: column-reverse !important;
+  }
+
+  .row-inner-container.is-reversed:not(.reverse-mobile) {
+    display: flex !important;
+    flex-direction: column-reverse !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   9. Stat Cards Preset
+   -------------------------------------------------------------------------- */
+.block.row.stat-cards-box,
+.block.row.has--style_name--statCards {
+  background: #f1f5f9 !important;
+  border-radius: 12px;
+  padding: 2.5rem 1.5rem !important;
+}
+
+.block.row.stat-cards-primary-box,
+.block.row.has--style_name--statCardsPrimary {
+  background: linear-gradient(to bottom, #d92518 50%, #ffffff 50%) !important;
+  border-radius: 12px;
+  padding: 2.5rem 1.5rem !important;
+}
+
+.block.row.stat-cards-box .row-column,
+.block.row.stat-cards-primary-box .row-column,
+.block.row.has--style_name--statCards .row-column,
+.block.row.has--style_name--statCardsPrimary .row-column {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  border-radius: 20px !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04) !important;
+  border: 1px solid rgba(0, 0, 0, 0.06) !important;
+  padding: 2.25rem 1.25rem !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  box-sizing: border-box !important;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.block.row.stat-cards-box .row-column:hover,
+.block.row.stat-cards-primary-box .row-column:hover,
+.block.row.has--style_name--statCards .row-column:hover,
+.block.row.has--style_name--statCardsPrimary .row-column:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 16px 36px -4px rgba(0, 0, 0, 0.12), 0 10px 16px -6px rgba(0, 0, 0, 0.06) !important;
+}
+
+.block.row.stat-cards-box .row-column .block,
+.block.row.stat-cards-box .row-column [class*='block-editor-'],
+.block.row.stat-cards-box .row-column .ui.drag.block.inner,
+.block.row.stat-cards-primary-box .row-column .block,
+.block.row.stat-cards-primary-box .row-column [class*='block-editor-'],
+.block.row.stat-cards-primary-box .row-column .ui.drag.block.inner,
+.block.row.has--style_name--statCards .row-column .block,
+.block.row.has--style_name--statCards .row-column [class*='block-editor-'],
+.block.row.has--style_name--statCards .row-column .ui.drag.block.inner,
+.block.row.has--style_name--statCardsPrimary .row-column .block,
+.block.row.has--style_name--statCardsPrimary .row-column [class*='block-editor-'],
+.block.row.has--style_name--statCardsPrimary .row-column .ui.drag.block.inner {
+  background: transparent !important;
+  background-color: transparent !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  width: 100% !important;
+}
+
+.block.row.stat-cards-box .row-column h1,
+.block.row.stat-cards-box .row-column h2,
+.block.row.stat-cards-box .row-column h3,
+.block.row.stat-cards-box .row-column h4,
+.block.row.stat-cards-box .row-column p:first-child,
+.block.row.stat-cards-primary-box .row-column h1,
+.block.row.stat-cards-primary-box .row-column h2,
+.block.row.stat-cards-primary-box .row-column h3,
+.block.row.stat-cards-primary-box .row-column h4,
+.block.row.stat-cards-primary-box .row-column p:first-child,
+.block.row.has--style_name--statCards .row-column h1,
+.block.row.has--style_name--statCards .row-column h2,
+.block.row.has--style_name--statCards .row-column h3,
+.block.row.has--style_name--statCards .row-column h4,
+.block.row.has--style_name--statCards .row-column p:first-child,
+.block.row.has--style_name--statCardsPrimary .row-column h1,
+.block.row.has--style_name--statCardsPrimary .row-column h2,
+.block.row.has--style_name--statCardsPrimary .row-column h3,
+.block.row.has--style_name--statCardsPrimary .row-column h4,
+.block.row.has--style_name--statCardsPrimary .row-column p:first-child {
+  font-size: 2.75rem !important;
+  font-weight: 700 !important;
+  color: #111827 !important;
+  line-height: 1.1 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0.5rem !important;
+  text-align: center !important;
+}
+
+.block.row.stat-cards-box .row-column p:not(:first-child),
+.block.row.stat-cards-primary-box .row-column p:not(:first-child),
+.block.row.has--style_name--statCards .row-column p:not(:first-child),
+.block.row.has--style_name--statCardsPrimary .row-column p:not(:first-child) {
+  font-size: 0.8rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+  color: #1f2937 !important;
+  line-height: 1.35 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  text-align: center !important;
+}
