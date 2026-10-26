@@ -12,6 +12,7 @@ import BlockChooser from '@plone/volto/components/manage/BlockChooser/BlockChoos
 import Icon from '@plone/volto/components/theme/Icon/Icon';
 import trashSVG from '@plone/volto/icons/delete.svg';
 import { moveBlockIntoColumn, insertBlockAsNewColumn } from './split';
+import { getImageUrl } from '../../../helpers/getImageUrl';
 
 interface RowEditProps {
   block: string;
@@ -83,6 +84,21 @@ const RowEdit: React.FC<RowEditProps> = (props) => {
   const customClass = data.styles?.customClass;
   const gridTemplate =
     data.gridTemplate || deriveGridTemplate(data.blocks_layout, data.blocks);
+
+  const bgImageUrl = getImageUrl(data.backgroundImage);
+  const hasBackground =
+    !!(styleName && styleName !== 'none') || !!bgImageUrl;
+
+  const rowStyle: React.CSSProperties = {
+    ...(bgImageUrl
+      ? {
+          backgroundImage: `url(${bgImageUrl})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center center',
+          backgroundRepeat: 'no-repeat',
+        }
+      : {}),
+  };
 
   const [selectedInnerBlock, setSelectedInnerBlock] = useState<string | null>(
     null,
@@ -661,10 +677,13 @@ const RowEdit: React.FC<RowEditProps> = (props) => {
           'row',
           `has--block-width--${blockWidth}`,
           styleName ? `has--style_name--${styleName}` : null,
+          hasBackground ? 'has--background' : null,
+          bgImageUrl ? 'has--background-image' : null,
           customClass,
           'row-edit-container',
           { 'is-selected': selected, 'is-dragging-over': !!dropHint },
         )}
+        style={rowStyle}
         onClick={(e) => {
           // Deselect inner block and switch to Row tab when clicking row container background
           if (

@@ -4,6 +4,7 @@ import RenderBlocks from '@plone/volto/components/theme/View/RenderBlocks';
 import { withBlockExtensions } from '@plone/volto/helpers/Extensions';
 import config from '@plone/volto/registry';
 import { normalizeRowData, deriveGridTemplate } from './normalize';
+import { getImageUrl } from '../../../helpers/getImageUrl';
 
 interface RowViewProps {
   data: any;
@@ -41,6 +42,22 @@ const RowView: React.FC<RowViewProps> = (props) => {
   const gridTemplate =
     data.gridTemplate || deriveGridTemplate(data.blocks_layout, data.blocks);
 
+  const bgImageUrl = getImageUrl(data.backgroundImage);
+  const hasBackground =
+    !!(styleName && styleName !== 'none') || !!bgImageUrl;
+
+  const mergedStyle: React.CSSProperties = {
+    ...style,
+    ...(bgImageUrl
+      ? {
+          backgroundImage: `url(${bgImageUrl})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center center',
+          backgroundRepeat: 'no-repeat',
+        }
+      : {}),
+  };
+
   return (
     <div
       className={cx(
@@ -48,10 +65,12 @@ const RowView: React.FC<RowViewProps> = (props) => {
         'row',
         `has--block-width--${blockWidth}`,
         styleName ? `has--style_name--${styleName}` : null,
+        hasBackground ? 'has--background' : null,
+        bgImageUrl ? 'has--background-image' : null,
         customClass,
         className,
       )}
-      style={style}
+      style={mergedStyle}
     >
       <div className="block-inner-container">
         {data.headline && <h2 className="headline">{data.headline}</h2>}

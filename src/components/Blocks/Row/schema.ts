@@ -160,6 +160,7 @@ export const RowSchema = ({ intl }: any = {}) => ({
         'reverseMobile',
         'layoutPreset',
         'gridGap',
+        'backgroundImage',
       ],
     },
   ],
@@ -192,6 +193,16 @@ export const RowSchema = ({ intl }: any = {}) => ({
       type: 'string',
       widget: 'row_style_preset',
       default: '',
+    },
+    backgroundImage: {
+      title: intl?.formatMessage
+        ? intl.formatMessage({
+            id: 'Background Image',
+            defaultMessage: 'Background Image',
+          })
+        : 'Background Image',
+      widget: 'image',
+      default: null,
     },
     alignItems: {
       title: intl?.formatMessage

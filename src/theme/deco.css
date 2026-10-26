@@ -5,6 +5,31 @@
 /* --------------------------------------------------------------------------
    1. Drag Handles (Root, Row Tab, and Nested Column Handles)
    -------------------------------------------------------------------------- */
+/* Standard Single Block Drag Handle (Left Gutter, Accessible, Non-overlapping) */
+.drag.handle.wrapper {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  margin-left: -32px !important;
+  width: 26px !important;
+  height: 26px !important;
+  border-radius: 4px !important;
+  background: #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.15) !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12) !important;
+  color: #64748b !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  cursor: grab !important;
+  cursor: -webkit-grab !important;
+  z-index: 200 !important;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease, transform 0.15s ease, background 0.15s ease, border-color 0.15s ease !important;
+}
+
 .drag.handle.wrapper,
 .drag.handle.wrapper:hover {
   cursor: grab !important;
@@ -28,15 +53,6 @@ body.is-dragging-volto-block .drag.handle.wrapper {
   transition: fill 0.15s ease !important;
 }
 
-.drag.handle.wrapper.is-selected,
-[class*='block-editor-']:hover > div > .drag.handle.wrapper,
-[class*='block-editor-'].is-selected > div > .drag.handle.wrapper,
-.row-column [class*='block-editor-']:hover .drag.handle.wrapper,
-.row-column [class*='block-editor-'].is-selected .drag.handle.wrapper {
-  opacity: 1 !important;
-  pointer-events: auto !important;
-}
-
 .drag.handle.wrapper:hover {
   background-color: #f0f9ff !important;
   border-color: #007bc1 !important;
@@ -48,6 +64,134 @@ body.is-dragging-volto-block .drag.handle.wrapper {
 .drag.handle.wrapper:hover svg,
 .drag.handle.wrapper:hover .icon {
   fill: #007bc1 !important;
+}
+
+/* Standard Single Block Delete Button (Right Gutter, Symmetrical, Non-overlapping) */
+.ui.drag.block.inner {
+  position: relative !important;
+}
+
+.block-delete-button.delete-button,
+.ui.drag.block.inner .delete-button,
+.ui.drag.block.inner button.delete-button,
+.block .delete-button {
+  position: absolute !important;
+  top: 0 !important;
+  right: -32px !important;
+  margin-right: 0 !important;
+  z-index: 200 !important;
+  width: 26px !important;
+  height: 26px !important;
+  border-radius: 50% !important;
+  background: #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.15) !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12) !important;
+  color: #64748b !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  cursor: pointer !important;
+  margin: 0 !important;
+  line-height: 1 !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  z-index: 10000 !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.block-delete-button.delete-button svg,
+.ui.drag.block.inner .delete-button svg,
+.block .delete-button svg {
+  fill: #64748b !important;
+  width: 14px !important;
+  height: 14px !important;
+  display: block !important;
+  transition: fill 0.2s ease-in-out, transform 0.2s ease-in-out !important;
+}
+
+.block-delete-button.delete-button:hover,
+.ui.drag.block.inner .delete-button:hover,
+.block .delete-button:hover {
+  background-color: #fee2e2 !important;
+  border-color: #ef4444 !important;
+  color: #dc2626 !important;
+  box-shadow: 0 3px 10px rgba(220, 38, 38, 0.25) !important;
+  transform: scale(1.12) !important;
+}
+
+.block-delete-button.delete-button:hover svg,
+.ui.drag.block.inner .delete-button:hover svg,
+.block .delete-button:hover svg {
+  fill: #dc2626 !important;
+  transform: scale(1.05) !important;
+}
+
+.block-delete-button.delete-button:active,
+.ui.drag.block.inner .delete-button:active,
+.block .delete-button:active {
+  transform: scale(0.95) !important;
+  background-color: #fecaca !important;
+}
+
+/* Drag handle and delete button for full-width blocks in edit mode */
+.blocks-form [class*='block-editor-'].has--block-width--full > div > .drag.handle.wrapper,
+body.content-view-edit [class*='block-editor-'].has--block-width--full > div > .drag.handle.wrapper,
+body.view-editview [class*='block-editor-'].has--block-width--full > div > .drag.handle.wrapper,
+#page-edit [class*='block-editor-'].has--block-width--full > div > .drag.handle.wrapper {
+  left: 1.5rem !important;
+  margin-left: 0 !important;
+}
+
+.blocks-form [class*='block-editor-'].has--block-width--full .block-delete-button.delete-button,
+body.content-view-edit [class*='block-editor-'].has--block-width--full .block-delete-button.delete-button,
+body.view-editview [class*='block-editor-'].has--block-width--full .block-delete-button.delete-button,
+#page-edit [class*='block-editor-'].has--block-width--full .block-delete-button.delete-button {
+  right: 1.5rem !important;
+  margin-right: 0 !important;
+}
+
+/* Drag handle and delete button are visible when block is selected OR hovered */
+.drag.handle.wrapper.is-selected,
+[class*='block-editor-']:hover > div > .drag.handle.wrapper,
+[class*='block-editor-'].is-selected > div > .drag.handle.wrapper,
+[class*='block-editor-'].selected > div > .drag.handle.wrapper,
+[class*='block-editor-']:hover .block-delete-button.delete-button,
+[class*='block-editor-'].is-selected .block-delete-button.delete-button,
+[class*='block-editor-'].selected .block-delete-button.delete-button,
+[class*='block-editor-']:hover > div > .block-delete-button,
+[class*='block-editor-'].is-selected > div > .block-delete-button,
+[class*='block-editor-'].selected > div > .block-delete-button,
+[class*='block-editor-']:hover .delete-button,
+[class*='block-editor-'].is-selected .delete-button,
+[class*='block-editor-'].selected .delete-button,
+.row-column [class*='block-editor-']:hover .drag.handle.wrapper,
+.row-column [class*='block-editor-'].is-selected .drag.handle.wrapper,
+.row-column [class*='block-editor-'].selected .drag.handle.wrapper,
+.row-column [class*='block-editor-']:hover .delete-button,
+.row-column [class*='block-editor-'].is-selected .delete-button,
+.row-column [class*='block-editor-'].selected .delete-button {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  z-index: 10000 !important;
+}
+
+/* Elevated stacking context for active/selected block */
+[class*='block-editor-'].is-selected,
+[class*='block-editor-'].selected,
+[class*='block-editor-']:focus-within,
+.block-editor-row.is-selected,
+.block-editor-row.selected,
+.block-editor-row:focus-within {
+  position: relative !important;
+  z-index: 500 !important;
+}
+
+/* Prevent tool clipping: block editor wrappers allow tools in gutters to show freely */
+[class*='block-editor-'],
+.ui.drag.block.inner,
+.blocks-form fieldset > div > div {
+  overflow: visible !important;
 }
 
 /* Container-level Row Drag Handle (Tabbed ABOVE the row so it never overlaps inner items) */
@@ -208,7 +352,367 @@ body.is-dragging-volto-block .row-column .ui.drag.block.inner {
 .row-column [class*='block-editor-'] {
   width: 100% !important;
   max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
   box-sizing: border-box !important;
+}
+
+/* Full-width rows: NO rounded corners anywhere */
+.block.row.has--block-width--full,
+#page-document .block.row.has--block-width--full,
+.view-wrapper .block.row.has--block-width--full,
+body.view-editview .block.row.has--block-width--full,
+#page-edit .block.row.has--block-width--full,
+body.view-editview .block-editor-row.has--block-width--full .block.row,
+#page-edit .block-editor-row.has--block-width--full .block.row {
+  border-radius: 0 !important;
+}
+
+/* Full-width row with background (preset or background image): NO rounded corners, NO margins */
+.block.row.has--block-width--full.has--background,
+.block.row.has--block-width--full.has--background-image,
+.block.row.has--block-width--full[class*='has--style_name--'],
+.block.row.has--block-width--full.primary-box,
+.block.row.has--block-width--full.gray-box,
+.block.row.has--block-width--full.secondary-box,
+.block.row.has--block-width--full.tertiary-box,
+.block.row.has--block-width--full.blue-box,
+.block.row.has--block-width--full.purple-box,
+.block.row.has--block-width--full.stat-cards-primary-box,
+#page-document .block.row.has--block-width--full.has--background,
+#page-document .block.row.has--block-width--full.has--background-image,
+#page-document .block.row.has--block-width--full[class*='has--style_name--'],
+#page-document .block.row.has--block-width--full[class*='-box'],
+.view-wrapper .block.row.has--block-width--full.has--background,
+.view-wrapper .block.row.has--block-width--full.has--background-image,
+.view-wrapper .block.row.has--block-width--full[class*='has--style_name--'],
+.view-wrapper .block.row.has--block-width--full[class*='-box'],
+.blocks-form .block-editor-row.has--block-width--full .block.row.has--background,
+.blocks-form .block-editor-row.has--block-width--full .block.row.has--background-image,
+.blocks-form .block-editor-row.has--block-width--full .block.row[class*='has--style_name--'],
+.blocks-form .block-editor-row.has--block-width--full .block.row[class*='-box'],
+body.content-view-edit .block-editor-row.has--block-width--full .block.row.has--background,
+body.content-view-edit .block-editor-row.has--block-width--full .block.row.has--background-image,
+body.content-view-edit .block-editor-row.has--block-width--full .block.row[class*='has--style_name--'],
+body.content-view-edit .block-editor-row.has--block-width--full .block.row[class*='-box'],
+body.view-editview .block-editor-row.has--block-width--full .block.row.has--background,
+body.view-editview .block-editor-row.has--block-width--full .block.row.has--background-image,
+body.view-editview .block-editor-row.has--block-width--full .block.row[class*='has--style_name--'],
+body.view-editview .block-editor-row.has--block-width--full .block.row[class*='-box'],
+#page-edit .block-editor-row.has--block-width--full .block.row.has--background,
+#page-edit .block-editor-row.has--block-width--full .block.row.has--background-image,
+#page-edit .block-editor-row.has--block-width--full .block.row[class*='has--style_name--'],
+#page-edit .block-editor-row.has--block-width--full .block.row[class*='-box'] {
+  border-radius: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* In edit mode, full-width row with background fills canvas edge-to-edge */
+.blocks-form .block-editor-row.has--block-width--full .block.row.has--background,
+.blocks-form .block-editor-row.has--block-width--full .block.row.has--background-image,
+.blocks-form .block-editor-row.has--block-width--full .block.row[class*='has--style_name--'],
+.blocks-form .block-editor-row.has--block-width--full .block.row[class*='-box'],
+body.content-view-edit .block-editor-row.has--block-width--full .block.row.has--background,
+body.content-view-edit .block-editor-row.has--block-width--full .block.row.has--background-image,
+body.content-view-edit .block-editor-row.has--block-width--full .block.row[class*='has--style_name--'],
+body.content-view-edit .block-editor-row.has--block-width--full .block.row[class*='-box'],
+body.view-editview .block-editor-row.has--block-width--full .block.row.has--background,
+body.view-editview .block-editor-row.has--block-width--full .block.row.has--background-image,
+body.view-editview .block-editor-row.has--block-width--full .block.row[class*='has--style_name--'],
+body.view-editview .block-editor-row.has--block-width--full .block.row[class*='-box'],
+#page-edit .block-editor-row.has--block-width--full .block.row.has--background,
+#page-edit .block-editor-row.has--block-width--full .block.row.has--background-image,
+#page-edit .block-editor-row.has--block-width--full .block.row[class*='has--style_name--'],
+#page-edit .block-editor-row.has--block-width--full .block.row[class*='-box'] {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+:root,
+html,
+body {
+  --narrow-container-width: 720px;
+  --default-container-width: 940px;
+  --layout-container-width: 1440px;
+  --full-container-width: 100%;
+}
+
+/* Page Document Container: Defaults to the exact same width as default row / row-columns (940px) */
+#page-document.ui.container,
+.view-wrapper #page-document.ui.container,
+#view #page-document.ui.container,
+body:not(.view-editview):not(.content-view-edit) #main #page-document.ui.container {
+  width: 100% !important;
+  max-width: var(--default-container-width, 940px) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+#page-document .ui.container {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* --------------------------------------------------------------------------
+   Universal Block Width System (Single Blocks & Multi-Column Rows)
+   View Mode: Responsive Container Widths & Edge-to-Edge Breakouts
+   -------------------------------------------------------------------------- */
+
+/* Narrow container width (720px) in View Mode */
+#page-document [class*='has--block-width--narrow'],
+#page-document .has--block-width--narrow,
+.view-wrapper [class*='has--block-width--narrow'],
+.view-wrapper .has--block-width--narrow,
+#view [class*='has--block-width--narrow'],
+#view .has--block-width--narrow,
+body:not(.view-editview):not(.content-view-edit) .block.has--block-width--narrow {
+  max-width: var(--narrow-container-width, 720px) !important;
+  width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  box-sizing: border-box !important;
+  transition: max-width 0.2s ease-in-out;
+}
+
+/* Default container width (940px) in View Mode */
+#page-document [class*='has--block-width--default'],
+#page-document .has--block-width--default,
+.view-wrapper [class*='has--block-width--default'],
+.view-wrapper .has--block-width--default,
+#view [class*='has--block-width--default'],
+#view .has--block-width--default,
+body:not(.view-editview):not(.content-view-edit) .block.has--block-width--default {
+  max-width: var(--default-container-width, 940px) !important;
+  width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  box-sizing: border-box !important;
+  transition: max-width 0.2s ease-in-out;
+}
+
+/* Layout container width (1440px) with edge-to-edge breakout in View Mode */
+#page-document [class*='has--block-width--layout'],
+#page-document .has--block-width--layout,
+.view-wrapper [class*='has--block-width--layout'],
+.view-wrapper .has--block-width--layout,
+#view [class*='has--block-width--layout'],
+#view .has--block-width--layout,
+body:not(.view-editview):not(.content-view-edit) .block.has--block-width--layout {
+  position: relative !important;
+  left: 50% !important;
+  right: 50% !important;
+  width: min(var(--layout-container-width, 1440px), 100vw) !important;
+  max-width: min(var(--layout-container-width, 1440px), 100vw) !important;
+  margin-left: calc(-1 * min(var(--layout-container-width, 1440px), 100vw) / 2) !important;
+  margin-right: calc(-1 * min(var(--layout-container-width, 1440px), 100vw) / 2) !important;
+  box-sizing: border-box !important;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Full container width (100vw edge-to-edge breakout) in View Mode */
+#page-document [class*='has--block-width--full'],
+#page-document .has--block-width--full,
+.view-wrapper [class*='has--block-width--full'],
+.view-wrapper .has--block-width--full,
+#view [class*='has--block-width--full'],
+#view .has--block-width--full,
+body:not(.view-editview):not(.content-view-edit) .block.has--block-width--full {
+  position: relative !important;
+  left: 50% !important;
+  right: 50% !important;
+  width: 100vw !important;
+  max-width: 100vw !important;
+  margin-left: -50vw !important;
+  margin-right: -50vw !important;
+  box-sizing: border-box !important;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Media inside full width blocks expand to fill 100% */
+.block.has--block-width--full img,
+.block.has--block-width--full .ui.image,
+.block.has--block-width--full figure,
+.block.has--block-width--full video,
+.block.has--block-width--full .video-inner,
+.block.has--block-width--full .block-inner-container,
+.block.has--block-width--full .row-block,
+.block.has--block-width--full .row-inner-container,
+[class*='block-editor-'].has--block-width--full img,
+[class*='block-editor-'].has--block-width--full .ui.image,
+[class*='block-editor-'].has--block-width--full figure,
+[class*='block-editor-'].has--block-width--full .block-inner-container,
+[class*='block-editor-'].has--block-width--full .row-inner-container {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+  object-fit: cover;
+}
+
+/* Protect nested inner blocks inside row columns from breaking out or auto margins */
+.row-column [class*='has--block-width-'],
+.row-column .block,
+.row-column [class*='block-editor-'],
+.row-column .ui.drag.block.inner,
+#page-document .row-column [class*='has--block-width-'],
+.view-wrapper .row-column [class*='has--block-width-'] {
+  position: static !important;
+  left: auto !important;
+  right: auto !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* --------------------------------------------------------------------------
+   Edit Mode (WYSIWYG Canvas Alignment & Container Width Proportions)
+   Bounds cleanly within the edit canvas between toolbar and sidebar
+   -------------------------------------------------------------------------- */
+
+body.view-editview .blocks-form,
+body.view-editview .blocks-form fieldset,
+body.view-editview .blocks-form fieldset > div,
+body.content-view-edit .blocks-form,
+body.content-view-edit .blocks-form fieldset,
+body.content-view-edit .blocks-form fieldset > div {
+  max-width: 100% !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* Edit mode: Cancel ANY left/right 50% breakout offsets */
+body.view-editview [class*='has--block-width--'],
+body.content-view-edit [class*='has--block-width--'],
+body.view-editview .block.row,
+body.content-view-edit .block.row,
+body.view-editview .row-edit-container,
+body.content-view-edit .row-edit-container,
+body.view-editview [class*='block-editor-'],
+body.content-view-edit [class*='block-editor-'] {
+  left: auto !important;
+  right: auto !important;
+  transform: none !important;
+}
+
+/* Full width in edit mode: spans 100% of edit canvas edge-to-edge */
+body.view-editview .blocks-form [class*='block-editor-'].has--block-width--full:not(.row-column *),
+body.content-view-edit .blocks-form [class*='block-editor-'].has--block-width--full:not(.row-column *),
+body.view-editview .blocks-form [class*='block-editor-'].has--block-width--full:not(.row-column *) > div,
+body.content-view-edit .blocks-form [class*='block-editor-'].has--block-width--full:not(.row-column *) > div,
+body.view-editview .block.row.has--block-width--full,
+body.content-view-edit .block.row.has--block-width--full,
+body.view-editview .row-edit-container.has--block-width--full,
+body.content-view-edit .row-edit-container.has--block-width--full {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* Layout width in edit mode (1440px or 100% of canvas) */
+body.view-editview .blocks-form [class*='block-editor-'].has--block-width--layout:not(.row-column *),
+body.content-view-edit .blocks-form [class*='block-editor-'].has--block-width--layout:not(.row-column *),
+body.view-editview .block.row.has--block-width--layout,
+body.content-view-edit .block.row.has--block-width--layout,
+body.view-editview .row-edit-container.has--block-width--layout,
+body.content-view-edit .row-edit-container.has--block-width--layout,
+body.view-editview .blocks-form [class*='has--block-width--layout']:not(.row-column *),
+body.content-view-edit .blocks-form [class*='has--block-width--layout']:not(.row-column *) {
+  width: 100% !important;
+  max-width: min(var(--layout-container-width, 1440px), 100%) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* Default width in edit mode (940px) */
+body.view-editview .blocks-form fieldset > div > [class*='block-editor-']:not(.has--block-width--full):not(.has--block-width--layout):not(.has--block-width--narrow),
+body.content-view-edit .blocks-form fieldset > div > [class*='block-editor-']:not(.has--block-width--full):not(.has--block-width--layout):not(.has--block-width--narrow),
+body.view-editview .blocks-form [class*='block-editor-'].has--block-width--default:not(.row-column *),
+body.content-view-edit .blocks-form [class*='block-editor-'].has--block-width--default:not(.row-column *),
+body.view-editview .block.row.has--block-width--default,
+body.content-view-edit .block.row.has--block-width--default,
+body.view-editview .row-edit-container.has--block-width--default,
+body.content-view-edit .row-edit-container.has--block-width--default,
+body.view-editview .blocks-form [class*='has--block-width--default']:not(.row-column *),
+body.content-view-edit .blocks-form [class*='has--block-width--default']:not(.row-column *) {
+  width: 100% !important;
+  max-width: min(var(--default-container-width, 940px), 100%) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* Narrow width in edit mode (720px) */
+body.view-editview .blocks-form [class*='block-editor-'].has--block-width--narrow:not(.row-column *),
+body.content-view-edit .blocks-form [class*='block-editor-'].has--block-width--narrow:not(.row-column *),
+body.view-editview .block.row.has--block-width--narrow,
+body.content-view-edit .block.row.has--block-width--narrow,
+body.view-editview .row-edit-container.has--block-width--narrow,
+body.content-view-edit .row-edit-container.has--block-width--narrow,
+body.view-editview .blocks-form [class*='has--block-width--narrow']:not(.row-column *),
+body.content-view-edit .blocks-form [class*='has--block-width--narrow']:not(.row-column *) {
+  width: 100% !important;
+  max-width: min(var(--narrow-container-width, 720px), 100%) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* Full-width row inner container centered with up to 1440px layout width */
+#page-document .block.row.has--block-width--full .block-inner-container,
+.view-wrapper .block.row.has--block-width--full .block-inner-container,
+.blocks-form .block.row.has--block-width--full .block-inner-container,
+body.content-view-edit .block.row.has--block-width--full .block-inner-container,
+body.view-editview .block.row.has--block-width--full .block-inner-container,
+#page-edit .block.row.has--block-width--full .block-inner-container,
+.row-edit-container.has--block-width--full .block-inner-container {
+  max-width: min(var(--layout-container-width, 1440px), 100%) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: 1.5rem !important;
+  padding-right: 1.5rem !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* Full-width row with style preset: edge-to-edge background with 940px centered inner content in both View and Edit modes */
+#page-document .block.row.has--block-width--full[class*='has--style_name--'] .block-inner-container,
+#page-document .block.row.has--block-width--full[class*='-box'] .block-inner-container,
+.view-wrapper .block.row.has--block-width--full[class*='has--style_name--'] .block-inner-container,
+.view-wrapper .block.row.has--block-width--full[class*='-box'] .block-inner-container,
+.blocks-form .block-editor-row.has--block-width--full[class*='has--style_name--'] .block-inner-container,
+.blocks-form .block-editor-row.has--block-width--full[class*='-box'] .block-inner-container,
+.row-edit-container.has--block-width--full[class*='has--style_name--'] .block-inner-container,
+.row-edit-container.has--block-width--full[class*='-box'] .block-inner-container {
+  max-width: var(--default-container-width, 940px) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Row Background Image */
+.block.row.has--background-image {
+  background-size: cover !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+  position: relative;
+}
+
+.block.row.has--background-image:not([class*='has--style_name--']):not([class*='-box']) {
+  padding: 3rem 1.5rem !important;
 }
 
 .row-edit-container {
@@ -357,7 +861,7 @@ body.is-dragging-volto-block .row-column .ui.drag.block.inner {
 
 .mosaic-drop-line {
   position: absolute;
-  z-index: 1000;
+  z-index: 10000;
   background: #007bc1;
   border-radius: 2px;
   pointer-events: none;
@@ -750,4 +1254,238 @@ body.is-resizing-columns * {
   margin-top: 0 !important;
   margin-bottom: 0 !important;
   text-align: center !important;
+}
+
+/* --------------------------------------------------------------------------
+   10. WYSIWYG Fidelity, Spacing & Styling System
+   -------------------------------------------------------------------------- */
+
+/* 1. Border radius applied ONLY to inner styled content container, never on block-editor */
+.styled-title:not(.has--block-width--full):not(.full-width),
+.styled-slate:not(.has--block-width--full):not(.full-width),
+.styled:not(.has--block-width--full):not(.full-width),
+[class*='styled-']:not(.has--block-width--full):not(.full-width),
+.block.primary-box:not([class*='block-editor-']):not(.has--block-width--full):not(.full-width),
+.block.gray-box:not([class*='block-editor-']):not(.has--block-width--full):not(.full-width),
+.block.secondary-box:not([class*='block-editor-']):not(.has--block-width--full):not(.full-width),
+.block.tertiary-box:not([class*='block-editor-']):not(.has--block-width--full):not(.full-width),
+.block.blue-box:not([class*='block-editor-']):not(.has--block-width--full):not(.full-width),
+.block.purple-box:not([class*='block-editor-']):not(.has--block-width--full):not(.full-width),
+.block[class*='has--style_name--']:not([class*='block-editor-']):not(.has--block-width--full):not(.full-width):not(.stat-cards-box):not(.stat-cards-primary-box),
+.primary-box:not([class*='block-editor-']):not(.has--block-width--full):not(.full-width):not(.block.row),
+.gray-box:not([class*='block-editor-']):not(.has--block-width--full):not(.full-width):not(.block.row),
+.secondary-box:not([class*='block-editor-']):not(.has--block-width--full):not(.full-width):not(.block.row),
+.tertiary-box:not([class*='block-editor-']):not(.has--block-width--full):not(.full-width):not(.block.row),
+.blue-box:not([class*='block-editor-']):not(.has--block-width--full):not(.full-width):not(.block.row),
+.purple-box:not([class*='block-editor-']):not(.has--block-width--full):not(.full-width):not(.block.row),
+.block.row:not(.has--block-width--full):not(.full-width)[class*='has--style_name--'],
+.block.row:not(.has--block-width--full):not(.full-width)[class*='-box'],
+.row-edit-container:not(.has--block-width--full):not(.full-width)[class*='has--style_name--'],
+.row-edit-container:not(.has--block-width--full):not(.full-width)[class*='-box'] {
+  border-radius: var(--yc-radius-card, 8px) !important;
+  overflow: hidden !important;
+}
+
+/* Block editor wrappers must NEVER have border-radius or overflow hidden so gutter tools are fully visible */
+[class*='block-editor-'],
+[class*='block-editor-'] > div,
+.ui.drag.block.inner,
+.blocks-form fieldset > div > div {
+  border-radius: 0 !important;
+  overflow: visible !important;
+}
+
+/* Full width blocks: No border radius */
+.has--block-width--full,
+.full-width,
+.styled-title.has--block-width--full,
+.styled-title.full-width,
+.styled-slate.has--block-width--full,
+.styled-slate.full-width,
+.styled.has--block-width--full,
+.styled.full-width,
+[class*='styled-'].has--block-width--full,
+[class*='styled-'].full-width,
+.block.has--block-width--full,
+.block.full-width,
+.block.row.has--block-width--full,
+.block.row.full-width,
+.row-edit-container.has--block-width--full,
+.row-edit-container.full-width,
+[class*='block-editor-'].has--block-width--full,
+[class*='block-editor-'].full-width,
+[class*='block-editor-'].has--block-width--full [class*='styled-'],
+[class*='block-editor-'].full-width [class*='styled-'] {
+  border-radius: 0 !important;
+}
+
+/* 2. Uniform padding on styled blocks in View and Edit modes */
+.styled-title.primary-box,
+.styled-title.gray-box,
+.styled-title.secondary-box,
+.styled-title.tertiary-box,
+.styled-title.blue-box,
+.styled-title.purple-box,
+.styled-title[class*='-box'],
+.styled-title[class*='has--style_name--'],
+.styled-slate.primary-box,
+.styled-slate.gray-box,
+.styled-slate.secondary-box,
+.styled-slate.tertiary-box,
+.styled-slate.blue-box,
+.styled-slate.purple-box,
+.styled-slate[class*='has--style_name--'],
+.styled-slate[class*='-box'],
+.styled.primary-box,
+.styled.gray-box,
+.styled.secondary-box,
+.styled.tertiary-box,
+.styled.blue-box,
+.styled.purple-box,
+.styled[class*='has--style_name--'],
+.styled[class*='-box'],
+[class*='styled-'][class*='-box'],
+[class*='styled-'][class*='has--style_name--'],
+.block.primary-box:not(.row),
+.block.gray-box:not(.row),
+.block.secondary-box:not(.row),
+.block.tertiary-box:not(.row),
+.block.blue-box:not(.row),
+.block.purple-box:not(.row),
+.block[class*='has--style_name--']:not(.row):not(.stat-cards-box):not(.stat-cards-primary-box) {
+  padding: 1.75rem 1.75rem !important;
+  box-sizing: border-box !important;
+}
+
+/* 3. Reset headings and paragraphs margin inside styled boxes for identical height */
+.styled-title h1,
+.styled-title h1.documentFirstHeading,
+.block-editor-title h1,
+.styled-title [contenteditable='true'],
+.styled-slate h1,
+.styled-slate h2,
+.styled-slate h3,
+.styled-slate h4,
+.styled-slate h5,
+.styled-slate h6,
+.styled-slate p,
+.styled h1,
+.styled h2,
+.styled h3,
+.styled h4,
+.styled h5,
+.styled h6,
+.styled p,
+[class*='block-editor-'] .styled-slate h1,
+[class*='block-editor-'] .styled-slate h2,
+[class*='block-editor-'] .styled-slate h3,
+[class*='block-editor-'] .styled-slate h4,
+[class*='block-editor-'] .styled-slate h5,
+[class*='block-editor-'] .styled-slate h6,
+[class*='block-editor-'] .styled-slate p,
+[class*='block-editor-'] .styled-slate .slate-editor,
+[class*='block-editor-'] .styled-slate .slate-editor div {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* 4. Vertical spacing between blocks in View Mode */
+#page-document .styled-title:not(.has--block-width--full):not(.full-width),
+#page-document .styled-slate:not(.has--block-width--full):not(.full-width),
+#page-document .styled:not(.has--block-width--full):not(.full-width),
+#page-document [class*='styled-']:not(.has--block-width--full):not(.full-width),
+#page-document .block:not(.has--block-width--full):not(.row)[class*='has--style_name--'],
+#page-document .block:not(.has--block-width--full):not(.row)[class*='-box'],
+.view-wrapper .styled-title:not(.has--block-width--full):not(.full-width),
+.view-wrapper .styled-slate:not(.has--block-width--full):not(.full-width),
+.view-wrapper .styled:not(.has--block-width--full):not(.full-width),
+.view-wrapper [class*='styled-']:not(.has--block-width--full):not(.full-width),
+.view-wrapper .block:not(.has--block-width--full):not(.row)[class*='has--style_name--'],
+.view-wrapper .block:not(.has--block-width--full):not(.row)[class*='-box'],
+#view .styled-title:not(.has--block-width--full):not(.full-width),
+#view .styled-slate:not(.has--block-width--full):not(.full-width),
+#view .styled:not(.has--block-width--full):not(.full-width),
+#view [class*='styled-']:not(.has--block-width--full):not(.full-width),
+#view .block:not(.has--block-width--full):not(.row)[class*='has--style_name--'],
+#view .block:not(.has--block-width--full):not(.row)[class*='-box'] {
+  margin-top: var(--block-spacing-vertical, 1.75rem) !important;
+  margin-bottom: var(--block-spacing-vertical, 1.75rem) !important;
+}
+
+/* 5. Vertical spacing between blocks in Edit Mode */
+.blocks-form [class*='block-editor-']:not(.block-editor-row):not(.has--block-width--full).has--background,
+.blocks-form [class*='block-editor-']:not(.block-editor-row):not(.has--block-width--full)[class*='has--style_name--'],
+.blocks-form [class*='block-editor-']:not(.block-editor-row):not(.has--block-width--full)[class*='-box'],
+body.content-view-edit [class*='block-editor-']:not(.block-editor-row):not(.has--block-width--full).has--background,
+body.content-view-edit [class*='block-editor-']:not(.block-editor-row):not(.has--block-width--full)[class*='has--style_name--'],
+body.content-view-edit [class*='block-editor-']:not(.block-editor-row):not(.has--block-width--full)[class*='-box'],
+body.view-editview [class*='block-editor-']:not(.block-editor-row):not(.has--block-width--full).has--background,
+body.view-editview [class*='block-editor-']:not(.block-editor-row):not(.has--block-width--full)[class*='has--style_name--'],
+body.view-editview [class*='block-editor-']:not(.block-editor-row):not(.has--block-width--full)[class*='-box'],
+#page-edit [class*='block-editor-']:not(.block-editor-row):not(.has--block-width--full).has--background,
+#page-edit [class*='block-editor-']:not(.block-editor-row):not(.has--block-width--full)[class*='has--style_name--'],
+#page-edit [class*='block-editor-']:not(.block-editor-row):not(.has--block-width--full)[class*='-box'] {
+  margin-top: var(--block-spacing-vertical, 1.75rem) !important;
+  margin-bottom: var(--block-spacing-vertical, 1.75rem) !important;
+}
+
+/* 6. Reset inner block bottom margin in edit mode so outer margin is the sole vertical margin */
+.blocks-form .ui.drag.block.inner,
+.blocks-form .block:not(.row) {
+  margin-bottom: 0 !important;
+}
+
+/* 7. Editing tools on highest z-level when block is selected */
+[class*='block-editor-'].is-selected .drag.handle.wrapper,
+[class*='block-editor-'].selected .drag.handle.wrapper,
+[class*='block-editor-']:hover > div > .drag.handle.wrapper,
+[class*='block-editor-'].is-selected .delete-button,
+[class*='block-editor-'].selected .delete-button,
+[class*='block-editor-'].is-selected .block-delete-button,
+[class*='block-editor-'].selected .block-delete-button,
+[class*='block-editor-'].is-selected .block-delete-button.delete-button,
+[class*='block-editor-'].selected .block-delete-button.delete-button,
+[class*='block-editor-'].is-selected .ui.drag.block.inner .delete-button,
+[class*='block-editor-'].is-selected .ui.drag.block.inner button.delete-button,
+[class*='block-editor-'].selected .ui.drag.block.inner .delete-button,
+[class*='block-editor-'].selected .ui.drag.block.inner button.delete-button,
+[class*='block-editor-']:hover .delete-button,
+[class*='block-editor-']:hover .block-delete-button,
+[class*='block-editor-']:hover .block-delete-button.delete-button,
+[class*='block-editor-']:hover .ui.drag.block.inner .delete-button,
+[class*='block-editor-']:hover .ui.drag.block.inner button.delete-button,
+[class*='block-editor-']:hover > div > .delete-button,
+[class*='block-editor-']:hover > div > .block-delete-button,
+[class*='block-editor-'].is-selected .add-button,
+[class*='block-editor-'].selected .add-button,
+[class*='block-editor-'].is-selected .block-add-button,
+[class*='block-editor-'].selected .block-add-button,
+[class*='block-editor-'].is-selected .ui.button.add-block-button,
+[class*='block-editor-'].is-selected .ui.button.block-add-button,
+[class*='block-editor-'].is-selected .mosaic-drop-line,
+[class*='block-editor-'].selected .mosaic-drop-line,
+[class*='block-editor-'].is-selected .drop-zone,
+[class*='block-editor-'].selected .drop-zone,
+.block-editor-row.is-selected > div > .drag.handle.wrapper,
+.block-editor-row.selected > div > .drag.handle.wrapper,
+.block-editor-row.is-selected .block-delete-button,
+.block-editor-row.selected .block-delete-button,
+.block-editor-row.is-selected .delete-button,
+.block-editor-row.selected .delete-button,
+.block-editor-row.is-selected .block-delete-button.delete-button,
+.block-editor-row.selected .block-delete-button.delete-button,
+.block-editor-row.is-selected .ui.drag.block.inner .delete-button,
+.block-editor-row.is-selected .ui.drag.block.inner button.delete-button,
+.block-editor-row.selected .ui.drag.block.inner .delete-button,
+.block-editor-row.selected .ui.drag.block.inner button.delete-button,
+.block-editor-row.is-selected .row-column-add,
+.block-editor-row.selected .row-column-add,
+.block-editor-row.is-selected .mosaic-drop-line,
+.block-editor-row.selected .mosaic-drop-line,
+.drag.handle.wrapper:hover,
+.drag.handle.wrapper:active,
+body.is-dragging-volto-block .mosaic-drop-line,
+body.is-dragging-volto-block .drop-zone {
+  z-index: 10000 !important;
+  pointer-events: auto !important;
 }

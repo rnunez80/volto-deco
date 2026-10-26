@@ -5,13 +5,15 @@ import {
   RowLayoutPresetWidget,
   RowStylePresetWidget,
   RowVerticalAlignWidget,
+  ContainerWidthWidget,
 } from './components/Widgets';
 import installRowMigrationMiddleware from './middleware/rowMigrationMiddleware';
+import installBlockWidth from './config/blockWidth';
 
 import './theme/deco.css';
 
 export function applyConfig(config: ConfigType) {
-  // 1. Register Row Widgets
+  // 1. Register Row & Container Width Widgets
   if (!config.widgets) {
     (config as any).widgets = {};
   }
@@ -22,6 +24,10 @@ export function applyConfig(config: ConfigType) {
     (config.widgets as any).id = {};
   }
 
+  config.widgets.widget.container_width = ContainerWidthWidget;
+  config.widgets.widget.blockWidth = ContainerWidthWidget;
+  config.widgets.id.blockWidth = ContainerWidthWidget;
+
   config.widgets.widget.row_style_preset = RowStylePresetWidget;
   config.widgets.id.style_name = RowStylePresetWidget;
 
@@ -30,6 +36,9 @@ export function applyConfig(config: ConfigType) {
 
   config.widgets.widget.row_layout_preset = RowLayoutPresetWidget;
   config.widgets.id.layoutPreset = RowLayoutPresetWidget;
+
+  // 2. Install Block Model v3 Container Width system
+  installBlockWidth(config);
 
   // 2. Register Multi-Column Row block (@type: 'row')
   if (!config.blocks) {
@@ -89,5 +98,8 @@ export {
   RowLayoutPresetWidget,
   RowStylePresetWidget,
   RowVerticalAlignWidget,
+  ContainerWidthWidget,
 } from './components/Widgets';
 export { default as installRowMigrationMiddleware } from './middleware/rowMigrationMiddleware';
+export { default as installBlockWidth } from './config/blockWidth';
+

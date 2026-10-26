@@ -72,6 +72,11 @@ A visual sidebar selector displaying miniature SVG preview cards organized ascen
 - Integrated Redux migration middleware automatically and transparently converts legacy `columnsBlock` and `gridBlock` content into modern `row` blocks in-flight and at save time.
 - Ensures existing pages load without downtime or broken block warnings.
 
+### 9. Universal Container & Block Width System
+- **Unified Sizing**: Seamlessly controls container widths for both standalone single blocks and multi-column row blocks via `ContainerWidthWidget`.
+- **Width Options**: `Narrow` (720px), `Default` (940px), `Layout` (1440px breakout), and `Full Width` (100vw edge-to-edge breakout).
+- **Universal Adaptation**: Supports all block types (Slate text, headings, images, custom blocks) across both View mode and Edit mode canvas.
+
 ---
 
 ## Installation
