@@ -11,6 +11,11 @@ All notable changes to `volto-deco` will be documented in this file.
   - Added modifier support to gutter drag handles so clicking any drag handle with `Ctrl` / `Cmd` toggles multi-selection instead of resetting to a single active block.
   - Added multi-block selection styling in [deco.css](file:///Users/rnunez/devel/yc19/frontend/packages/volto-deco/src/theme/deco.css) with zero-layout-shift `::before` outline (`2px solid #007bc1`) and prominent blue drag handle state (`.is-multi-selected`).
   - Enabled standard Volto toolbar actions (`Copy blocks`, `Cut blocks`, `Delete blocks`, and `Paste blocks`) when multiple blocks are selected.
+- **Full-Width Row Style Preset Width & Column Containment:**
+  - Updated full-width rows with style presets (`has--block-width--full[class*='has--style_name--']` / `[class*='-box']`) to enforce `1440px` (`--layout-container-width`) inner container constraint (`.block-inner-container`) instead of `940px`, ensuring edge-to-edge background presets match full layout breadth in both View and Edit modes.
+  - Enforced `min-width: 0 !important;` on edit mode `.blocks-form`, `fieldset`, and `fieldset > div` to prevent wide horizontal slider tracks (`.slick-track`) from expanding `<fieldset>`'s default `min-content` formatting context, which previously shifted centered blocks off-screen.
+  - Enforced strict column and canvas containment on row column children, fieldsets, blocks forms, and carousels/sliders (`.advancedView`, `.advancedSlider`, `.slick-slider`, `.slick-list`) so Advance Carousel always stays within boundaries during editing without pushing other blocks off-canvas.
+  - Added safety guards and empty fallback in `AdvancedCarouselBlockTemplate` to prevent rendering unmounted Slider structures when items are empty or undefined.
 
 ## 1.2.1 (2026-10-25)
 

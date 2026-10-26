@@ -396,10 +396,28 @@ body.is-dragging-volto-block .row-column .ui.drag.block.inner {
   box-sizing: border-box;
 }
 
+.row-column fieldset,
+.row-column .blocks-form,
+.row-column .blocks-form > fieldset > div,
+.row-column .ui.drag.block.inner,
 .row-column .block,
 .row-column [class*='block-editor-'] {
   width: 100% !important;
   max-width: 100% !important;
+  min-width: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* Ensure carousels and sliders stay strictly within column boundaries in both view and edit modes */
+.row-column .advancedView,
+.row-column .advancedSlider,
+.row-column .slick-slider,
+.row-column .slick-list {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
   margin-left: 0 !important;
   margin-right: 0 !important;
   box-sizing: border-box !important;
@@ -624,9 +642,13 @@ body.view-editview .blocks-form fieldset,
 body.view-editview .blocks-form fieldset > div,
 body.content-view-edit .blocks-form,
 body.content-view-edit .blocks-form fieldset,
-body.content-view-edit .blocks-form fieldset > div {
+body.content-view-edit .blocks-form fieldset > div,
+.blocks-form,
+.blocks-form fieldset,
+.blocks-form fieldset > div {
   max-width: 100% !important;
   width: 100% !important;
+  min-width: 0 !important;
   box-sizing: border-box !important;
 }
 
@@ -685,16 +707,17 @@ body.content-view-edit .blocks-form [class*='has--block-width--layout']:not(.row
 /* Default width in edit mode (940px) */
 body.view-editview .blocks-form fieldset > div > [class*='block-editor-']:not(.has--block-width--full):not(.has--block-width--layout):not(.has--block-width--narrow),
 body.content-view-edit .blocks-form fieldset > div > [class*='block-editor-']:not(.has--block-width--full):not(.has--block-width--layout):not(.has--block-width--narrow),
-body.view-editview .blocks-form [class*='block-editor-'].has--block-width--default:not(.row-column *),
-body.content-view-edit .blocks-form [class*='block-editor-'].has--block-width--default:not(.row-column *),
+body.view-editview .blocks-form [class*='block-editor-'].has--block-width--default,
+body.content-view-edit .blocks-form [class*='block-editor-'].has--block-width--default,
 body.view-editview .block.row.has--block-width--default,
 body.content-view-edit .block.row.has--block-width--default,
 body.view-editview .row-edit-container.has--block-width--default,
 body.content-view-edit .row-edit-container.has--block-width--default,
-body.view-editview .blocks-form [class*='has--block-width--default']:not(.row-column *),
-body.content-view-edit .blocks-form [class*='has--block-width--default']:not(.row-column *) {
+body.view-editview .blocks-form [class*='has--block-width--default'],
+body.content-view-edit .blocks-form [class*='has--block-width--default'] {
   width: 100% !important;
   max-width: min(var(--default-container-width, 940px), 100%) !important;
+  min-width: 0 !important;
   margin-left: auto !important;
   margin-right: auto !important;
   padding-left: 0 !important;
@@ -737,7 +760,7 @@ body.view-editview .block.row.has--block-width--full .block-inner-container,
   box-sizing: border-box !important;
 }
 
-/* Full-width row with style preset: edge-to-edge background with 940px centered inner content in both View and Edit modes */
+/* Full-width row with style preset: edge-to-edge background with 1440px centered inner content in both View and Edit modes */
 #page-document .block.row.has--block-width--full[class*='has--style_name--'] .block-inner-container,
 #page-document .block.row.has--block-width--full[class*='-box'] .block-inner-container,
 .view-wrapper .block.row.has--block-width--full[class*='has--style_name--'] .block-inner-container,
@@ -746,7 +769,7 @@ body.view-editview .block.row.has--block-width--full .block-inner-container,
 .blocks-form .block-editor-row.has--block-width--full[class*='-box'] .block-inner-container,
 .row-edit-container.has--block-width--full[class*='has--style_name--'] .block-inner-container,
 .row-edit-container.has--block-width--full[class*='-box'] .block-inner-container {
-  max-width: var(--default-container-width, 940px) !important;
+  max-width: min(var(--layout-container-width, 1440px), 100%) !important;
   margin-left: auto !important;
   margin-right: auto !important;
 }
