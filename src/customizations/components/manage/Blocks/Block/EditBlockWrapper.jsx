@@ -51,6 +51,7 @@ const EditBlockWrapper = (props) => {
     block,
     blocksConfig,
     selected,
+    multiSelected,
     type,
     onChangeBlock,
     onChangeFormData,
@@ -69,7 +70,8 @@ const EditBlockWrapper = (props) => {
   const [dropPosition, setDropPosition] = useState(null);
 
   const data = applyBlockDefaults({ data: originalData, ...blockProps, intl });
-  const visible = selected && !hideHandler(data);
+  const isSelectedOrMulti = selected || multiSelected;
+  const visible = (selected || multiSelected) && !hideHandler(data);
   const required = isBoolean(data.required)
     ? data.required
     : includes(config.blocks.requiredBlocks, type);
@@ -251,6 +253,15 @@ const EditBlockWrapper = (props) => {
     }
   };
 
+  const handleModifierClick = (e) => {
+    const isMultipleSelection = e.shiftKey || e.ctrlKey || e.metaKey;
+    if (isMultipleSelection && onSelectBlock) {
+      e.preventDefault();
+      e.stopPropagation();
+      onSelectBlock(block, true, e);
+    }
+  };
+
   return (
     <div
       ref={draginfo.innerRef}
@@ -263,8 +274,18 @@ const EditBlockWrapper = (props) => {
         {
           [data.align]: data.align,
           [`has--block-width--${data.blockWidth || 'default'}`]: !isNested,
+          'is-selected': selected,
+          'is-multi-selected': multiSelected,
+          selected: isSelectedOrMulti,
+          multiSelected: multiSelected,
         },
       )}
+      onMouseDownCapture={(e) => {
+        if (e.shiftKey || e.ctrlKey || e.metaKey) {
+          e.preventDefault();
+        }
+      }}
+      onClickCapture={handleModifierClick}
       onDragOverCapture={handleDragOver}
       onDragLeave={handleDragLeave}
       onDropCapture={handleDrop}
@@ -288,15 +309,17 @@ const EditBlockWrapper = (props) => {
           tabIndex={0}
           onClick={(e) => {
             e.stopPropagation();
+            const isMultipleSelection = e.shiftKey || e.ctrlKey || e.metaKey;
             if (onSelectBlock) {
-              onSelectBlock(block);
+              onSelectBlock(block, isMultipleSelection, e);
             }
           }}
           onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') {
               e.stopPropagation();
+              const isMultipleSelection = e.shiftKey || e.ctrlKey || e.metaKey;
               if (onSelectBlock) {
-                onSelectBlock(block);
+                onSelectBlock(block, isMultipleSelection, e);
               }
             }
           }}
@@ -324,6 +347,7 @@ const EditBlockWrapper = (props) => {
           }}
           className={cx('drag handle wrapper', {
             'is-selected': selected,
+            'is-multi-selected': multiSelected,
             'is-hidden': !visible,
             'is-nested-handle': isNested,
             'is-root-handle': !isNested,

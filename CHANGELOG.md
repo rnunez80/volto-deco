@@ -2,6 +2,16 @@
 
 All notable changes to `volto-deco` will be documented in this file.
 
+## 1.2.2 (2026-10-26)
+
+### Features & Multi-Block Selection Restoration
+- **Full Multi-Block Selection with Modifier Keys (Ctrl / Cmd / Shift):**
+  - Restored multi-block selection capability across all Volto blocks (single blocks, Slate editors, styled boxes, and Row blocks) without altering visual aesthetics, margins, padding, or WYSIWYG alignment.
+  - Implemented `onMouseDownCapture` and `onClickCapture` modifier event interceptors in [EditBlockWrapper.jsx](file:///Users/rnunez/devel/yc19/frontend/packages/volto-deco/src/customizations/components/manage/Blocks/Block/EditBlockWrapper.jsx) to prevent Slate contenteditable focus stealing when holding `Ctrl`, `Cmd` (Mac), or `Shift`.
+  - Added modifier support to gutter drag handles so clicking any drag handle with `Ctrl` / `Cmd` toggles multi-selection instead of resetting to a single active block.
+  - Added multi-block selection styling in [deco.css](file:///Users/rnunez/devel/yc19/frontend/packages/volto-deco/src/theme/deco.css) with zero-layout-shift `::before` outline (`2px solid #007bc1`) and prominent blue drag handle state (`.is-multi-selected`).
+  - Enabled standard Volto toolbar actions (`Copy blocks`, `Cut blocks`, `Delete blocks`, and `Paste blocks`) when multiple blocks are selected.
+
 ## 1.2.1 (2026-10-25)
 
 ### Bug Fixes & WYSIWYG Tool Alignment

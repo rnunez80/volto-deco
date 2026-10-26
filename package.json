@@ -1,6 +1,6 @@
 {
   "name": "volto-deco",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Volto Deco: Standalone modern 2D canvas drag-and-drop and multi-column row grid layout system for Plone Volto.",
   "main": "src/index.ts",
   "author": "Rafael Nunez",

@@ -151,11 +151,14 @@ body.view-editview [class*='block-editor-'].has--block-width--full .block-delete
   margin-right: 0 !important;
 }
 
-/* Drag handle and delete button are visible when block is selected OR hovered */
+/* Drag handle and delete button are visible when block is selected, multi-selected, OR hovered */
 .drag.handle.wrapper.is-selected,
+.drag.handle.wrapper.is-multi-selected,
 [class*='block-editor-']:hover > div > .drag.handle.wrapper,
 [class*='block-editor-'].is-selected > div > .drag.handle.wrapper,
+[class*='block-editor-'].is-multi-selected > div > .drag.handle.wrapper,
 [class*='block-editor-'].selected > div > .drag.handle.wrapper,
+[class*='block-editor-'].multiSelected > div > .drag.handle.wrapper,
 [class*='block-editor-']:hover .block-delete-button.delete-button,
 [class*='block-editor-'].is-selected .block-delete-button.delete-button,
 [class*='block-editor-'].selected .block-delete-button.delete-button,
@@ -167,7 +170,9 @@ body.view-editview [class*='block-editor-'].has--block-width--full .block-delete
 [class*='block-editor-'].selected .delete-button,
 .row-column [class*='block-editor-']:hover .drag.handle.wrapper,
 .row-column [class*='block-editor-'].is-selected .drag.handle.wrapper,
+.row-column [class*='block-editor-'].is-multi-selected .drag.handle.wrapper,
 .row-column [class*='block-editor-'].selected .drag.handle.wrapper,
+.row-column [class*='block-editor-'].multiSelected .drag.handle.wrapper,
 .row-column [class*='block-editor-']:hover .delete-button,
 .row-column [class*='block-editor-'].is-selected .delete-button,
 .row-column [class*='block-editor-'].selected .delete-button {
@@ -176,15 +181,58 @@ body.view-editview [class*='block-editor-'].has--block-width--full .block-delete
   z-index: 10000 !important;
 }
 
-/* Elevated stacking context for active/selected block */
+/* Multi-selected block drag handle styling (prominent blue state) */
+.drag.handle.wrapper.is-multi-selected,
+[class*='block-editor-'].is-multi-selected > div > .drag.handle.wrapper,
+[class*='block-editor-'].multiSelected > div > .drag.handle.wrapper {
+  background-color: #007bc1 !important;
+  border-color: #007bc1 !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(0, 123, 193, 0.3) !important;
+}
+
+.drag.handle.wrapper.is-multi-selected svg,
+[class*='block-editor-'].is-multi-selected > div > .drag.handle.wrapper svg,
+[class*='block-editor-'].multiSelected > div > .drag.handle.wrapper svg {
+  fill: #ffffff !important;
+}
+
+/* Elevated stacking context for active/selected/multi-selected block */
 [class*='block-editor-'].is-selected,
+[class*='block-editor-'].is-multi-selected,
 [class*='block-editor-'].selected,
+[class*='block-editor-'].multiSelected,
 [class*='block-editor-']:focus-within,
 .block-editor-row.is-selected,
+.block-editor-row.is-multi-selected,
 .block-editor-row.selected,
+.block-editor-row.multiSelected,
 .block-editor-row:focus-within {
   position: relative !important;
   z-index: 500 !important;
+}
+
+/* Multi-selected block highlight without affecting layout, padding or typography */
+[class*='block-editor-'].is-multi-selected .block:not(.inner),
+[class*='block-editor-'].multiSelected .block:not(.inner),
+.blocks-form .block.multiSelected:not(.inner) {
+  position: relative !important;
+}
+
+[class*='block-editor-'].is-multi-selected .block:not(.inner)::before,
+[class*='block-editor-'].multiSelected .block:not(.inner)::before,
+.blocks-form .block.multiSelected:not(.inner)::before {
+  content: '' !important;
+  position: absolute !important;
+  top: -4px !important;
+  left: -4px !important;
+  right: -4px !important;
+  bottom: -4px !important;
+  border: 2px solid #007bc1 !important;
+  border-radius: var(--yc-radius-card, 8px) !important;
+  background-color: rgba(0, 123, 193, 0.08) !important;
+  pointer-events: none !important;
+  z-index: 50 !important;
 }
 
 /* Prevent tool clipping: block editor wrappers allow tools in gutters to show freely */

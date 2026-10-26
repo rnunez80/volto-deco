@@ -752,7 +752,11 @@ const RowEdit: React.FC<RowEditProps> = (props) => {
                       isContainer
                       isMainForm={false}
                       pathname={pathname}
-                      onSelectBlock={(id: string) => handleSelectInnerBlock(id)}
+                      onSelectBlock={(
+                        id: string,
+                        isMultipleSelection?: boolean,
+                        event?: any,
+                      ) => handleSelectInnerBlock(id)}
                       onChangeFormData={(newColData: any) =>
                         handleColBlockChange(colId, newColData)
                       }
