@@ -66,12 +66,16 @@ export function applyConfig(config: ConfigType) {
     config.blocks.blocksConfig.columnsBlock.restricted = true;
     config.blocks.blocksConfig.columnsBlock.mostUsed = false;
     config.blocks.blocksConfig.columnsBlock.view = RowView;
+    config.blocks.blocksConfig.columnsBlock.edit = RowEdit;
+    config.blocks.blocksConfig.columnsBlock.schema = RowSchema;
   }
 
   if (config.blocks?.blocksConfig?.gridBlock) {
     config.blocks.blocksConfig.gridBlock.restricted = true;
     config.blocks.blocksConfig.gridBlock.mostUsed = false;
     config.blocks.blocksConfig.gridBlock.view = RowView;
+    config.blocks.blocksConfig.gridBlock.edit = RowEdit;
+    config.blocks.blocksConfig.gridBlock.schema = RowSchema;
   }
 
   // 4. Install Redux migration middleware for in-flight legacy block normalization

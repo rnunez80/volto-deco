@@ -176,7 +176,14 @@ const RowVerticalAlignWidget: React.FC<RowVerticalAlignWidgetProps> = (
   props,
 ) => {
   const { id = 'alignItems', value = 'stretch', onChange } = props;
-  const currentVal = value || 'stretch';
+  const currentVal =
+    value === 'top' || value === 'flex-start'
+      ? 'start'
+      : value === 'middle'
+        ? 'center'
+        : value === 'bottom' || value === 'flex-end'
+          ? 'end'
+          : value || 'stretch';
 
   return (
     <FormFieldWrapper {...props} className="row-valign-field">

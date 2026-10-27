@@ -92,41 +92,71 @@ export function extractBlockFromFormData(
     };
   }
 
-  // 2. Inside row columns
+  // 2. Inside row columns (checking both .blocks and .data.blocks)
   for (const rId of Object.keys(nextBlocks)) {
     const rBlock = nextBlocks[rId];
-    if (!isRowType(rBlock) || !rBlock.blocks) continue;
-    for (const cId of Object.keys(rBlock.blocks)) {
-      const col = rBlock.blocks[cId];
-      if (col?.blocks?.[blockId]) {
-        const blockData = col.blocks[blockId];
-        const newColBlocks = { ...col.blocks };
-        delete newColBlocks[blockId];
-        const newCol = {
-          ...col,
-          blocks: newColBlocks,
-          blocks_layout: {
-            items: (col.blocks_layout?.items || []).filter(
-              (id: string) => id !== blockId,
-            ),
-          },
-        };
-        nextBlocks[rId] = {
-          ...rBlock,
-          blocks: {
-            ...rBlock.blocks,
-            [cId]: newCol,
-          },
-        };
-        return {
-          blockData,
-          newFormData: {
-            ...formData,
-            blocks: nextBlocks,
-            blocks_layout: { items: nextLayoutItems },
-          },
-          source: { rowId: rId, colId: cId },
-        };
+    if (!rBlock) continue;
+
+    const colContainers =
+      rBlock.blocks || rBlock.data?.blocks || rBlock.columnsBlocks;
+    if (colContainers && typeof colContainers === 'object') {
+      for (const cId of Object.keys(colContainers)) {
+        const col = colContainers[cId];
+        if (!col) continue;
+
+        const innerBlocks = col.blocks || col.data?.blocks;
+        if (innerBlocks && innerBlocks[blockId]) {
+          const blockData = innerBlocks[blockId];
+          const newColBlocks = { ...innerBlocks };
+          delete newColBlocks[blockId];
+
+          const colLayout =
+            col.blocks_layout || col.data?.blocks_layout || { items: [] };
+          const newColItems = (colLayout.items || []).filter(
+            (id: string) => id !== blockId,
+          );
+
+          const updatedCol = {
+            ...col,
+            blocks: newColBlocks,
+            blocks_layout: { items: newColItems },
+          };
+          if (col.data && typeof col.data === 'object') {
+            updatedCol.data = {
+              ...col.data,
+              blocks: newColBlocks,
+              blocks_layout: { items: newColItems },
+            };
+          }
+
+          const updatedCols = {
+            ...colContainers,
+            [cId]: updatedCol,
+          };
+
+          const updatedRow = {
+            ...rBlock,
+            blocks: updatedCols,
+          };
+          if (rBlock.data && typeof rBlock.data === 'object') {
+            updatedRow.data = {
+              ...rBlock.data,
+              blocks: updatedCols,
+            };
+          }
+
+          nextBlocks[rId] = updatedRow;
+
+          return {
+            blockData,
+            newFormData: {
+              ...formData,
+              blocks: nextBlocks,
+              blocks_layout: { items: nextLayoutItems },
+            },
+            source: { rowId: rId, colId: cId },
+          };
+        }
       }
     }
   }
@@ -145,29 +175,72 @@ export function extractBlockFromFormData(
 /**
  * Mosaic behaviour: when a block is dragged out of a column and that column
  * is left empty, the column is removed (as long as the row keeps at least one).
+ * If all columns in the source row become empty, the row is removed from layout.
  */
 function removeEmptySourceColumn(
   blocks: Record<string, any>,
   source: SourceLocation | null,
+  layoutItems?: string[],
 ) {
   if (!source) return;
   const row = blocks[source.rowId];
-  if (!row?.blocks) return;
-  const col = row.blocks[source.colId];
-  if (!col || (col.blocks_layout?.items || []).length > 0) return;
-  const items: string[] = row.blocks_layout?.items || [];
-  if (items.length <= 1) return;
+  if (!row) return;
 
-  const newItems = items.filter((i) => i !== source.colId);
-  const newCols = { ...row.blocks };
+  const colContainers =
+    row.blocks || row.data?.blocks || row.columnsBlocks;
+  if (!colContainers) return;
+
+  const col = colContainers[source.colId];
+  if (!col) return;
+
+  const colItems: string[] =
+    col.blocks_layout?.items || col.data?.blocks_layout?.items || [];
+  if (colItems.length > 0) return;
+
+  // The source column is now empty.
+  const rowItems: string[] =
+    row.blocks_layout?.items ||
+    row.data?.blocks_layout?.items ||
+    Object.keys(colContainers);
+
+  // Check if all columns in this row are now empty
+  let totalBlocks = 0;
+  rowItems.forEach((cid) => {
+    const c = colContainers[cid];
+    const items =
+      c?.blocks_layout?.items || c?.data?.blocks_layout?.items || [];
+    totalBlocks += items.length;
+  });
+
+  if (totalBlocks === 0 && layoutItems) {
+    // Entire row is empty, remove the row from root layout
+    delete blocks[source.rowId];
+    const rIdx = layoutItems.indexOf(source.rowId);
+    if (rIdx > -1) layoutItems.splice(rIdx, 1);
+    return;
+  }
+
+  if (rowItems.length <= 1) return;
+
+  const newItems = rowItems.filter((i) => i !== source.colId);
+  const newCols = { ...colContainers };
   delete newCols[source.colId];
-  blocks[source.rowId] = {
+
+  const updatedRow = {
     ...row,
     blocks: newCols,
     blocks_layout: { items: newItems },
     gridTemplate: deriveGridTemplate({ items: newItems }, newCols),
     layoutPreset: undefined,
   };
+  if (row.data && typeof row.data === 'object') {
+    updatedRow.data = {
+      ...row.data,
+      blocks: newCols,
+      blocks_layout: { items: newItems },
+    };
+  }
+  blocks[source.rowId] = updatedRow;
 }
 
 /**
@@ -232,7 +305,7 @@ export function splitBlocksIntoRow(
     };
     // Only remove empty source column if it came from a different row
     if (source && source.rowId !== targetBlockId) {
-      removeEmptySourceColumn(nextBlocks, source);
+      removeEmptySourceColumn(nextBlocks, source, nextLayoutItems);
     }
 
     return {
@@ -320,7 +393,7 @@ export function splitBlocksIntoRow(
   if (targetIndex > -1) nextLayoutItems.splice(targetIndex, 1, newRowId);
   else nextLayoutItems.push(newRowId);
 
-  removeEmptySourceColumn(nextBlocks, source);
+  removeEmptySourceColumn(nextBlocks, source, nextLayoutItems);
 
   return {
     blocks: nextBlocks,
@@ -363,7 +436,7 @@ export function moveBlockToRoot(
     nextLayoutItems.push(sourceBlockId);
   }
 
-  removeEmptySourceColumn(nextBlocks, source);
+  removeEmptySourceColumn(nextBlocks, source, nextLayoutItems);
 
   return { blocks: nextBlocks, blocks_layout: { items: nextLayoutItems } };
 }
@@ -389,40 +462,67 @@ export function moveBlockIntoColumn(
   if (!sourceBlock) return formData;
 
   const nextBlocks = { ...(newFormData.blocks || {}) };
+  const nextLayoutItems = [...(newFormData.blocks_layout?.items || [])];
   const row = nextBlocks[targetRowId];
-  const targetCol = row?.blocks?.[targetColId];
+  if (!row) return formData;
+
+  const colContainers =
+    row.blocks || row.data?.blocks || row.columnsBlocks;
+  const targetCol = colContainers?.[targetColId];
   if (!targetCol) return formData;
 
+  const targetColBlocks = targetCol.blocks || targetCol.data?.blocks || {};
+  const targetColLayout =
+    targetCol.blocks_layout || targetCol.data?.blocks_layout || { items: [] };
+
   const newTargetBlocks = {
-    ...(targetCol.blocks || {}),
+    ...targetColBlocks,
     [sourceBlockId]: cleanInnerBlockData(sourceBlock),
   };
-  const items: string[] = [...(targetCol.blocks_layout?.items || [])];
+  const items: string[] = [...(targetColLayout.items || [])];
   const beforeIdx = beforeBlockId ? items.indexOf(beforeBlockId) : -1;
   if (beforeIdx > -1) items.splice(beforeIdx, 0, sourceBlockId);
   else items.push(sourceBlockId);
 
-  nextBlocks[targetRowId] = {
-    ...row,
-    blocks: {
-      ...row.blocks,
-      [targetColId]: {
-        ...targetCol,
-        blocks: newTargetBlocks,
-        blocks_layout: { items },
-      },
-    },
+  const updatedTargetCol = {
+    ...targetCol,
+    blocks: newTargetBlocks,
+    blocks_layout: { items },
+  };
+  if (targetCol.data && typeof targetCol.data === 'object') {
+    updatedTargetCol.data = {
+      ...targetCol.data,
+      blocks: newTargetBlocks,
+      blocks_layout: { items },
+    };
+  }
+
+  const updatedCols = {
+    ...colContainers,
+    [targetColId]: updatedTargetCol,
   };
 
-  // Only remove empty source column if it came from a different row
+  const updatedRow = {
+    ...row,
+    blocks: updatedCols,
+  };
+  if (row.data && typeof row.data === 'object') {
+    updatedRow.data = {
+      ...row.data,
+      blocks: updatedCols,
+    };
+  }
+  nextBlocks[targetRowId] = updatedRow;
+
+  // Remove empty source column if it came from a different row
   if (source && source.rowId !== targetRowId) {
-    removeEmptySourceColumn(nextBlocks, source);
+    removeEmptySourceColumn(nextBlocks, source, nextLayoutItems);
   }
 
   return {
     ...formData,
     blocks: nextBlocks,
-    blocks_layout: newFormData.blocks_layout,
+    blocks_layout: { items: nextLayoutItems },
   };
 }
 
@@ -445,17 +545,24 @@ export function insertBlockAsNewColumn(
   if (!sourceBlock) return formData;
 
   const nextBlocks = { ...(newFormData.blocks || {}) };
+  const nextLayoutItems = [...(newFormData.blocks_layout?.items || [])];
   const row = nextBlocks[targetRowId];
-  if (!row?.blocks) return formData;
+  if (!row) return formData;
+
+  const colContainers =
+    row.blocks || row.data?.blocks || row.columnsBlocks;
+  if (!colContainers) return formData;
 
   const { id: newColId, col } = makeColumn(sourceBlockId, sourceBlock);
-  const colIds: string[] = [...(row.blocks_layout?.items || [])];
+  const rowLayout =
+    row.blocks_layout || row.data?.blocks_layout || { items: [] };
+  const colIds: string[] = [...(rowLayout.items || Object.keys(colContainers))];
   const refIdx = colIds.indexOf(refColId);
   const insertAt =
     refIdx < 0 ? colIds.length : side === 'before' ? refIdx : refIdx + 1;
   colIds.splice(insertAt, 0, newColId);
 
-  const colBlocks: Record<string, any> = { ...row.blocks, [newColId]: col };
+  const colBlocks: Record<string, any> = { ...colContainers, [newColId]: col };
   colIds.forEach((cid) => {
     if (colBlocks[cid]) colBlocks[cid] = { ...colBlocks[cid], width: '1fr' };
   });
@@ -470,22 +577,30 @@ export function insertBlockAsNewColumn(
           ? '4-col-equal'
           : 'custom';
 
-  nextBlocks[targetRowId] = {
+  const updatedRow = {
     ...row,
     blocks: colBlocks,
     blocks_layout: { items: colIds },
     gridTemplate: deriveGridTemplate({ items: colIds }, colBlocks),
     layoutPreset: preset,
   };
+  if (row.data && typeof row.data === 'object') {
+    updatedRow.data = {
+      ...row.data,
+      blocks: colBlocks,
+      blocks_layout: { items: colIds },
+    };
+  }
+  nextBlocks[targetRowId] = updatedRow;
 
-  // Only remove empty source column if it came from a different row
+  // Remove empty source column if it came from a different row
   if (source && source.rowId !== targetRowId) {
-    removeEmptySourceColumn(nextBlocks, source);
+    removeEmptySourceColumn(nextBlocks, source, nextLayoutItems);
   }
 
   return {
     ...formData,
     blocks: nextBlocks,
-    blocks_layout: newFormData.blocks_layout,
+    blocks_layout: { items: nextLayoutItems },
   };
 }

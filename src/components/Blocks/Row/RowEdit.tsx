@@ -125,6 +125,9 @@ const RowEdit: React.FC<RowEditProps> = (props) => {
   const handleSelectInnerBlock = (id: string | null) => {
     setSelectedInnerBlock(id);
     if (id) {
+      if (!selected && props.onSelectBlock) {
+        props.onSelectBlock(block);
+      }
       // When an inner block is selected, switch to the "Block" sidebar tab (tab index 1)
       dispatch(setSidebarTab(1));
     }
@@ -541,22 +544,36 @@ const RowEdit: React.FC<RowEditProps> = (props) => {
         [draggingId]: draggedBlockData,
       };
 
-      onChangeBlock(block, {
-        ...data,
-        blocks: {
+      if (newSourceItems.length === 0 && columnIds.length > 1) {
+        const nextColIds = columnIds.filter((cid) => cid !== sourceColId);
+        const nextBlocks = {
           ...data.blocks,
-          [sourceColId]: {
-            ...sourceCol,
-            blocks: newSourceBlocks,
-            blocks_layout: { items: newSourceItems },
-          },
           [colId]: {
             ...targetCol,
             blocks: newTargetBlocks,
             blocks_layout: { items: newTargetItems },
           },
-        },
-      });
+        };
+        delete nextBlocks[sourceColId];
+        updateColumns(nextColIds, nextBlocks);
+      } else {
+        onChangeBlock(block, {
+          ...data,
+          blocks: {
+            ...data.blocks,
+            [sourceColId]: {
+              ...sourceCol,
+              blocks: newSourceBlocks,
+              blocks_layout: { items: newSourceItems },
+            },
+            [colId]: {
+              ...targetCol,
+              blocks: newTargetBlocks,
+              blocks_layout: { items: newTargetItems },
+            },
+          },
+        });
+      }
       handleSelectInnerBlock(draggingId);
       return;
     }
@@ -594,6 +611,13 @@ const RowEdit: React.FC<RowEditProps> = (props) => {
         },
         [newColId]: newCol,
       };
+
+      if (newSourceItems.length === 0) {
+        const sIdx = newColIds.indexOf(sourceColId);
+        if (sIdx > -1) newColIds.splice(sIdx, 1);
+        delete newBlocks[sourceColId];
+      }
+
       newColIds.forEach((cid) => {
         if (newBlocks[cid])
           newBlocks[cid] = { ...newBlocks[cid], width: '1fr' };
@@ -709,7 +733,22 @@ const RowEdit: React.FC<RowEditProps> = (props) => {
               [`align--${data.alignItems || 'stretch'}`]: true,
               'reverse-mobile': !!data.reverseMobile,
             })}
-            style={{ gridTemplateColumns: gridTemplate }}
+            style={{
+              gridTemplateColumns: gridTemplate,
+              alignItems:
+                data.alignItems === 'start' ||
+                data.alignItems === 'top' ||
+                data.alignItems === 'flex-start'
+                  ? 'flex-start'
+                  : data.alignItems === 'center' ||
+                    data.alignItems === 'middle'
+                  ? 'center'
+                  : data.alignItems === 'end' ||
+                    data.alignItems === 'bottom' ||
+                    data.alignItems === 'flex-end'
+                  ? 'flex-end'
+                  : 'stretch',
+            }}
           >
             {columnIds.map((colId, index) => {
               const colData = data.blocks?.[colId] || {
@@ -748,7 +787,7 @@ const RowEdit: React.FC<RowEditProps> = (props) => {
                       metadata={metadata}
                       properties={colData}
                       manage={manage}
-                      selectedBlock={selected ? selectedInnerBlock : null}
+                      selectedBlock={selectedInnerBlock}
                       isContainer
                       isMainForm={false}
                       pathname={pathname}

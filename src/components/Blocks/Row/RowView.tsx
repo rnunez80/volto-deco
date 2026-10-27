@@ -85,6 +85,19 @@ const RowView: React.FC<RowViewProps> = (props) => {
           })}
           style={{
             gridTemplateColumns: gridTemplate,
+            alignItems:
+              data.alignItems === 'start' ||
+              data.alignItems === 'top' ||
+              data.alignItems === 'flex-start'
+                ? 'flex-start'
+                : data.alignItems === 'center' ||
+                  data.alignItems === 'middle'
+                ? 'center'
+                : data.alignItems === 'end' ||
+                  data.alignItems === 'bottom' ||
+                  data.alignItems === 'flex-end'
+                ? 'flex-end'
+                : 'stretch',
           }}
         >
           {columnIds.map((colId: string) => {

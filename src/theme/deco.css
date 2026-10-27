@@ -313,12 +313,22 @@ body.view-editview [class*='block-editor-'].has--block-width--full .block-delete
   top: 8px !important;
   margin-left: 0 !important;
   z-index: 140 !important;
-  width: 24px !important;
-  height: 24px !important;
+  width: 26px !important;
+  height: 26px !important;
   border-radius: 4px !important;
   background: #ffffff !important;
   border: 1px solid #cbd5e1 !important;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12) !important;
+  display: inline-flex !important;
+}
+
+.row-column [class*='block-editor-']:hover .drag.handle.wrapper,
+.row-column [class*='block-editor-'].is-selected .drag.handle.wrapper,
+.row-column [class*='block-editor-'].selected .drag.handle.wrapper,
+.row-column .drag.handle.wrapper:hover {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  z-index: 10000 !important;
 }
 
 .row-column .block-delete-button.delete-button,
@@ -374,19 +384,24 @@ body.is-dragging-volto-block .row-column .ui.drag.block.inner {
 }
 
 .row-inner-container.align--stretch {
-  align-items: stretch;
+  align-items: stretch !important;
 }
 
-.row-inner-container.align--top {
-  align-items: flex-start;
+.row-inner-container.align--top,
+.row-inner-container.align--start,
+.row-inner-container.align--flex-start {
+  align-items: flex-start !important;
 }
 
-.row-inner-container.align--middle {
-  align-items: center;
+.row-inner-container.align--middle,
+.row-inner-container.align--center {
+  align-items: center !important;
 }
 
-.row-inner-container.align--bottom {
-  align-items: flex-end;
+.row-inner-container.align--bottom,
+.row-inner-container.align--end,
+.row-inner-container.align--flex-end {
+  align-items: flex-end !important;
 }
 
 .row-column {
@@ -587,10 +602,10 @@ body:not(.view-editview):not(.content-view-edit) .block.has--block-width--full {
   position: relative !important;
   left: 50% !important;
   right: 50% !important;
-  width: 100vw !important;
-  max-width: 100vw !important;
-  margin-left: -50vw !important;
-  margin-right: -50vw !important;
+  width: calc(100vw - var(--volto-toolbar-width, 0px)) !important;
+  max-width: calc(100vw - var(--volto-toolbar-width, 0px)) !important;
+  margin-left: calc(-50vw + (var(--volto-toolbar-width, 0px) / 2)) !important;
+  margin-right: calc(-50vw + (var(--volto-toolbar-width, 0px) / 2)) !important;
   box-sizing: border-box !important;
   transition: all 0.2s ease-in-out;
 }

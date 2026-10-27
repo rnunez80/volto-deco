@@ -2,6 +2,21 @@
 
 All notable changes to `volto-deco` will be documented in this file.
 
+## 1.2.3 (2026-10-26)
+
+### Features & Layout Enhancements
+- **Multi-Column Row Vertical Alignment:**
+  - Resolved issue where selecting vertical alignment options ('Top', 'Middle', 'Bottom') had no effect due to missing CSS classes.
+  - Added matching CSS selectors in `deco.css` for `.row-inner-container.align--start`, `.align--center`, and `.align--end` (with `.align--flex-start` and `.align--flex-end` aliases).
+  - Added direct inline `alignItems` style mapping on `.row-inner-container` in `RowEdit.tsx` and `RowView.tsx` (`flex-start`, `center`, `flex-end`, `stretch`).
+  - Added value normalization in `RowVerticalAlignWidget.tsx` so legacy values (`'top'`, `'middle'`, `'bottom'`) activate the corresponding sidebar buttons.
+- **Cross-Row & Cross-Column Block Dragging:**
+  - Enabled dragging blocks out of multi-column row columns and dropping them into other rows, empty columns, or the root canvas.
+  - Updated `split.ts` (`insertBlockAsNewColumn`, `insertBlockIntoExistingColumn`) to support nested and legacy block containers (`row.blocks`, `row.data.blocks`, `columnsBlocks`) and properly clean up emptied source columns across rows.
+  - Enforced `isNested` detection and `z-index: 10000` on column block drag handles so block drag handles within columns are directly draggable.
+- **Legacy EEA Columns Block Compatibility:**
+  - Registered `RowEdit` and `RowSchema` for legacy `columnsBlock` and `gridBlock` in `index.ts` so older column content uses the modern multi-column row editor.
+
 ## 1.2.2 (2026-10-26)
 
 ### Features & Multi-Block Selection Restoration

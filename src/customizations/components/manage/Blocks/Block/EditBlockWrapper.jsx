@@ -259,6 +259,12 @@ const EditBlockWrapper = (props) => {
       e.preventDefault();
       e.stopPropagation();
       onSelectBlock(block, true, e);
+    } else if (!selected && onSelectBlock && !e.defaultPrevented) {
+      // Allow clicking unselected blocks (like buttons, images, etc.) to select them
+      const tag = (e.target?.tagName || '').toLowerCase();
+      if (!['button', 'input', 'textarea', 'select', 'a'].includes(tag)) {
+        onSelectBlock(block, false, e);
+      }
     }
   };
 
@@ -273,7 +279,9 @@ const EditBlockWrapper = (props) => {
         classNames,
         {
           [data.align]: data.align,
-          [`has--block-width--${data.blockWidth || 'default'}`]: !isNested,
+          [`has--block-width--${
+            data['@type'] === 'headerTitle' ? 'full' : (data.blockWidth || 'default')
+          }`]: !isNested,
           'is-selected': selected,
           'is-multi-selected': multiSelected,
           selected: isSelectedOrMulti,
@@ -304,63 +312,64 @@ const EditBlockWrapper = (props) => {
       )}
 
       <div style={{ position: 'relative' }}>
-        <div
-          role="button"
-          tabIndex={0}
-          onClick={(e) => {
-            e.stopPropagation();
-            const isMultipleSelection = e.shiftKey || e.ctrlKey || e.metaKey;
-            if (onSelectBlock) {
-              onSelectBlock(block, isMultipleSelection, e);
-            }
-          }}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
+        {!hideHandler(data) && (
+          <div
+            role="button"
+            tabIndex={0}
+            onClick={(e) => {
               e.stopPropagation();
               const isMultipleSelection = e.shiftKey || e.ctrlKey || e.metaKey;
               if (onSelectBlock) {
                 onSelectBlock(block, isMultipleSelection, e);
               }
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.stopPropagation();
+                const isMultipleSelection = e.shiftKey || e.ctrlKey || e.metaKey;
+                if (onSelectBlock) {
+                  onSelectBlock(block, isMultipleSelection, e);
+                }
+              }
+            }}
+            draggable={true}
+            onDragStart={(e) => {
+              e.stopPropagation();
+              e.dataTransfer.setData('text/volto-block-id', block);
+              e.dataTransfer.setData('application/x-volto-block-id', block);
+              e.dataTransfer.effectAllowed = 'move';
+              if (typeof window !== 'undefined') {
+                window.__volto_dragging_block_id = block;
+              }
+              if (typeof document !== 'undefined') {
+                document.body.classList.add('is-dragging-volto-block');
+              }
+            }}
+            onDragEnd={() => {
+              if (typeof window !== 'undefined') {
+                window.__volto_dragging_block_id = null;
+              }
+              if (typeof document !== 'undefined') {
+                document.body.classList.remove('is-dragging-volto-block');
+              }
+              setDropPosition(null);
+            }}
+            className={cx('drag handle wrapper', {
+              'is-selected': selected,
+              'is-multi-selected': multiSelected,
+              'is-nested-handle': isNested,
+              'is-root-handle': !isNested,
+              'is-row-handle': type === 'row',
+            })}
+            aria-label={intl.formatMessage(messages.drag_block, { type })}
+            title={
+              type === 'row' ? 'Drag entire Row' : 'Drag to reorder or move block'
             }
-          }}
-          draggable={true}
-          onDragStart={(e) => {
-            e.stopPropagation();
-            e.dataTransfer.setData('text/volto-block-id', block);
-            e.dataTransfer.setData('application/x-volto-block-id', block);
-            e.dataTransfer.effectAllowed = 'move';
-            if (typeof window !== 'undefined') {
-              window.__volto_dragging_block_id = block;
-            }
-            if (typeof document !== 'undefined') {
-              document.body.classList.add('is-dragging-volto-block');
-            }
-          }}
-          onDragEnd={() => {
-            if (typeof window !== 'undefined') {
-              window.__volto_dragging_block_id = null;
-            }
-            if (typeof document !== 'undefined') {
-              document.body.classList.remove('is-dragging-volto-block');
-            }
-            setDropPosition(null);
-          }}
-          className={cx('drag handle wrapper', {
-            'is-selected': selected,
-            'is-multi-selected': multiSelected,
-            'is-hidden': !visible,
-            'is-nested-handle': isNested,
-            'is-root-handle': !isNested,
-            'is-row-handle': type === 'row',
-          })}
-          aria-label={intl.formatMessage(messages.drag_block, { type })}
-          title={
-            type === 'row' ? 'Drag entire Row' : 'Drag to reorder or move block'
-          }
-        >
-          <Icon name={dragSVG} size={type === 'row' ? '12px' : '16px'} />
-          {type === 'row' && <span className="row-handle-label">Row</span>}
-        </div>
+          >
+            <Icon name={dragSVG} size={type === 'row' ? '12px' : '16px'} />
+            {type === 'row' && <span className="row-handle-label">Row</span>}
+          </div>
+        )}
         <div className={`ui drag block inner ${type}`}>
           {children}
           {selected && !required && editable && (
