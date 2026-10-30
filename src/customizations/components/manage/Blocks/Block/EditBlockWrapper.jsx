@@ -94,7 +94,9 @@ const EditBlockWrapper = (props) => {
   //   left/right edge -> split into columns, otherwise -> insert above/below.
   // Blocks living inside a row column are handled by the column itself
   // (RowEdit), so only one drop line is ever visible.
-  const isNested = !!blockProps.isContainer;
+  const isNested =
+    !!blockProps.isContainer ||
+    blockProps.properties?.['@type'] === 'rowColumn';
 
   useEffect(() => {
     const clear = () => {
@@ -253,16 +255,40 @@ const EditBlockWrapper = (props) => {
     }
   };
 
+  // When clicking on a block inside a column of a row, let the inner block
+  // handle the click / Cmd+click so only that inner block is selected.
+  // When clicking on the row itself (outside any inner block), select the row.
+  const isInsideInnerBlock = (e) => {
+    if (type !== 'row' || isNested) return false;
+    const target = e.target;
+    if (!target || typeof target.closest !== 'function') return false;
+    const innerBlock = target.closest('.row-column [data-block-id]');
+    return !!innerBlock && e.currentTarget.contains(innerBlock);
+  };
+
+  const notifyRowContainerSelected = (isMulti) => {
+    if (type === 'row' && typeof window !== 'undefined') {
+      window.dispatchEvent(
+        new CustomEvent('voltoSelectRowContainer', {
+          detail: { block, isMultipleSelection: isMulti },
+        }),
+      );
+    }
+  };
+
   const handleModifierClick = (e) => {
+    if (isInsideInnerBlock(e)) return;
     const isMultipleSelection = e.shiftKey || e.ctrlKey || e.metaKey;
     if (isMultipleSelection && onSelectBlock) {
       e.preventDefault();
       e.stopPropagation();
-      onSelectBlock(block, true, e);
+      notifyRowContainerSelected(true);
+      onSelectBlock(block, type === 'row' && multiSelected ? false : true, e);
     } else if (!selected && onSelectBlock && !e.defaultPrevented) {
       // Allow clicking unselected blocks (like buttons, images, etc.) to select them
       const tag = (e.target?.tagName || '').toLowerCase();
       if (!['button', 'input', 'textarea', 'select', 'a'].includes(tag)) {
+        notifyRowContainerSelected(false);
         onSelectBlock(block, false, e);
       }
     }
@@ -289,6 +315,7 @@ const EditBlockWrapper = (props) => {
         },
       )}
       onMouseDownCapture={(e) => {
+        if (isInsideInnerBlock(e)) return;
         if (e.shiftKey || e.ctrlKey || e.metaKey) {
           e.preventDefault();
         }
@@ -319,16 +346,30 @@ const EditBlockWrapper = (props) => {
             onClick={(e) => {
               e.stopPropagation();
               const isMultipleSelection = e.shiftKey || e.ctrlKey || e.metaKey;
+              notifyRowContainerSelected(isMultipleSelection);
               if (onSelectBlock) {
-                onSelectBlock(block, isMultipleSelection, e);
+                onSelectBlock(
+                  block,
+                  type === 'row' && multiSelected && isMultipleSelection
+                    ? false
+                    : isMultipleSelection,
+                  e,
+                );
               }
             }}
             onKeyDown={(e) => {
               if (e.key === 'Enter' || e.key === ' ') {
                 e.stopPropagation();
                 const isMultipleSelection = e.shiftKey || e.ctrlKey || e.metaKey;
+                notifyRowContainerSelected(isMultipleSelection);
                 if (onSelectBlock) {
-                  onSelectBlock(block, isMultipleSelection, e);
+                  onSelectBlock(
+                    block,
+                    type === 'row' && multiSelected && isMultipleSelection
+                      ? false
+                      : isMultipleSelection,
+                    e,
+                  );
                 }
               }
             }}

@@ -78,6 +78,14 @@ const RowEdit: React.FC<RowEditProps> = (props) => {
   }, [rawData, block, onChangeBlock]);
 
   const data = normalizeRowData(rawData);
+  const latestDataRef = useRef(data);
+  latestDataRef.current = data;
+
+  const emitRowChange = (nextData: any) => {
+    latestDataRef.current = nextData;
+    onChangeBlock(block, nextData);
+  };
+
   const columnIds: string[] = data.blocks_layout?.items || [];
   const blockWidth = data.blockWidth || 'default';
   const styleName = data.style_name || data.styles?.style_name;
@@ -100,9 +108,14 @@ const RowEdit: React.FC<RowEditProps> = (props) => {
       : {}),
   };
 
+  const isRowActive = !!(selected || props.multiSelected);
+
   const [selectedInnerBlock, setSelectedInnerBlock] = useState<string | null>(
     null,
   );
+  const [multiSelectedInnerBlocks, setMultiSelectedInnerBlocks] = useState<
+    string[]
+  >([]);
   const [dropHint, setDropHint] = useState<DropHint | null>(null);
   const [chooserColId, setChooserColId] = useState<string | null>(null);
 
@@ -115,21 +128,59 @@ const RowEdit: React.FC<RowEditProps> = (props) => {
     isSnapped?: boolean;
   } | null>(null);
 
+  // Clear inner selection when row becomes inactive
+  useEffect(() => {
+    if (
+      !isRowActive &&
+      (selectedInnerBlock || multiSelectedInnerBlocks.length > 0)
+    ) {
+      setSelectedInnerBlock(null);
+      setMultiSelectedInnerBlocks([]);
+    }
+  }, [isRowActive, selectedInnerBlock, multiSelectedInnerBlocks.length]);
+
+  // Listen for direct Row container selection (e.g. Cmd/Ctrl+click on row outside inner blocks)
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const onSelectRowContainer = (e: Event) => {
+      const detail = (e as CustomEvent).detail;
+      if (detail?.block === block) {
+        setSelectedInnerBlock(null);
+        setMultiSelectedInnerBlocks([]);
+        dispatch(setSidebarTab(2));
+      }
+    };
+    window.addEventListener('voltoSelectRowContainer', onSelectRowContainer);
+    return () => {
+      window.removeEventListener(
+        'voltoSelectRowContainer',
+        onSelectRowContainer,
+      );
+    };
+  }, [block, dispatch]);
+
   // When row container itself is selected (and no inner block), default to the "Row" sidebar tab (tab index 2)
   useEffect(() => {
-    if (selected && !selectedInnerBlock) {
+    if (isRowActive && !selectedInnerBlock) {
       dispatch(setSidebarTab(2));
     }
-  }, [selected, selectedInnerBlock, dispatch]);
+  }, [isRowActive, selectedInnerBlock, dispatch]);
 
-  const handleSelectInnerBlock = (id: string | null) => {
+  const handleSelectInnerBlock = (
+    id: string | null,
+    isMultipleSelection?: boolean,
+    _event?: any,
+  ) => {
     setSelectedInnerBlock(id);
     if (id) {
-      if (!selected && props.onSelectBlock) {
-        props.onSelectBlock(block);
+      setMultiSelectedInnerBlocks(isMultipleSelection ? [id] : []);
+      if ((!selected || props.multiSelected) && props.onSelectBlock) {
+        props.onSelectBlock(block, false);
       }
       // When an inner block is selected, switch to the "Block" sidebar tab (tab index 1)
       dispatch(setSidebarTab(1));
+    } else {
+      setMultiSelectedInnerBlocks([]);
     }
   };
 
@@ -146,6 +197,7 @@ const RowEdit: React.FC<RowEditProps> = (props) => {
   }, [dropHint]);
 
   const updateColumns = (items: string[], blocks: Record<string, any>) => {
+    const currentData = latestDataRef.current;
     const preset =
       items.length === 2
         ? '2-col-equal'
@@ -155,8 +207,8 @@ const RowEdit: React.FC<RowEditProps> = (props) => {
             ? '4-col-equal'
             : 'custom';
 
-    onChangeBlock(block, {
-      ...data,
+    emitRowChange({
+      ...currentData,
       layoutPreset: preset,
       blocks_layout: { items },
       blocks,
@@ -164,13 +216,62 @@ const RowEdit: React.FC<RowEditProps> = (props) => {
     });
   };
 
-  const handleColBlockChange = (colId: string, newColData: any) => {
-    const currentCol = data.blocks[colId] || {};
-    onChangeBlock(block, {
-      ...data,
+  const handleColBlockChange = (
+    colId: string,
+    newColData: any,
+    renderColData?: any,
+  ) => {
+    const currentData = latestDataRef.current;
+    const currentCol = currentData.blocks?.[colId] || {
+      '@type': 'rowColumn',
+      id: colId,
+      width: '1fr',
+      blocks: {},
+      blocks_layout: { items: [] },
+    };
+
+    // Handle Volto deleteBlock edge case where deleting the last block returns [id, formData]
+    const resolvedColData = Array.isArray(newColData)
+      ? { blocks: {}, blocks_layout: { items: [] } }
+      : newColData;
+
+    // If a synchronous batch (e.g. Slate Enter key split) already added/updated blocks_layout via
+    // onChangeField in this tick, and a follow-up changeBlock call passed stale renderColData.blocks_layout,
+    // merge the updated block data without reverting blocks_layout or dropping newly created blocks.
+    let nextCol: any;
+    if (
+      renderColData &&
+      currentCol.blocks_layout &&
+      renderColData.blocks_layout &&
+      currentCol.blocks_layout !== renderColData.blocks_layout &&
+      resolvedColData.blocks_layout === renderColData.blocks_layout
+    ) {
+      const mergedBlocks = { ...(currentCol.blocks || {}) };
+      Object.keys(resolvedColData.blocks || {}).forEach((bid) => {
+        if (resolvedColData.blocks[bid] !== renderColData.blocks?.[bid]) {
+          mergedBlocks[bid] = resolvedColData.blocks[bid];
+        }
+      });
+      nextCol = {
+        ...currentCol,
+        blocks: mergedBlocks,
+        '@type': 'rowColumn',
+        id: colId,
+      };
+    } else {
+      nextCol = {
+        ...currentCol,
+        ...resolvedColData,
+        '@type': 'rowColumn',
+        id: colId,
+      };
+    }
+
+    emitRowChange({
+      ...currentData,
       blocks: {
-        ...data.blocks,
-        [colId]: { ...currentCol, ...newColData },
+        ...currentData.blocks,
+        [colId]: nextCol,
       },
     });
   };
@@ -705,17 +806,19 @@ const RowEdit: React.FC<RowEditProps> = (props) => {
           bgImageUrl ? 'has--background-image' : null,
           customClass,
           'row-edit-container',
-          { 'is-selected': selected, 'is-dragging-over': !!dropHint },
+          {
+            'is-selected': isRowActive && !selectedInnerBlock,
+            'is-dragging-over': !!dropHint,
+          },
         )}
         style={rowStyle}
         onClick={(e) => {
-          // Deselect inner block and switch to Row tab when clicking row container background
+          // Deselect inner block and switch to Row tab when clicking row container outside any inner block
+          const target = e.target as HTMLElement;
           if (
-            e.target === e.currentTarget ||
-            (e.target as HTMLElement).classList.contains(
-              'block-inner-container',
-            ) ||
-            (e.target as HTMLElement).classList.contains('row-inner-container')
+            target &&
+            typeof target.closest === 'function' &&
+            !target.closest('.row-column [data-block-id], .row-col-chooser')
           ) {
             handleSelectInnerBlock(null);
             dispatch(setSidebarTab(2));
@@ -751,9 +854,13 @@ const RowEdit: React.FC<RowEditProps> = (props) => {
             }}
           >
             {columnIds.map((colId, index) => {
-              const colData = data.blocks?.[colId] || {
-                blocks: {},
-                blocks_layout: { items: [] },
+              const rawCol = data.blocks?.[colId] || {};
+              const colData = {
+                '@type': 'rowColumn',
+                id: colId,
+                ...rawCol,
+                blocks: rawCol.blocks || {},
+                blocks_layout: rawCol.blocks_layout || { items: [] },
               };
               const hasBlocks = (colData.blocks_layout?.items || []).length > 0;
               const hint = dropHint?.colId === colId ? dropHint : null;
@@ -787,17 +894,29 @@ const RowEdit: React.FC<RowEditProps> = (props) => {
                       metadata={metadata}
                       properties={colData}
                       manage={manage}
-                      selectedBlock={selectedInnerBlock}
-                      isContainer
+                      selectedBlock={isRowActive ? selectedInnerBlock : null}
+                      multiSelected={
+                        isRowActive ? multiSelectedInnerBlocks : []
+                      }
                       isMainForm={false}
+                      stopPropagation
                       pathname={pathname}
+                      blocksConfig={
+                        props.blocksConfig || config.blocks.blocksConfig
+                      }
+                      allowedBlocks={props.allowedBlocks}
+                      showRestricted={props.showRestricted}
+                      navRoot={props.navRoot}
+                      type={props.contentType || props.type}
                       onSelectBlock={(
                         id: string,
                         isMultipleSelection?: boolean,
                         event?: any,
-                      ) => handleSelectInnerBlock(id)}
+                      ) =>
+                        handleSelectInnerBlock(id, isMultipleSelection, event)
+                      }
                       onChangeFormData={(newColData: any) =>
-                        handleColBlockChange(colId, newColData)
+                        handleColBlockChange(colId, newColData, colData)
                       }
                       onChangeField={(id: string, value: any) => {
                         if (['blocks', 'blocks_layout'].includes(id)) {
@@ -881,7 +1000,7 @@ const RowEdit: React.FC<RowEditProps> = (props) => {
       )}
 
       {/* Row settings + column management live in the "Row" sidebar tab */}
-      <SidebarPortal selected={selected} tab="sidebar-row">
+      <SidebarPortal selected={isRowActive} tab="sidebar-row">
         <div className="sidebar-row-scroll-wrapper">
           {/* Columns panel placed at top of Row tab for immediate visibility */}
           <div className="row-columns-panel">
@@ -962,7 +1081,7 @@ const RowEdit: React.FC<RowEditProps> = (props) => {
       </SidebarPortal>
 
       {/* Notice on the "Block" tab only when the Row container itself is selected without an inner block */}
-      {selected && !selectedInnerBlock && (
+      {isRowActive && !selectedInnerBlock && (
         <SidebarPortal selected tab="sidebar-properties">
           <div style={{ padding: '1.5rem', textAlign: 'center' }}>
             <h3

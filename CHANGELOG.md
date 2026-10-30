@@ -2,9 +2,41 @@
 
 All notable changes to `volto-deco` will be documented in this file.
 
+## 1.2.7 (2026-10-29)
+
+### Sidebar & Editing Improvements
+- **Hide "Order" Tab from Right Side Panel (`Sidebar.jsx`, `deco.css`):**
+  - Configured `orderTab: false` by default in the edit `Sidebar` component, hiding the "Order" tab from the right side panel navigation header.
+  - Rendered a persistent hidden portal target `<div id="sidebar-order" style={{ display: 'none' }} />` to ensure Volto's `BlocksForm.jsx` `createPortal` safely attaches without throwing unmounted container runtime errors.
+  - Added CSS rules in `deco.css` to hide `.item-order` and `#sidebar-order` in the edit sidebar.
+
+## 1.2.6 (2026-10-29)
+
+### Layout & Sizing
+- **Add Mode (`view-addview`) Width Consistency (`deco.css`):**
+  - Added `body.view-addview` alongside `body.view-editview` to full-width, layout (`1440px`), default (`940px`), and narrow container edit rules in `deco.css`.
+  - Ensures newly added items follow identical container width constraints and horizontal centering as edit and view modes.
+
+## 1.2.5 (2026-10-29)
+
+### Row & Carousel Improvements
+- **Image Block Spacing Consistency:** Ensured `figure.block.image`, `p.block.image`, and `.block.image` inside row columns have `margin-bottom: 2rem;` in View mode, matching Edit mode block spacing, with `:last-child` resetting to `0`.
+- **Column Layout Presets Update:** Replaced `70 / 30` with `67 / 33` (`2fr 1fr`) and `30 / 70` with `33 / 67` (`1fr 2fr`) in the Row Column Layout widget presets and schema, with backwards compatibility mapping for existing rows saved with `30-70` and `70-30`.
+- **Carousel Controls Column Boundary Containment:** Explicitly assigned `position: relative !important;` to `.row-column .advancedView`, `.row-column .advancedSlider`, and `.row-column .slick-slider` in `deco.css`, ensuring absolute carousel navigation controls (previous/next arrows, slide dots, play/pause controls) stay strictly contained inside their column boundaries in both view and edit modes.
+
+## 1.2.4 (2026-10-29)
+
+### Layout & Cinematic Blocks Integration
+
+- **Universal Container Width Exclusions:**
+  - Excluded `.cinematicSlider`, `.cinematicHorizontalScroll`, `.cinematic-slider-wrapper`, and `.cinematic-horizontal-scroll` from narrow, default (`940px`), and layout (`1440px`) container constraints in `deco.css`.
+  - Added `block-editor-cinematicSlider` and `block-editor-cinematicHorizontalScroll` to full-width block-editor rules in Edit mode (100% canvas expansion).
+  - Excluded both cinematic block editors from the default `940px` edit mode restrictions.
+
 ## 1.2.3 (2026-10-26)
 
 ### Features & Layout Enhancements
+
 - **Multi-Column Row Vertical Alignment:**
   - Resolved issue where selecting vertical alignment options ('Top', 'Middle', 'Bottom') had no effect due to missing CSS classes.
   - Added matching CSS selectors in `deco.css` for `.row-inner-container.align--start`, `.align--center`, and `.align--end` (with `.align--flex-start` and `.align--flex-end` aliases).
@@ -20,6 +52,7 @@ All notable changes to `volto-deco` will be documented in this file.
 ## 1.2.2 (2026-10-26)
 
 ### Features & Multi-Block Selection Restoration
+
 - **Full Multi-Block Selection with Modifier Keys (Ctrl / Cmd / Shift):**
   - Restored multi-block selection capability across all Volto blocks (single blocks, Slate editors, styled boxes, and Row blocks) without altering visual aesthetics, margins, padding, or WYSIWYG alignment.
   - Implemented `onMouseDownCapture` and `onClickCapture` modifier event interceptors in [EditBlockWrapper.jsx](file:///Users/rnunez/devel/yc19/frontend/packages/volto-deco/src/customizations/components/manage/Blocks/Block/EditBlockWrapper.jsx) to prevent Slate contenteditable focus stealing when holding `Ctrl`, `Cmd` (Mac), or `Shift`.
@@ -35,6 +68,7 @@ All notable changes to `volto-deco` will be documented in this file.
 ## 1.2.1 (2026-10-25)
 
 ### Bug Fixes & WYSIWYG Tool Alignment
+
 - **Gutter Tool Placement & Anti-Clipping Architecture:**
   - Resolved issue where block editing tools (drag handle and delete button) were clipped or rendered as white notches cut into rounded corners of styled blocks.
   - Positioned single block drag handle at `left: 0 !important; margin-left: -32px !important; top: 0 !important;` and delete button at `right: -32px !important; margin-right: 0 !important; top: 0 !important;`, keeping tools cleanly accessible in the canvas gutters outside the styled box.
@@ -48,6 +82,7 @@ All notable changes to `volto-deco` will be documented in this file.
 ## 1.2.0 (2026-10-25)
 
 ### Features & Architecture Consolidation
+
 - **Universal Single Block & Multi-Column Row Width Adaptation:** Resolved issue where regular single blocks (slate, title, custom blocks) were not adapting to selected widths. Implemented automatic view wrapper injection in `installBlockWidth` so non-styled blocks (like plain Slate paragraphs and lists) with custom widths (`narrow`, `layout`, `full`) are properly wrapped and adapt to their container width in View mode.
 - **True WYSIWYG Edit Mode & View Mode Parity:**
   - **UI Z-Index Overlap & Tool Accessibility:** Elevated selected block containers and set editing tools (drag handle, delete button, add button, mosaic drop lines) to `z-index: 10000`, ensuring they remain on the highest layer and are never covered by background textures, pseudo-elements, or adjacent blocks.
@@ -60,11 +95,13 @@ All notable changes to `volto-deco` will be documented in this file.
 ## 1.1.1 (2026-10-25)
 
 ### Container Width & Layout
+
 - **Container and RowColumns Width Parity:** Unified `#page-document.ui.container` with multi-column row columns default width (`940px`), ensuring nested blocks, headings, and column layouts share identical width and margins.
 
 ## 1.1.0 (2026-10-24)
 
 ### Features & Styling
+
 - **Single Block Row & Multi-Column Row Style Parity:** Unified Single Block Row styling with Multi-Column Row styles, ensuring identical padding, margins, colors, and border rendering between edit mode and published view mode.
 - **Row Full-Width Background Breakout:** Enhanced full-width background image and color breakout logic in `RowEdit.tsx`, `RowView.tsx`, and `deco.css` with responsive breakout calculations that account for the Volto edit sidebar, toolbar, and container constraints.
 - **Sidepanel Layout Improvements:** Moved row background image widget to the bottom of the block styling sidepanel for an intuitive editing workflow.
@@ -73,6 +110,7 @@ All notable changes to `volto-deco` will be documented in this file.
 ## 1.0.0 (2026-10-23)
 
 ### Features
+
 - Initial standalone release of **Volto Deco**.
 - **2D Canvas Interactions**: Drag-and-drop to split blocks into multi-column rows, reorder within columns, or insert into columns.
 - **Column Drop Zone**: Support dragging blocks into columns above, between, or below current items with narrow edge detection (max 28px) so inner drops are natural and fluid.

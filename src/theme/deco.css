@@ -27,7 +27,11 @@
   z-index: 200 !important;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.15s ease, transform 0.15s ease, background 0.15s ease, border-color 0.15s ease !important;
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease,
+    background 0.15s ease,
+    border-color 0.15s ease !important;
 }
 
 .drag.handle.wrapper,
@@ -107,7 +111,9 @@ body.is-dragging-volto-block .drag.handle.wrapper {
   width: 14px !important;
   height: 14px !important;
   display: block !important;
-  transition: fill 0.2s ease-in-out, transform 0.2s ease-in-out !important;
+  transition:
+    fill 0.2s ease-in-out,
+    transform 0.2s ease-in-out !important;
 }
 
 .block-delete-button.delete-button:hover,
@@ -135,18 +141,38 @@ body.is-dragging-volto-block .drag.handle.wrapper {
 }
 
 /* Drag handle and delete button for full-width blocks in edit mode */
-.blocks-form [class*='block-editor-'].has--block-width--full > div > .drag.handle.wrapper,
-body.content-view-edit [class*='block-editor-'].has--block-width--full > div > .drag.handle.wrapper,
-body.view-editview [class*='block-editor-'].has--block-width--full > div > .drag.handle.wrapper,
-#page-edit [class*='block-editor-'].has--block-width--full > div > .drag.handle.wrapper {
+.blocks-form
+  [class*='block-editor-'].has--block-width--full
+  > div
+  > .drag.handle.wrapper,
+body.content-view-edit
+  [class*='block-editor-'].has--block-width--full
+  > div
+  > .drag.handle.wrapper,
+body.view-editview
+  [class*='block-editor-'].has--block-width--full
+  > div
+  > .drag.handle.wrapper,
+#page-edit
+  [class*='block-editor-'].has--block-width--full
+  > div
+  > .drag.handle.wrapper {
   left: 1.5rem !important;
   margin-left: 0 !important;
 }
 
-.blocks-form [class*='block-editor-'].has--block-width--full .block-delete-button.delete-button,
-body.content-view-edit [class*='block-editor-'].has--block-width--full .block-delete-button.delete-button,
-body.view-editview [class*='block-editor-'].has--block-width--full .block-delete-button.delete-button,
-#page-edit [class*='block-editor-'].has--block-width--full .block-delete-button.delete-button {
+.blocks-form
+  [class*='block-editor-'].has--block-width--full
+  .block-delete-button.delete-button,
+body.content-view-edit
+  [class*='block-editor-'].has--block-width--full
+  .block-delete-button.delete-button,
+body.view-editview
+  [class*='block-editor-'].has--block-width--full
+  .block-delete-button.delete-button,
+#page-edit
+  [class*='block-editor-'].has--block-width--full
+  .block-delete-button.delete-button {
   right: 1.5rem !important;
   margin-right: 0 !important;
 }
@@ -387,10 +413,20 @@ body.is-dragging-volto-block .row-column .ui.drag.block.inner {
   align-items: stretch !important;
 }
 
+.row-inner-container.align--stretch > .row-column {
+  justify-content: flex-start !important;
+}
+
 .row-inner-container.align--top,
 .row-inner-container.align--start,
 .row-inner-container.align--flex-start {
   align-items: flex-start !important;
+}
+
+.row-inner-container.align--top > .row-column,
+.row-inner-container.align--start > .row-column,
+.row-inner-container.align--flex-start > .row-column {
+  justify-content: flex-start !important;
 }
 
 .row-inner-container.align--middle,
@@ -425,11 +461,34 @@ body.is-dragging-volto-block .row-column .ui.drag.block.inner {
   box-sizing: border-box !important;
 }
 
+/* Ensure image block in view mode matches the 2rem spacing of edit mode */
+figure.block.image,
+p.block.image,
+.block.image {
+  margin-bottom: 2rem;
+}
+
+.row-column > figure.block.image:last-child,
+.row-column > p.block.image:last-child,
+.row-column > .block.image:last-child {
+  margin-bottom: 0;
+}
+
+body.view-editview figure.block.image,
+body.view-editview p.block.image,
+body.view-editview .block.image,
+body.content-view-edit figure.block.image,
+body.content-view-edit p.block.image,
+body.content-view-edit .block.image {
+  margin-bottom: 0;
+}
+
 /* Ensure carousels and sliders stay strictly within column boundaries in both view and edit modes */
 .row-column .advancedView,
 .row-column .advancedSlider,
 .row-column .slick-slider,
 .row-column .slick-list {
+  position: relative !important;
   width: 100% !important;
   max-width: 100% !important;
   min-width: 0 !important;
@@ -459,6 +518,7 @@ body.view-editview .block-editor-row.has--block-width--full .block.row,
 .block.row.has--block-width--full.tertiary-box,
 .block.row.has--block-width--full.blue-box,
 .block.row.has--block-width--full.purple-box,
+.block.row.has--block-width--full.red-blue-box,
 .block.row.has--block-width--full.stat-cards-primary-box,
 #page-document .block.row.has--block-width--full.has--background,
 #page-document .block.row.has--block-width--full.has--background-image,
@@ -468,21 +528,47 @@ body.view-editview .block-editor-row.has--block-width--full .block.row,
 .view-wrapper .block.row.has--block-width--full.has--background-image,
 .view-wrapper .block.row.has--block-width--full[class*='has--style_name--'],
 .view-wrapper .block.row.has--block-width--full[class*='-box'],
-.blocks-form .block-editor-row.has--block-width--full .block.row.has--background,
-.blocks-form .block-editor-row.has--block-width--full .block.row.has--background-image,
-.blocks-form .block-editor-row.has--block-width--full .block.row[class*='has--style_name--'],
+.blocks-form
+  .block-editor-row.has--block-width--full
+  .block.row.has--background,
+.blocks-form
+  .block-editor-row.has--block-width--full
+  .block.row.has--background-image,
+.blocks-form
+  .block-editor-row.has--block-width--full
+  .block.row[class*='has--style_name--'],
 .blocks-form .block-editor-row.has--block-width--full .block.row[class*='-box'],
-body.content-view-edit .block-editor-row.has--block-width--full .block.row.has--background,
-body.content-view-edit .block-editor-row.has--block-width--full .block.row.has--background-image,
-body.content-view-edit .block-editor-row.has--block-width--full .block.row[class*='has--style_name--'],
-body.content-view-edit .block-editor-row.has--block-width--full .block.row[class*='-box'],
-body.view-editview .block-editor-row.has--block-width--full .block.row.has--background,
-body.view-editview .block-editor-row.has--block-width--full .block.row.has--background-image,
-body.view-editview .block-editor-row.has--block-width--full .block.row[class*='has--style_name--'],
-body.view-editview .block-editor-row.has--block-width--full .block.row[class*='-box'],
+body.content-view-edit
+  .block-editor-row.has--block-width--full
+  .block.row.has--background,
+body.content-view-edit
+  .block-editor-row.has--block-width--full
+  .block.row.has--background-image,
+body.content-view-edit
+  .block-editor-row.has--block-width--full
+  .block.row[class*='has--style_name--'],
+body.content-view-edit
+  .block-editor-row.has--block-width--full
+  .block.row[class*='-box'],
+body.view-editview
+  .block-editor-row.has--block-width--full
+  .block.row.has--background,
+body.view-editview
+  .block-editor-row.has--block-width--full
+  .block.row.has--background-image,
+body.view-editview
+  .block-editor-row.has--block-width--full
+  .block.row[class*='has--style_name--'],
+body.view-editview
+  .block-editor-row.has--block-width--full
+  .block.row[class*='-box'],
 #page-edit .block-editor-row.has--block-width--full .block.row.has--background,
-#page-edit .block-editor-row.has--block-width--full .block.row.has--background-image,
-#page-edit .block-editor-row.has--block-width--full .block.row[class*='has--style_name--'],
+#page-edit
+  .block-editor-row.has--block-width--full
+  .block.row.has--background-image,
+#page-edit
+  .block-editor-row.has--block-width--full
+  .block.row[class*='has--style_name--'],
 #page-edit .block-editor-row.has--block-width--full .block.row[class*='-box'] {
   border-radius: 0 !important;
   margin-top: 0 !important;
@@ -490,21 +576,47 @@ body.view-editview .block-editor-row.has--block-width--full .block.row[class*='-
 }
 
 /* In edit mode, full-width row with background fills canvas edge-to-edge */
-.blocks-form .block-editor-row.has--block-width--full .block.row.has--background,
-.blocks-form .block-editor-row.has--block-width--full .block.row.has--background-image,
-.blocks-form .block-editor-row.has--block-width--full .block.row[class*='has--style_name--'],
+.blocks-form
+  .block-editor-row.has--block-width--full
+  .block.row.has--background,
+.blocks-form
+  .block-editor-row.has--block-width--full
+  .block.row.has--background-image,
+.blocks-form
+  .block-editor-row.has--block-width--full
+  .block.row[class*='has--style_name--'],
 .blocks-form .block-editor-row.has--block-width--full .block.row[class*='-box'],
-body.content-view-edit .block-editor-row.has--block-width--full .block.row.has--background,
-body.content-view-edit .block-editor-row.has--block-width--full .block.row.has--background-image,
-body.content-view-edit .block-editor-row.has--block-width--full .block.row[class*='has--style_name--'],
-body.content-view-edit .block-editor-row.has--block-width--full .block.row[class*='-box'],
-body.view-editview .block-editor-row.has--block-width--full .block.row.has--background,
-body.view-editview .block-editor-row.has--block-width--full .block.row.has--background-image,
-body.view-editview .block-editor-row.has--block-width--full .block.row[class*='has--style_name--'],
-body.view-editview .block-editor-row.has--block-width--full .block.row[class*='-box'],
+body.content-view-edit
+  .block-editor-row.has--block-width--full
+  .block.row.has--background,
+body.content-view-edit
+  .block-editor-row.has--block-width--full
+  .block.row.has--background-image,
+body.content-view-edit
+  .block-editor-row.has--block-width--full
+  .block.row[class*='has--style_name--'],
+body.content-view-edit
+  .block-editor-row.has--block-width--full
+  .block.row[class*='-box'],
+body.view-editview
+  .block-editor-row.has--block-width--full
+  .block.row.has--background,
+body.view-editview
+  .block-editor-row.has--block-width--full
+  .block.row.has--background-image,
+body.view-editview
+  .block-editor-row.has--block-width--full
+  .block.row[class*='has--style_name--'],
+body.view-editview
+  .block-editor-row.has--block-width--full
+  .block.row[class*='-box'],
 #page-edit .block-editor-row.has--block-width--full .block.row.has--background,
-#page-edit .block-editor-row.has--block-width--full .block.row.has--background-image,
-#page-edit .block-editor-row.has--block-width--full .block.row[class*='has--style_name--'],
+#page-edit
+  .block-editor-row.has--block-width--full
+  .block.row.has--background-image,
+#page-edit
+  .block-editor-row.has--block-width--full
+  .block.row[class*='has--style_name--'],
 #page-edit .block-editor-row.has--block-width--full .block.row[class*='-box'] {
   padding-left: 0 !important;
   padding-right: 0 !important;
@@ -523,7 +635,9 @@ body {
 #page-document.ui.container,
 .view-wrapper #page-document.ui.container,
 #view #page-document.ui.container,
-body:not(.view-editview):not(.content-view-edit) #main #page-document.ui.container {
+body:not(.view-editview):not(.content-view-edit)
+  #main
+  #page-document.ui.container {
   width: 100% !important;
   max-width: var(--default-container-width, 940px) !important;
   margin-left: auto !important;
@@ -541,13 +655,34 @@ body:not(.view-editview):not(.content-view-edit) #main #page-document.ui.contain
    -------------------------------------------------------------------------- */
 
 /* Narrow container width (720px) in View Mode */
-#page-document [class*='has--block-width--narrow'],
-#page-document .has--block-width--narrow,
-.view-wrapper [class*='has--block-width--narrow'],
-.view-wrapper .has--block-width--narrow,
-#view [class*='has--block-width--narrow'],
-#view .has--block-width--narrow,
-body:not(.view-editview):not(.content-view-edit) .block.has--block-width--narrow {
+#page-document
+  [class*='has--block-width--narrow']:not(.cinematicSlider):not(
+    .cinematicHorizontalScroll
+  ):not(.cinematic-slider-wrapper):not(.cinematic-horizontal-scroll),
+#page-document
+  .has--block-width--narrow:not(.cinematicSlider):not(
+    .cinematicHorizontalScroll
+  ):not(.cinematic-slider-wrapper):not(.cinematic-horizontal-scroll),
+.view-wrapper
+  [class*='has--block-width--narrow']:not(.cinematicSlider):not(
+    .cinematicHorizontalScroll
+  ):not(.cinematic-slider-wrapper):not(.cinematic-horizontal-scroll),
+.view-wrapper
+  .has--block-width--narrow:not(.cinematicSlider):not(
+    .cinematicHorizontalScroll
+  ):not(.cinematic-slider-wrapper):not(.cinematic-horizontal-scroll),
+#view
+  [class*='has--block-width--narrow']:not(.cinematicSlider):not(
+    .cinematicHorizontalScroll
+  ):not(.cinematic-slider-wrapper):not(.cinematic-horizontal-scroll),
+#view
+  .has--block-width--narrow:not(.cinematicSlider):not(
+    .cinematicHorizontalScroll
+  ):not(.cinematic-slider-wrapper):not(.cinematic-horizontal-scroll),
+body:not(.view-editview):not(.content-view-edit)
+  .block.has--block-width--narrow:not(.cinematicSlider):not(
+    .cinematicHorizontalScroll
+  ):not(.cinematic-slider-wrapper):not(.cinematic-horizontal-scroll) {
   max-width: var(--narrow-container-width, 720px) !important;
   width: 100% !important;
   margin-left: auto !important;
@@ -557,13 +692,34 @@ body:not(.view-editview):not(.content-view-edit) .block.has--block-width--narrow
 }
 
 /* Default container width (940px) in View Mode */
-#page-document [class*='has--block-width--default'],
-#page-document .has--block-width--default,
-.view-wrapper [class*='has--block-width--default'],
-.view-wrapper .has--block-width--default,
-#view [class*='has--block-width--default'],
-#view .has--block-width--default,
-body:not(.view-editview):not(.content-view-edit) .block.has--block-width--default {
+#page-document
+  [class*='has--block-width--default']:not(.cinematicSlider):not(
+    .cinematicHorizontalScroll
+  ):not(.cinematic-slider-wrapper):not(.cinematic-horizontal-scroll),
+#page-document
+  .has--block-width--default:not(.cinematicSlider):not(
+    .cinematicHorizontalScroll
+  ):not(.cinematic-slider-wrapper):not(.cinematic-horizontal-scroll),
+.view-wrapper
+  [class*='has--block-width--default']:not(.cinematicSlider):not(
+    .cinematicHorizontalScroll
+  ):not(.cinematic-slider-wrapper):not(.cinematic-horizontal-scroll),
+.view-wrapper
+  .has--block-width--default:not(.cinematicSlider):not(
+    .cinematicHorizontalScroll
+  ):not(.cinematic-slider-wrapper):not(.cinematic-horizontal-scroll),
+#view
+  [class*='has--block-width--default']:not(.cinematicSlider):not(
+    .cinematicHorizontalScroll
+  ):not(.cinematic-slider-wrapper):not(.cinematic-horizontal-scroll),
+#view
+  .has--block-width--default:not(.cinematicSlider):not(
+    .cinematicHorizontalScroll
+  ):not(.cinematic-slider-wrapper):not(.cinematic-horizontal-scroll),
+body:not(.view-editview):not(.content-view-edit)
+  .block.has--block-width--default:not(.cinematicSlider):not(
+    .cinematicHorizontalScroll
+  ):not(.cinematic-slider-wrapper):not(.cinematic-horizontal-scroll) {
   max-width: var(--default-container-width, 940px) !important;
   width: 100% !important;
   margin-left: auto !important;
@@ -573,20 +729,45 @@ body:not(.view-editview):not(.content-view-edit) .block.has--block-width--defaul
 }
 
 /* Layout container width (1440px) with edge-to-edge breakout in View Mode */
-#page-document [class*='has--block-width--layout'],
-#page-document .has--block-width--layout,
-.view-wrapper [class*='has--block-width--layout'],
-.view-wrapper .has--block-width--layout,
-#view [class*='has--block-width--layout'],
-#view .has--block-width--layout,
-body:not(.view-editview):not(.content-view-edit) .block.has--block-width--layout {
+#page-document
+  [class*='has--block-width--layout']:not(.cinematicSlider):not(
+    .cinematicHorizontalScroll
+  ):not(.cinematic-slider-wrapper):not(.cinematic-horizontal-scroll),
+#page-document
+  .has--block-width--layout:not(.cinematicSlider):not(
+    .cinematicHorizontalScroll
+  ):not(.cinematic-slider-wrapper):not(.cinematic-horizontal-scroll),
+.view-wrapper
+  [class*='has--block-width--layout']:not(.cinematicSlider):not(
+    .cinematicHorizontalScroll
+  ):not(.cinematic-slider-wrapper):not(.cinematic-horizontal-scroll),
+.view-wrapper
+  .has--block-width--layout:not(.cinematicSlider):not(
+    .cinematicHorizontalScroll
+  ):not(.cinematic-slider-wrapper):not(.cinematic-horizontal-scroll),
+#view
+  [class*='has--block-width--layout']:not(.cinematicSlider):not(
+    .cinematicHorizontalScroll
+  ):not(.cinematic-slider-wrapper):not(.cinematic-horizontal-scroll),
+#view
+  .has--block-width--layout:not(.cinematicSlider):not(
+    .cinematicHorizontalScroll
+  ):not(.cinematic-slider-wrapper):not(.cinematic-horizontal-scroll),
+body:not(.view-editview):not(.content-view-edit)
+  .block.has--block-width--layout:not(.cinematicSlider):not(
+    .cinematicHorizontalScroll
+  ):not(.cinematic-slider-wrapper):not(.cinematic-horizontal-scroll) {
   position: relative !important;
   left: 50% !important;
   right: 50% !important;
   width: min(var(--layout-container-width, 1440px), 100vw) !important;
   max-width: min(var(--layout-container-width, 1440px), 100vw) !important;
-  margin-left: calc(-1 * min(var(--layout-container-width, 1440px), 100vw) / 2) !important;
-  margin-right: calc(-1 * min(var(--layout-container-width, 1440px), 100vw) / 2) !important;
+  margin-left: calc(
+    -1 * min(var(--layout-container-width, 1440px), 100vw) / 2
+  ) !important;
+  margin-right: calc(
+    -1 * min(var(--layout-container-width, 1440px), 100vw) / 2
+  ) !important;
   box-sizing: border-box !important;
   transition: all 0.2s ease-in-out;
 }
@@ -682,13 +863,59 @@ body.content-view-edit [class*='block-editor-'] {
 }
 
 /* Full width in edit mode: spans 100% of edit canvas edge-to-edge */
-body.view-editview .blocks-form [class*='block-editor-'].has--block-width--full:not(.row-column *),
-body.content-view-edit .blocks-form [class*='block-editor-'].has--block-width--full:not(.row-column *),
-body.view-editview .blocks-form [class*='block-editor-'].has--block-width--full:not(.row-column *) > div,
-body.content-view-edit .blocks-form [class*='block-editor-'].has--block-width--full:not(.row-column *) > div,
+body.view-editview
+  .blocks-form
+  [class*='block-editor-'].has--block-width--full:not(.row-column *),
+body.content-view-edit
+  .blocks-form
+  [class*='block-editor-'].has--block-width--full:not(.row-column *),
+body.view-editview
+  .blocks-form
+  [class*='block-editor-'].has--block-width--full:not(.row-column *)
+  > div,
+body.view-addview
+  .blocks-form
+  [class*='block-editor-'].has--block-width--full:not(.row-column *)
+  > div,
+body.content-view-edit
+  .blocks-form
+  [class*='block-editor-'].has--block-width--full:not(.row-column *)
+  > div,
+body.view-editview .blocks-form [class*='block-editor-cinematicSlider'],
+body.view-addview .blocks-form [class*='block-editor-cinematicSlider'],
+body.content-view-edit .blocks-form [class*='block-editor-cinematicSlider'],
+body.view-editview .blocks-form [class*='block-editor-cinematicSlider'] > div,
+body.view-addview .blocks-form [class*='block-editor-cinematicSlider'] > div,
+body.content-view-edit
+  .blocks-form
+  [class*='block-editor-cinematicSlider']
+  > div,
+body.view-editview
+  .blocks-form
+  [class*='block-editor-cinematicHorizontalScroll'],
+body.view-addview
+  .blocks-form
+  [class*='block-editor-cinematicHorizontalScroll'],
+body.content-view-edit
+  .blocks-form
+  [class*='block-editor-cinematicHorizontalScroll'],
+body.view-editview
+  .blocks-form
+  [class*='block-editor-cinematicHorizontalScroll']
+  > div,
+body.view-addview
+  .blocks-form
+  [class*='block-editor-cinematicHorizontalScroll']
+  > div,
+body.content-view-edit
+  .blocks-form
+  [class*='block-editor-cinematicHorizontalScroll']
+  > div,
 body.view-editview .block.row.has--block-width--full,
+body.view-addview .block.row.has--block-width--full,
 body.content-view-edit .block.row.has--block-width--full,
 body.view-editview .row-edit-container.has--block-width--full,
+body.view-addview .row-edit-container.has--block-width--full,
 body.content-view-edit .row-edit-container.has--block-width--full {
   width: 100% !important;
   max-width: 100% !important;
@@ -702,60 +929,247 @@ body.content-view-edit .row-edit-container.has--block-width--full {
 }
 
 /* Layout width in edit mode (1440px or 100% of canvas) */
-body.view-editview .blocks-form [class*='block-editor-'].has--block-width--layout:not(.row-column *),
-body.content-view-edit .blocks-form [class*='block-editor-'].has--block-width--layout:not(.row-column *),
+body.view-editview
+  .blocks-form
+  [class*='block-editor-'].has--block-width--layout:not(.row-column *),
+body.view-addview
+  .blocks-form
+  [class*='block-editor-'].has--block-width--layout:not(.row-column *),
+body.content-view-edit
+  .blocks-form
+  [class*='block-editor-'].has--block-width--layout:not(.row-column *),
 body.view-editview .block.row.has--block-width--layout,
+body.view-addview .block.row.has--block-width--layout,
 body.content-view-edit .block.row.has--block-width--layout,
 body.view-editview .row-edit-container.has--block-width--layout,
+body.view-addview .row-edit-container.has--block-width--layout,
 body.content-view-edit .row-edit-container.has--block-width--layout,
-body.view-editview .blocks-form [class*='has--block-width--layout']:not(.row-column *),
-body.content-view-edit .blocks-form [class*='has--block-width--layout']:not(.row-column *) {
+body.view-editview
+  .blocks-form
+  [class*='has--block-width--layout']:not(.row-column *),
+body.view-addview
+  .blocks-form
+  [class*='has--block-width--layout']:not(.row-column *),
+body.content-view-edit
+  .blocks-form
+  [class*='has--block-width--layout']:not(.row-column *) {
   width: 100% !important;
   max-width: min(var(--layout-container-width, 1440px), 100%) !important;
   margin-left: auto !important;
   margin-right: auto !important;
-  padding-left: 0 !important;
-  padding-right: 0 !important;
   box-sizing: border-box !important;
 }
 
+body.view-editview
+  .blocks-form
+  [class*='block-editor-'].has--block-width--layout:not(.row-column *),
+body.view-addview
+  .blocks-form
+  [class*='block-editor-'].has--block-width--layout:not(.row-column *),
+body.content-view-edit
+  .blocks-form
+  [class*='block-editor-'].has--block-width--layout:not(.row-column *),
+body.view-editview
+  .block.row.has--block-width--layout:not([class*='has--style_name--']):not(
+    [class*='-box']
+  ),
+body.view-addview
+  .block.row.has--block-width--layout:not([class*='has--style_name--']):not(
+    [class*='-box']
+  ),
+body.content-view-edit
+  .block.row.has--block-width--layout:not([class*='has--style_name--']):not(
+    [class*='-box']
+  ) {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
 /* Default width in edit mode (940px) */
-body.view-editview .blocks-form fieldset > div > [class*='block-editor-']:not(.has--block-width--full):not(.has--block-width--layout):not(.has--block-width--narrow),
-body.content-view-edit .blocks-form fieldset > div > [class*='block-editor-']:not(.has--block-width--full):not(.has--block-width--layout):not(.has--block-width--narrow),
-body.view-editview .blocks-form [class*='block-editor-'].has--block-width--default,
-body.content-view-edit .blocks-form [class*='block-editor-'].has--block-width--default,
+body.view-editview
+  .blocks-form
+  fieldset
+  > div
+  > [class*='block-editor-']:not(.has--block-width--full):not(
+    .has--block-width--layout
+  ):not(.has--block-width--narrow):not(.block-editor-cinematicSlider):not(
+    .block-editor-cinematicHorizontalScroll
+  ),
+body.view-addview
+  .blocks-form
+  fieldset
+  > div
+  > [class*='block-editor-']:not(.has--block-width--full):not(
+    .has--block-width--layout
+  ):not(.has--block-width--narrow):not(.block-editor-cinematicSlider):not(
+    .block-editor-cinematicHorizontalScroll
+  ),
+body.content-view-edit
+  .blocks-form
+  fieldset
+  > div
+  > [class*='block-editor-']:not(.has--block-width--full):not(
+    .has--block-width--layout
+  ):not(.has--block-width--narrow):not(.block-editor-cinematicSlider):not(
+    .block-editor-cinematicHorizontalScroll
+  ),
+body.view-editview
+  .blocks-form
+  [class*='block-editor-']:not(.block-editor-cinematicSlider):not(
+    .block-editor-cinematicHorizontalScroll
+  ).has--block-width--default,
+body.view-addview
+  .blocks-form
+  [class*='block-editor-']:not(.block-editor-cinematicSlider):not(
+    .block-editor-cinematicHorizontalScroll
+  ).has--block-width--default,
+body.content-view-edit
+  .blocks-form
+  [class*='block-editor-']:not(.block-editor-cinematicSlider):not(
+    .block-editor-cinematicHorizontalScroll
+  ).has--block-width--default,
 body.view-editview .block.row.has--block-width--default,
+body.view-addview .block.row.has--block-width--default,
 body.content-view-edit .block.row.has--block-width--default,
 body.view-editview .row-edit-container.has--block-width--default,
+body.view-addview .row-edit-container.has--block-width--default,
 body.content-view-edit .row-edit-container.has--block-width--default,
-body.view-editview .blocks-form [class*='has--block-width--default'],
-body.content-view-edit .blocks-form [class*='has--block-width--default'] {
+body.view-editview
+  .blocks-form
+  [class*='has--block-width--default']:not(.row-column *):not(
+    .block-editor-cinematicSlider
+  ):not(.block-editor-cinematicHorizontalScroll),
+body.view-addview
+  .blocks-form
+  [class*='has--block-width--default']:not(.row-column *):not(
+    .block-editor-cinematicSlider
+  ):not(.block-editor-cinematicHorizontalScroll),
+body.content-view-edit
+  .blocks-form
+  [class*='has--block-width--default']:not(.row-column *):not(
+    .block-editor-cinematicSlider
+  ):not(.block-editor-cinematicHorizontalScroll) {
   width: 100% !important;
   max-width: min(var(--default-container-width, 940px), 100%) !important;
   min-width: 0 !important;
   margin-left: auto !important;
   margin-right: auto !important;
-  padding-left: 0 !important;
-  padding-right: 0 !important;
   box-sizing: border-box !important;
 }
 
+body.view-editview
+  .blocks-form
+  fieldset
+  > div
+  > [class*='block-editor-']:not(.has--block-width--full):not(
+    .has--block-width--layout
+  ):not(.has--block-width--narrow):not(.block-editor-cinematicSlider):not(
+    .block-editor-cinematicHorizontalScroll
+  ),
+body.view-addview
+  .blocks-form
+  fieldset
+  > div
+  > [class*='block-editor-']:not(.has--block-width--full):not(
+    .has--block-width--layout
+  ):not(.has--block-width--narrow):not(.block-editor-cinematicSlider):not(
+    .block-editor-cinematicHorizontalScroll
+  ),
+body.content-view-edit
+  .blocks-form
+  fieldset
+  > div
+  > [class*='block-editor-']:not(.has--block-width--full):not(
+    .has--block-width--layout
+  ):not(.has--block-width--narrow):not(.block-editor-cinematicSlider):not(
+    .block-editor-cinematicHorizontalScroll
+  ),
+body.view-editview
+  .blocks-form
+  [class*='block-editor-']:not(.block-editor-cinematicSlider):not(
+    .block-editor-cinematicHorizontalScroll
+  ).has--block-width--default,
+body.view-addview
+  .blocks-form
+  [class*='block-editor-']:not(.block-editor-cinematicSlider):not(
+    .block-editor-cinematicHorizontalScroll
+  ).has--block-width--default,
+body.content-view-edit
+  .blocks-form
+  [class*='block-editor-']:not(.block-editor-cinematicSlider):not(
+    .block-editor-cinematicHorizontalScroll
+  ).has--block-width--default,
+body.view-editview
+  .block.row.has--block-width--default:not([class*='has--style_name--']):not(
+    [class*='-box']
+  ),
+body.view-addview
+  .block.row.has--block-width--default:not([class*='has--style_name--']):not(
+    [class*='-box']
+  ),
+body.content-view-edit
+  .block.row.has--block-width--default:not([class*='has--style_name--']):not(
+    [class*='-box']
+  ) {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
 /* Narrow width in edit mode (720px) */
-body.view-editview .blocks-form [class*='block-editor-'].has--block-width--narrow:not(.row-column *),
-body.content-view-edit .blocks-form [class*='block-editor-'].has--block-width--narrow:not(.row-column *),
+body.view-editview
+  .blocks-form
+  [class*='block-editor-'].has--block-width--narrow:not(.row-column *),
+body.view-addview
+  .blocks-form
+  [class*='block-editor-'].has--block-width--narrow:not(.row-column *),
+body.content-view-edit
+  .blocks-form
+  [class*='block-editor-'].has--block-width--narrow:not(.row-column *),
 body.view-editview .block.row.has--block-width--narrow,
+body.view-addview .block.row.has--block-width--narrow,
 body.content-view-edit .block.row.has--block-width--narrow,
 body.view-editview .row-edit-container.has--block-width--narrow,
+body.view-addview .row-edit-container.has--block-width--narrow,
 body.content-view-edit .row-edit-container.has--block-width--narrow,
-body.view-editview .blocks-form [class*='has--block-width--narrow']:not(.row-column *),
-body.content-view-edit .blocks-form [class*='has--block-width--narrow']:not(.row-column *) {
+body.view-editview
+  .blocks-form
+  [class*='has--block-width--narrow']:not(.row-column *),
+body.view-addview
+  .blocks-form
+  [class*='has--block-width--narrow']:not(.row-column *),
+body.content-view-edit
+  .blocks-form
+  [class*='has--block-width--narrow']:not(.row-column *) {
   width: 100% !important;
   max-width: min(var(--narrow-container-width, 720px), 100%) !important;
   margin-left: auto !important;
   margin-right: auto !important;
+  box-sizing: border-box !important;
+}
+
+body.view-editview
+  .blocks-form
+  [class*='block-editor-'].has--block-width--narrow:not(.row-column *),
+body.view-addview
+  .blocks-form
+  [class*='block-editor-'].has--block-width--narrow:not(.row-column *),
+body.content-view-edit
+  .blocks-form
+  [class*='block-editor-'].has--block-width--narrow:not(.row-column *),
+body.view-editview
+  .block.row.has--block-width--narrow:not([class*='has--style_name--']):not(
+    [class*='-box']
+  ),
+body.view-addview
+  .block.row.has--block-width--narrow:not([class*='has--style_name--']):not(
+    [class*='-box']
+  ),
+body.content-view-edit
+  .block.row.has--block-width--narrow:not([class*='has--style_name--']):not(
+    [class*='-box']
+  ) {
   padding-left: 0 !important;
   padding-right: 0 !important;
-  box-sizing: border-box !important;
 }
 
 /* Full-width row inner container centered with up to 1440px layout width */
@@ -776,14 +1190,28 @@ body.view-editview .block.row.has--block-width--full .block-inner-container,
 }
 
 /* Full-width row with style preset: edge-to-edge background with 1440px centered inner content in both View and Edit modes */
-#page-document .block.row.has--block-width--full[class*='has--style_name--'] .block-inner-container,
-#page-document .block.row.has--block-width--full[class*='-box'] .block-inner-container,
-.view-wrapper .block.row.has--block-width--full[class*='has--style_name--'] .block-inner-container,
-.view-wrapper .block.row.has--block-width--full[class*='-box'] .block-inner-container,
-.blocks-form .block-editor-row.has--block-width--full[class*='has--style_name--'] .block-inner-container,
-.blocks-form .block-editor-row.has--block-width--full[class*='-box'] .block-inner-container,
-.row-edit-container.has--block-width--full[class*='has--style_name--'] .block-inner-container,
-.row-edit-container.has--block-width--full[class*='-box'] .block-inner-container {
+#page-document
+  .block.row.has--block-width--full[class*='has--style_name--']
+  .block-inner-container,
+#page-document
+  .block.row.has--block-width--full[class*='-box']
+  .block-inner-container,
+.view-wrapper
+  .block.row.has--block-width--full[class*='has--style_name--']
+  .block-inner-container,
+.view-wrapper
+  .block.row.has--block-width--full[class*='-box']
+  .block-inner-container,
+.blocks-form
+  .block-editor-row.has--block-width--full[class*='has--style_name--']
+  .block-inner-container,
+.blocks-form
+  .block-editor-row.has--block-width--full[class*='-box']
+  .block-inner-container,
+.row-edit-container.has--block-width--full[class*='has--style_name--']
+  .block-inner-container,
+.row-edit-container.has--block-width--full[class*='-box']
+  .block-inner-container {
   max-width: min(var(--layout-container-width, 1440px), 100%) !important;
   margin-left: auto !important;
   margin-right: auto !important;
@@ -797,7 +1225,9 @@ body.view-editview .block.row.has--block-width--full .block-inner-container,
   position: relative;
 }
 
-.block.row.has--background-image:not([class*='has--style_name--']):not([class*='-box']) {
+.block.row.has--background-image:not([class*='has--style_name--']):not(
+    [class*='-box']
+  ) {
   padding: 3rem 1.5rem !important;
 }
 
@@ -1034,7 +1464,11 @@ body.is-resizing-columns * {
   justify-content: center;
   opacity: 0;
   transform: scale(0.85);
-  transition: opacity 0.15s ease, transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease,
+    background 0.15s ease,
+    border-color 0.15s ease;
   user-select: none;
 }
 
@@ -1084,7 +1518,9 @@ body.is-resizing-columns * {
   margin-top: -10px;
   letter-spacing: 0.3px;
   white-space: nowrap;
-  transition: background 0.15s ease, box-shadow 0.15s ease;
+  transition:
+    background 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
 .row-col-resizer-tooltip.is-snapped {
@@ -1095,6 +1531,14 @@ body.is-resizing-columns * {
 /* --------------------------------------------------------------------------
    7. Sidebar Row Tab (#sidebar-row) & Columns Panel
    -------------------------------------------------------------------------- */
+/* Hide Order Tab from Edit Sidebar */
+.sidebar-container .formtabs button.item-order,
+.sidebar-container .formtabs .item-order,
+.sidebar-container .formtabs button[data-tab='order'],
+#sidebar-order {
+  display: none !important;
+}
+
 #sidebar-row,
 #sidebar-row.tab-wrapper {
   overflow-y: auto !important;
@@ -1235,47 +1679,160 @@ body.is-resizing-columns * {
 }
 
 /* --------------------------------------------------------------------------
-   9. Stat Cards Preset
+   9. Stat Cards & Style Presets
    -------------------------------------------------------------------------- */
 .block.row.stat-cards-box,
-.block.row.has--style_name--statCards {
-  background: #f1f5f9 !important;
-  border-radius: 12px;
-  padding: 2.5rem 1.5rem !important;
+.block.row.has--style_name--statCards,
+.row-edit-container.stat-cards-box,
+.row-edit-container.has--style_name--statCards {
+  background: transparent !important;
+  background-color: transparent !important;
+  padding: 2.5rem 0 !important;
 }
 
 .block.row.stat-cards-primary-box,
-.block.row.has--style_name--statCardsPrimary {
-  background: linear-gradient(to bottom, #d92518 50%, #ffffff 50%) !important;
-  border-radius: 12px;
-  padding: 2.5rem 1.5rem !important;
+.block.row.has--style_name--statCardsPrimary,
+.row-edit-container.stat-cards-primary-box,
+.row-edit-container.has--style_name--statCardsPrimary,
+body.view-editview .block.row.stat-cards-primary-box,
+body.view-editview .block.row.has--style_name--statCardsPrimary,
+body.content-view-edit .block.row.stat-cards-primary-box,
+body.content-view-edit .block.row.has--style_name--statCardsPrimary {
+  position: relative !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  padding: 1.25rem 1.5rem 2.5rem 1.5rem !important;
+  box-shadow: none !important;
+}
+
+.block.row.stat-cards-primary-box::before,
+.block.row.has--style_name--statCardsPrimary::before,
+.row-edit-container.stat-cards-primary-box::before,
+.row-edit-container.has--style_name--statCardsPrimary::before,
+.block .block.stat-cards-primary-box:not(.inner)::before,
+.block .block.has--style_name--statCardsPrimary:not(.inner)::before,
+.ui.drag.block.inner .block.row.stat-cards-primary-box::before,
+.ui.drag.block.inner .block.row.has--style_name--statCardsPrimary::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: auto !important;
+  width: 100% !important;
+  height: 50px !important;
+  border: none !important;
+  background-color: #cd291e !important;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 1000 1000' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.5' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)' opacity='.05'/%3E%3C/svg%3E"),
+    radial-gradient(at 0% 100%, rgba(227, 24, 55, 0.8) 0, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(0, 0, 0, 0.3) 0, transparent 50%),
+    radial-gradient(at 80% 80%, rgba(255, 255, 255, 0.1) 0, transparent 30%) !important;
+  border-radius: var(--yc-radius-card, 8px) var(--yc-radius-card, 8px) 0 0 !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+}
+
+.block.row.stat-cards-primary-box::after,
+.block.row.has--style_name--statCardsPrimary::after,
+.row-edit-container.stat-cards-primary-box::after,
+.row-edit-container.has--style_name--statCardsPrimary::after,
+.block .block.stat-cards-primary-box:not(.inner)::after,
+.block .block.has--style_name--statCardsPrimary:not(.inner)::after,
+.ui.drag.block.inner .block.row.stat-cards-primary-box::after,
+.ui.drag.block.inner .block.row.has--style_name--statCardsPrimary::after {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: auto !important;
+  width: 100% !important;
+  height: 120px !important;
+  border: none !important;
+  background-image: linear-gradient(
+      30deg,
+      rgba(255, 255, 255, 0.03) 1px,
+      transparent 1px
+    ),
+    linear-gradient(150deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px) !important;
+  background-size: 80px 140px !important;
+  mask-image: radial-gradient(
+    ellipse at center,
+    black,
+    transparent 90%
+  ) !important;
+  -webkit-mask-image: radial-gradient(
+    ellipse at center,
+    black,
+    transparent 90%
+  ) !important;
+  border-radius: var(--yc-radius-card, 8px) var(--yc-radius-card, 8px) 0 0 !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+}
+
+.block.row.has--block-width--full.stat-cards-primary-box::before,
+.block.row.has--block-width--full.stat-cards-primary-box::after,
+.block.row.has--block-width--full.has--style_name--statCardsPrimary::before,
+.block.row.has--block-width--full.has--style_name--statCardsPrimary::after,
+.row-edit-container.has--block-width--full.stat-cards-primary-box::before,
+.row-edit-container.has--block-width--full.stat-cards-primary-box::after,
+.row-edit-container.has--block-width--full.has--style_name--statCardsPrimary::before,
+.row-edit-container.has--block-width--full.has--style_name--statCardsPrimary::after {
+  border-radius: 0 !important;
+}
+
+.block.row.stat-cards-primary-box > .block-inner-container,
+.block.row.has--style_name--statCardsPrimary > .block-inner-container,
+.row-edit-container.stat-cards-primary-box > .block-inner-container,
+.row-edit-container.has--style_name--statCardsPrimary > .block-inner-container,
+.block.row.primary-box > .block-inner-container,
+.block.row.has--style_name--primaryBox > .block-inner-container,
+.block.row.red-blue-box > .block-inner-container,
+.block.row.has--style_name--redBlueBox > .block-inner-container {
+  position: relative;
+  z-index: 2;
 }
 
 .block.row.stat-cards-box .row-column,
 .block.row.stat-cards-primary-box .row-column,
 .block.row.has--style_name--statCards .row-column,
-.block.row.has--style_name--statCardsPrimary .row-column {
+.block.row.has--style_name--statCardsPrimary .row-column,
+.row-edit-container.stat-cards-box .row-column,
+.row-edit-container.stat-cards-primary-box .row-column,
+.row-edit-container.has--style_name--statCards .row-column,
+.row-edit-container.has--style_name--statCardsPrimary .row-column {
   background: #ffffff !important;
   background-color: #ffffff !important;
+  color: #1e293b;
   border-radius: 20px !important;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04) !important;
+  box-shadow:
+    0 10px 25px -5px rgba(0, 0, 0, 0.08),
+    0 8px 10px -6px rgba(0, 0, 0, 0.04) !important;
   border: 1px solid rgba(0, 0, 0, 0.06) !important;
   padding: 2.25rem 1.25rem !important;
   display: flex !important;
   flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
-  text-align: center !important;
   box-sizing: border-box !important;
-  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  transition:
+    transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
 .block.row.stat-cards-box .row-column:hover,
 .block.row.stat-cards-primary-box .row-column:hover,
 .block.row.has--style_name--statCards .row-column:hover,
-.block.row.has--style_name--statCardsPrimary .row-column:hover {
+.block.row.has--style_name--statCardsPrimary .row-column:hover,
+.row-edit-container.stat-cards-box .row-column:hover,
+.row-edit-container.stat-cards-primary-box .row-column:hover,
+.row-edit-container.has--style_name--statCards .row-column:hover,
+.row-edit-container.has--style_name--statCardsPrimary .row-column:hover {
   transform: translateY(-4px) !important;
-  box-shadow: 0 16px 36px -4px rgba(0, 0, 0, 0.12), 0 10px 16px -6px rgba(0, 0, 0, 0.06) !important;
+  box-shadow:
+    0 16px 36px -4px rgba(0, 0, 0, 0.12),
+    0 10px 16px -6px rgba(0, 0, 0, 0.06) !important;
 }
 
 .block.row.stat-cards-box .row-column .block,
@@ -1288,58 +1845,36 @@ body.is-resizing-columns * {
 .block.row.has--style_name--statCards .row-column [class*='block-editor-'],
 .block.row.has--style_name--statCards .row-column .ui.drag.block.inner,
 .block.row.has--style_name--statCardsPrimary .row-column .block,
-.block.row.has--style_name--statCardsPrimary .row-column [class*='block-editor-'],
-.block.row.has--style_name--statCardsPrimary .row-column .ui.drag.block.inner {
+.block.row.has--style_name--statCardsPrimary
+  .row-column
+  [class*='block-editor-'],
+.block.row.has--style_name--statCardsPrimary .row-column .ui.drag.block.inner,
+.row-edit-container.stat-cards-box .row-column .block,
+.row-edit-container.stat-cards-box .row-column [class*='block-editor-'],
+.row-edit-container.stat-cards-box .row-column .ui.drag.block.inner,
+.row-edit-container.stat-cards-primary-box .row-column .block,
+.row-edit-container.stat-cards-primary-box .row-column [class*='block-editor-'],
+.row-edit-container.stat-cards-primary-box .row-column .ui.drag.block.inner,
+.row-edit-container.has--style_name--statCards .row-column .block,
+.row-edit-container.has--style_name--statCards
+  .row-column
+  [class*='block-editor-'],
+.row-edit-container.has--style_name--statCards .row-column .ui.drag.block.inner,
+.row-edit-container.has--style_name--statCardsPrimary .row-column .block,
+.row-edit-container.has--style_name--statCardsPrimary
+  .row-column
+  [class*='block-editor-'],
+.row-edit-container.has--style_name--statCardsPrimary
+  .row-column
+  .ui.drag.block.inner {
   background: transparent !important;
   background-color: transparent !important;
   padding: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
   border-radius: 0 !important;
   box-shadow: none !important;
   width: 100% !important;
-}
-
-.block.row.stat-cards-box .row-column h1,
-.block.row.stat-cards-box .row-column h2,
-.block.row.stat-cards-box .row-column h3,
-.block.row.stat-cards-box .row-column h4,
-.block.row.stat-cards-box .row-column p:first-child,
-.block.row.stat-cards-primary-box .row-column h1,
-.block.row.stat-cards-primary-box .row-column h2,
-.block.row.stat-cards-primary-box .row-column h3,
-.block.row.stat-cards-primary-box .row-column h4,
-.block.row.stat-cards-primary-box .row-column p:first-child,
-.block.row.has--style_name--statCards .row-column h1,
-.block.row.has--style_name--statCards .row-column h2,
-.block.row.has--style_name--statCards .row-column h3,
-.block.row.has--style_name--statCards .row-column h4,
-.block.row.has--style_name--statCards .row-column p:first-child,
-.block.row.has--style_name--statCardsPrimary .row-column h1,
-.block.row.has--style_name--statCardsPrimary .row-column h2,
-.block.row.has--style_name--statCardsPrimary .row-column h3,
-.block.row.has--style_name--statCardsPrimary .row-column h4,
-.block.row.has--style_name--statCardsPrimary .row-column p:first-child {
-  font-size: 2.75rem !important;
-  font-weight: 700 !important;
-  color: #111827 !important;
-  line-height: 1.1 !important;
-  margin-top: 0 !important;
-  margin-bottom: 0.5rem !important;
-  text-align: center !important;
-}
-
-.block.row.stat-cards-box .row-column p:not(:first-child),
-.block.row.stat-cards-primary-box .row-column p:not(:first-child),
-.block.row.has--style_name--statCards .row-column p:not(:first-child),
-.block.row.has--style_name--statCardsPrimary .row-column p:not(:first-child) {
-  font-size: 0.8rem !important;
-  font-weight: 700 !important;
-  letter-spacing: 0.05em !important;
-  text-transform: uppercase !important;
-  color: #1f2937 !important;
-  line-height: 1.35 !important;
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
-  text-align: center !important;
 }
 
 /* --------------------------------------------------------------------------
@@ -1351,23 +1886,69 @@ body.is-resizing-columns * {
 .styled-slate:not(.has--block-width--full):not(.full-width),
 .styled:not(.has--block-width--full):not(.full-width),
 [class*='styled-']:not(.has--block-width--full):not(.full-width),
-.block.primary-box:not([class*='block-editor-']):not(.has--block-width--full):not(.full-width),
-.block.gray-box:not([class*='block-editor-']):not(.has--block-width--full):not(.full-width),
-.block.secondary-box:not([class*='block-editor-']):not(.has--block-width--full):not(.full-width),
-.block.tertiary-box:not([class*='block-editor-']):not(.has--block-width--full):not(.full-width),
-.block.blue-box:not([class*='block-editor-']):not(.has--block-width--full):not(.full-width),
-.block.purple-box:not([class*='block-editor-']):not(.has--block-width--full):not(.full-width),
-.block[class*='has--style_name--']:not([class*='block-editor-']):not(.has--block-width--full):not(.full-width):not(.stat-cards-box):not(.stat-cards-primary-box),
-.primary-box:not([class*='block-editor-']):not(.has--block-width--full):not(.full-width):not(.block.row),
-.gray-box:not([class*='block-editor-']):not(.has--block-width--full):not(.full-width):not(.block.row),
-.secondary-box:not([class*='block-editor-']):not(.has--block-width--full):not(.full-width):not(.block.row),
-.tertiary-box:not([class*='block-editor-']):not(.has--block-width--full):not(.full-width):not(.block.row),
-.blue-box:not([class*='block-editor-']):not(.has--block-width--full):not(.full-width):not(.block.row),
-.purple-box:not([class*='block-editor-']):not(.has--block-width--full):not(.full-width):not(.block.row),
-.block.row:not(.has--block-width--full):not(.full-width)[class*='has--style_name--'],
-.block.row:not(.has--block-width--full):not(.full-width)[class*='-box'],
-.row-edit-container:not(.has--block-width--full):not(.full-width)[class*='has--style_name--'],
-.row-edit-container:not(.has--block-width--full):not(.full-width)[class*='-box'] {
+.block.primary-box:not([class*='block-editor-']):not(
+    .has--block-width--full
+  ):not(.full-width),
+.block.gray-box:not([class*='block-editor-']):not(.has--block-width--full):not(
+    .full-width
+  ),
+.block.secondary-box:not([class*='block-editor-']):not(
+    .has--block-width--full
+  ):not(.full-width),
+.block.tertiary-box:not([class*='block-editor-']):not(
+    .has--block-width--full
+  ):not(.full-width),
+.block.blue-box:not([class*='block-editor-']):not(.has--block-width--full):not(
+    .full-width
+  ),
+.block.purple-box:not([class*='block-editor-']):not(
+    .has--block-width--full
+  ):not(.full-width),
+.block.red-blue-box:not([class*='block-editor-']):not(
+    .has--block-width--full
+  ):not(.full-width),
+.block[class*='has--style_name--']:not([class*='block-editor-']):not(
+    .has--block-width--full
+  ):not(.full-width):not(.stat-cards-box):not(.stat-cards-primary-box):not(
+    .has--style_name--statCards
+  ):not(.has--style_name--statCardsPrimary),
+.primary-box:not([class*='block-editor-']):not(.has--block-width--full):not(
+    .full-width
+  ):not(.block.row),
+.gray-box:not([class*='block-editor-']):not(.has--block-width--full):not(
+    .full-width
+  ):not(.block.row),
+.secondary-box:not([class*='block-editor-']):not(.has--block-width--full):not(
+    .full-width
+  ):not(.block.row),
+.tertiary-box:not([class*='block-editor-']):not(.has--block-width--full):not(
+    .full-width
+  ):not(.block.row),
+.blue-box:not([class*='block-editor-']):not(.has--block-width--full):not(
+    .full-width
+  ):not(.block.row),
+.purple-box:not([class*='block-editor-']):not(.has--block-width--full):not(
+    .full-width
+  ):not(.block.row),
+.red-blue-box:not([class*='block-editor-']):not(.has--block-width--full):not(
+    .full-width
+  ):not(.block.row),
+.block.row:not(.has--block-width--full):not(
+    .full-width
+  )[class*='has--style_name--']:not(.stat-cards-box):not(
+    .stat-cards-primary-box
+  ):not(.has--style_name--statCards):not(.has--style_name--statCardsPrimary),
+.block.row:not(.has--block-width--full):not(.full-width)[class*='-box']:not(
+    .stat-cards-box
+  ):not(.stat-cards-primary-box),
+.row-edit-container:not(.has--block-width--full):not(
+    .full-width
+  )[class*='has--style_name--']:not(.stat-cards-box):not(
+    .stat-cards-primary-box
+  ):not(.has--style_name--statCards):not(.has--style_name--statCardsPrimary),
+.row-edit-container:not(.has--block-width--full):not(
+    .full-width
+  )[class*='-box']:not(.stat-cards-box):not(.stat-cards-primary-box) {
   border-radius: var(--yc-radius-card, 8px) !important;
   overflow: hidden !important;
 }
@@ -1412,6 +1993,7 @@ body.is-resizing-columns * {
 .styled-title.tertiary-box,
 .styled-title.blue-box,
 .styled-title.purple-box,
+.styled-title.red-blue-box,
 .styled-title[class*='-box'],
 .styled-title[class*='has--style_name--'],
 .styled-slate.primary-box,
@@ -1420,6 +2002,7 @@ body.is-resizing-columns * {
 .styled-slate.tertiary-box,
 .styled-slate.blue-box,
 .styled-slate.purple-box,
+.styled-slate.red-blue-box,
 .styled-slate[class*='has--style_name--'],
 .styled-slate[class*='-box'],
 .styled.primary-box,
@@ -1428,6 +2011,7 @@ body.is-resizing-columns * {
 .styled.tertiary-box,
 .styled.blue-box,
 .styled.purple-box,
+.styled.red-blue-box,
 .styled[class*='has--style_name--'],
 .styled[class*='-box'],
 [class*='styled-'][class*='-box'],
@@ -1438,7 +2022,10 @@ body.is-resizing-columns * {
 .block.tertiary-box:not(.row),
 .block.blue-box:not(.row),
 .block.purple-box:not(.row),
-.block[class*='has--style_name--']:not(.row):not(.stat-cards-box):not(.stat-cards-primary-box) {
+.block.red-blue-box:not(.row),
+.block[class*='has--style_name--']:not(.row):not(.stat-cards-box):not(
+    .stat-cards-primary-box
+  ) {
   padding: 1.75rem 1.75rem !important;
   box-sizing: border-box !important;
 }
@@ -1476,41 +2063,115 @@ body.is-resizing-columns * {
 }
 
 /* 4. Vertical spacing between blocks in View Mode */
-#page-document .styled-title:not(.has--block-width--full):not(.full-width),
-#page-document .styled-slate:not(.has--block-width--full):not(.full-width),
-#page-document .styled:not(.has--block-width--full):not(.full-width),
-#page-document [class*='styled-']:not(.has--block-width--full):not(.full-width),
-#page-document .block:not(.has--block-width--full):not(.row)[class*='has--style_name--'],
-#page-document .block:not(.has--block-width--full):not(.row)[class*='-box'],
-.view-wrapper .styled-title:not(.has--block-width--full):not(.full-width),
-.view-wrapper .styled-slate:not(.has--block-width--full):not(.full-width),
-.view-wrapper .styled:not(.has--block-width--full):not(.full-width),
-.view-wrapper [class*='styled-']:not(.has--block-width--full):not(.full-width),
-.view-wrapper .block:not(.has--block-width--full):not(.row)[class*='has--style_name--'],
-.view-wrapper .block:not(.has--block-width--full):not(.row)[class*='-box'],
-#view .styled-title:not(.has--block-width--full):not(.full-width),
-#view .styled-slate:not(.has--block-width--full):not(.full-width),
-#view .styled:not(.has--block-width--full):not(.full-width),
-#view [class*='styled-']:not(.has--block-width--full):not(.full-width),
-#view .block:not(.has--block-width--full):not(.row)[class*='has--style_name--'],
-#view .block:not(.has--block-width--full):not(.row)[class*='-box'] {
+#page-document
+  .styled-title:not(.has--block-width--full):not(.full-width):not(.contained),
+#page-document
+  .styled-slate:not(.has--block-width--full):not(.full-width):not(.contained),
+#page-document
+  .styled:not(.has--block-width--full):not(.full-width):not(.contained),
+#page-document
+  [class*='styled-']:not(.has--block-width--full):not(.full-width):not(
+    .contained
+  ),
+#page-document
+  .block:not(.has--block-width--full):not(.row):not(
+    .contained
+  )[class*='has--style_name--'],
+#page-document
+  .block:not(.has--block-width--full):not(.row):not(.contained)[class*='-box'],
+.view-wrapper
+  .styled-title:not(.has--block-width--full):not(.full-width):not(.contained),
+.view-wrapper
+  .styled-slate:not(.has--block-width--full):not(.full-width):not(.contained),
+.view-wrapper
+  .styled:not(.has--block-width--full):not(.full-width):not(.contained),
+.view-wrapper
+  [class*='styled-']:not(.has--block-width--full):not(.full-width):not(
+    .contained
+  ),
+.view-wrapper
+  .block:not(.has--block-width--full):not(.row):not(
+    .contained
+  )[class*='has--style_name--'],
+.view-wrapper
+  .block:not(.has--block-width--full):not(.row):not(.contained)[class*='-box'],
+#view
+  .styled-title:not(.has--block-width--full):not(.full-width):not(.contained),
+#view
+  .styled-slate:not(.has--block-width--full):not(.full-width):not(.contained),
+#view .styled:not(.has--block-width--full):not(.full-width):not(.contained),
+#view
+  [class*='styled-']:not(.has--block-width--full):not(.full-width):not(
+    .contained
+  ),
+#view
+  .block:not(.has--block-width--full):not(.row):not(
+    .contained
+  )[class*='has--style_name--'],
+#view
+  .block:not(.has--block-width--full):not(.row):not(.contained)[class*='-box'] {
   margin-top: var(--block-spacing-vertical, 1.75rem) !important;
   margin-bottom: var(--block-spacing-vertical, 1.75rem) !important;
 }
 
+/* Blocks inside row columns should not have outer vertical block spacing */
+#page-document .row-column [class*='styled-'],
+.view-wrapper .row-column [class*='styled-'],
+#view .row-column [class*='styled-'],
+.row-column [class*='styled-'] {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
 /* 5. Vertical spacing between blocks in Edit Mode */
-.blocks-form [class*='block-editor-']:not(.block-editor-row):not(.has--block-width--full).has--background,
-.blocks-form [class*='block-editor-']:not(.block-editor-row):not(.has--block-width--full)[class*='has--style_name--'],
-.blocks-form [class*='block-editor-']:not(.block-editor-row):not(.has--block-width--full)[class*='-box'],
-body.content-view-edit [class*='block-editor-']:not(.block-editor-row):not(.has--block-width--full).has--background,
-body.content-view-edit [class*='block-editor-']:not(.block-editor-row):not(.has--block-width--full)[class*='has--style_name--'],
-body.content-view-edit [class*='block-editor-']:not(.block-editor-row):not(.has--block-width--full)[class*='-box'],
-body.view-editview [class*='block-editor-']:not(.block-editor-row):not(.has--block-width--full).has--background,
-body.view-editview [class*='block-editor-']:not(.block-editor-row):not(.has--block-width--full)[class*='has--style_name--'],
-body.view-editview [class*='block-editor-']:not(.block-editor-row):not(.has--block-width--full)[class*='-box'],
-#page-edit [class*='block-editor-']:not(.block-editor-row):not(.has--block-width--full).has--background,
-#page-edit [class*='block-editor-']:not(.block-editor-row):not(.has--block-width--full)[class*='has--style_name--'],
-#page-edit [class*='block-editor-']:not(.block-editor-row):not(.has--block-width--full)[class*='-box'] {
+.blocks-form
+  [class*='block-editor-']:not(.block-editor-row):not(
+    .has--block-width--full
+  ).has--background,
+.blocks-form
+  [class*='block-editor-']:not(.block-editor-row):not(
+    .has--block-width--full
+  )[class*='has--style_name--'],
+.blocks-form
+  [class*='block-editor-']:not(.block-editor-row):not(
+    .has--block-width--full
+  )[class*='-box'],
+body.content-view-edit
+  [class*='block-editor-']:not(.block-editor-row):not(
+    .has--block-width--full
+  ).has--background,
+body.content-view-edit
+  [class*='block-editor-']:not(.block-editor-row):not(
+    .has--block-width--full
+  )[class*='has--style_name--'],
+body.content-view-edit
+  [class*='block-editor-']:not(.block-editor-row):not(
+    .has--block-width--full
+  )[class*='-box'],
+body.view-editview
+  [class*='block-editor-']:not(.block-editor-row):not(
+    .has--block-width--full
+  ).has--background,
+body.view-editview
+  [class*='block-editor-']:not(.block-editor-row):not(
+    .has--block-width--full
+  )[class*='has--style_name--'],
+body.view-editview
+  [class*='block-editor-']:not(.block-editor-row):not(
+    .has--block-width--full
+  )[class*='-box'],
+#page-edit
+  [class*='block-editor-']:not(.block-editor-row):not(
+    .has--block-width--full
+  ).has--background,
+#page-edit
+  [class*='block-editor-']:not(.block-editor-row):not(
+    .has--block-width--full
+  )[class*='has--style_name--'],
+#page-edit
+  [class*='block-editor-']:not(.block-editor-row):not(
+    .has--block-width--full
+  )[class*='-box'] {
   margin-top: var(--block-spacing-vertical, 1.75rem) !important;
   margin-bottom: var(--block-spacing-vertical, 1.75rem) !important;
 }

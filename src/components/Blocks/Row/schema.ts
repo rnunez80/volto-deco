@@ -24,20 +24,20 @@ export const LAYOUT_PRESETS: Record<string, LayoutPresetInfo> = {
     widths: ['1fr', '4fr'],
     columns: 2,
   },
-  '30-70': {
-    id: '30-70',
-    title: '2 Columns (30 / 70)',
-    label: '30 / 70',
-    template: '3fr 7fr',
-    widths: ['3fr', '7fr'],
+  '33-67': {
+    id: '33-67',
+    title: '2 Columns (33 / 67)',
+    label: '33 / 67',
+    template: '1fr 2fr',
+    widths: ['1fr', '2fr'],
     columns: 2,
   },
-  '70-30': {
-    id: '70-30',
-    title: '2 Columns (70 / 30)',
-    label: '70 / 30',
-    template: '7fr 3fr',
-    widths: ['7fr', '3fr'],
+  '67-33': {
+    id: '67-33',
+    title: '2 Columns (67 / 33)',
+    label: '67 / 33',
+    template: '2fr 1fr',
+    widths: ['2fr', '1fr'],
     columns: 2,
   },
   '80-20': {
@@ -127,6 +127,8 @@ export const LEGACY_PRESET_MAP: Record<string, string> = {
   '2-col-equal': '50-50',
   '2-col-left-wide': '60-40',
   '2-col-right-wide': '40-60',
+  '30-70': '33-67',
+  '70-30': '67-33',
   '3-col-equal': '33-33-33',
   '3-col-center-wide': '25-50-25',
   '4-col-equal': '25-25-25-25',
@@ -139,6 +141,8 @@ LAYOUT_PRESETS['1-col'] = LAYOUT_PRESETS['100'];
 LAYOUT_PRESETS['2-col-equal'] = LAYOUT_PRESETS['50-50'];
 LAYOUT_PRESETS['2-col-left-wide'] = LAYOUT_PRESETS['60-40'];
 LAYOUT_PRESETS['2-col-right-wide'] = LAYOUT_PRESETS['40-60'];
+LAYOUT_PRESETS['30-70'] = LAYOUT_PRESETS['33-67'];
+LAYOUT_PRESETS['70-30'] = LAYOUT_PRESETS['67-33'];
 LAYOUT_PRESETS['3-col-equal'] = LAYOUT_PRESETS['33-33-33'];
 LAYOUT_PRESETS['3-col-center-wide'] = LAYOUT_PRESETS['25-50-25'];
 LAYOUT_PRESETS['4-col-equal'] = LAYOUT_PRESETS['25-25-25-25'];

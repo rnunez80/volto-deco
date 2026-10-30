@@ -15,8 +15,8 @@ export const VISUAL_LAYOUT_PRESETS: LayoutPresetInfo[] = [
   LAYOUT_PRESETS['50-50'],
   LAYOUT_PRESETS['60-40'],
   LAYOUT_PRESETS['40-60'],
-  LAYOUT_PRESETS['70-30'],
-  LAYOUT_PRESETS['30-70'],
+  LAYOUT_PRESETS['67-33'],
+  LAYOUT_PRESETS['33-67'],
   LAYOUT_PRESETS['80-20'],
   LAYOUT_PRESETS['20-80'],
 
@@ -106,13 +106,14 @@ const renderPresetIcon = (presetId: string, isSelected: boolean) => {
           />
         </svg>
       );
+    case '33-67':
     case '30-70':
       return (
         <svg viewBox="0 0 56 26" width="46" height="22">
           <rect
             x="1"
             y={y}
-            width="15"
+            width="16"
             height={height}
             rx={rx}
             fill={fill}
@@ -120,9 +121,9 @@ const renderPresetIcon = (presetId: string, isSelected: boolean) => {
             strokeWidth={strokeWidth}
           />
           <rect
-            x="20"
+            x="21"
             y={y}
-            width="35"
+            width="34"
             height={height}
             rx={rx}
             fill={fill}
@@ -131,13 +132,14 @@ const renderPresetIcon = (presetId: string, isSelected: boolean) => {
           />
         </svg>
       );
+    case '67-33':
     case '70-30':
       return (
         <svg viewBox="0 0 56 26" width="46" height="22">
           <rect
             x="1"
             y={y}
-            width="35"
+            width="34"
             height={height}
             rx={rx}
             fill={fill}
@@ -145,9 +147,9 @@ const renderPresetIcon = (presetId: string, isSelected: boolean) => {
             strokeWidth={strokeWidth}
           />
           <rect
-            x="40"
+            x="39"
             y={y}
-            width="15"
+            width="16"
             height={height}
             rx={rx}
             fill={fill}

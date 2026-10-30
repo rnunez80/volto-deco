@@ -43,7 +43,7 @@ Content editors can split blocks into multi-column rows simply by dragging them 
 ### 3. Visual Layout Preset Widget
 A visual sidebar selector displaying miniature SVG preview cards organized ascending by column count:
 - **1 Column**: `100%`
-- **2 Columns**: `50 / 50`, `60 / 40`, `40 / 60`, `70 / 30`, `30 / 70`, `80 / 20`, `20 / 80`
+- **2 Columns**: `50 / 50`, `60 / 40`, `40 / 60`, `67 / 33`, `33 / 67`, `80 / 20`, `20 / 80`
 - **3 Columns**: `33 / 33 / 33`, `25 / 50 / 25`, `50 / 25 / 25`
 - **4 Columns**: `25 / 25 / 25 / 25`
 - **5 Columns**: `20 / 20 / 20 / 20 / 20`

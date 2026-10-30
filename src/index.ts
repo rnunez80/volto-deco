@@ -59,6 +59,8 @@ export function applyConfig(config: ConfigType) {
     restricted: false,
     mostUsed: true,
     sidebarTab: 2,
+    blockHasOwnFocusManagement: true,
+    disableEnter: true,
   };
 
   // 3. Backward compatibility for legacy columnsBlock & gridBlock
@@ -68,6 +70,8 @@ export function applyConfig(config: ConfigType) {
     config.blocks.blocksConfig.columnsBlock.view = RowView;
     config.blocks.blocksConfig.columnsBlock.edit = RowEdit;
     config.blocks.blocksConfig.columnsBlock.schema = RowSchema;
+    config.blocks.blocksConfig.columnsBlock.blockHasOwnFocusManagement = true;
+    config.blocks.blocksConfig.columnsBlock.disableEnter = true;
   }
 
   if (config.blocks?.blocksConfig?.gridBlock) {
@@ -76,6 +80,8 @@ export function applyConfig(config: ConfigType) {
     config.blocks.blocksConfig.gridBlock.view = RowView;
     config.blocks.blocksConfig.gridBlock.edit = RowEdit;
     config.blocks.blocksConfig.gridBlock.schema = RowSchema;
+    config.blocks.blocksConfig.gridBlock.blockHasOwnFocusManagement = true;
+    config.blocks.blocksConfig.gridBlock.disableEnter = true;
   }
 
   // 4. Install Redux migration middleware for in-flight legacy block normalization

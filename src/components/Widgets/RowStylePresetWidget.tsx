@@ -83,10 +83,19 @@ export const STYLE_PRESETS: StylePresetOption[] = [
     id: 'statCardsPrimary',
     title: 'Red + Cards',
     cssClass: 'stat-cards-primary-box',
-    color: 'linear-gradient(to bottom, #d92518 50%, #ffffff 50%)',
+    color: 'linear-gradient(to bottom, #9d162a 50%, transparent 50%)',
     textColor: '#ffffff',
     border: '1px solid rgba(0, 0, 0, 0.15)',
     description: 'York Red banner with white elevated stat cards',
+  },
+  {
+    id: 'redBlueBox',
+    title: 'Red / Blue',
+    cssClass: 'red-blue-box',
+    color:
+      'linear-gradient(102deg, #dc0022 0%, #e51e2d 48%, #1d3a82 49%, #2a4ea6 72%, #1d3a82 100%)',
+    textColor: '#ffffff',
+    description: 'York Red and Navy geometric split background with white text',
   },
 ];
 
