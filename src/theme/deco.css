@@ -1721,7 +1721,7 @@ body.content-view-edit .block.row.has--style_name--statCardsPrimary {
   right: 0 !important;
   bottom: auto !important;
   width: 100% !important;
-  height: 50px !important;
+  height: 75px !important;
   border: none !important;
   background-color: #cd291e !important;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 1000 1000' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.5' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)' opacity='.05'/%3E%3C/svg%3E"),
@@ -1732,6 +1732,20 @@ body.content-view-edit .block.row.has--style_name--statCardsPrimary {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
   pointer-events: none !important;
   z-index: 0 !important;
+}
+
+/* Dark mode seamless transition: #912018 */
+html.dark .block.row.stat-cards-primary-box::before,
+html.dark .block.row.has--style_name--statCardsPrimary::before,
+html.dark .row-edit-container.stat-cards-primary-box::before,
+html.dark .row-edit-container.has--style_name--statCardsPrimary::before,
+html.dark .block .block.stat-cards-primary-box:not(.inner)::before,
+html.dark .block .block.has--style_name--statCardsPrimary:not(.inner)::before,
+html.dark .ui.drag.block.inner .block.row.stat-cards-primary-box::before,
+html.dark .ui.drag.block.inner .block.row.has--style_name--statCardsPrimary::before {
+  background-color: #912018 !important;
+  background-image: none !important;
+  box-shadow: none !important;
 }
 
 .block.row.stat-cards-primary-box::after,
@@ -1875,6 +1889,79 @@ body.content-view-edit .block.row.has--style_name--statCardsPrimary {
   border-radius: 0 !important;
   box-shadow: none !important;
   width: 100% !important;
+}
+
+/* ADA text contrast for stat cards in dark mode:
+   White card columns remain white, so numbers and labels must be high-contrast dark text */
+html.dark .block.row.stat-cards-box .row-column,
+html.dark .block.row.stat-cards-primary-box .row-column,
+html.dark .block.row.has--style_name--statCards .row-column,
+html.dark .block.row.has--style_name--statCardsPrimary .row-column,
+html.dark .row-edit-container.stat-cards-box .row-column,
+html.dark .row-edit-container.stat-cards-primary-box .row-column,
+html.dark .row-edit-container.has--style_name--statCards .row-column,
+html.dark .row-edit-container.has--style_name--statCardsPrimary .row-column {
+  color: #0f172a !important;
+}
+
+html.dark .block.row.stat-cards-box .row-column .ui.statistic > .value,
+html.dark .block.row.stat-cards-box .row-column .ui.statistic .value,
+html.dark .block.row.stat-cards-box .row-column .ui.statistic .value > div,
+html.dark .block.row.stat-cards-primary-box .row-column .ui.statistic > .value,
+html.dark .block.row.stat-cards-primary-box .row-column .ui.statistic .value,
+html.dark .block.row.stat-cards-primary-box .row-column .ui.statistic .value > div,
+html.dark .block.row.has--style_name--statCards .row-column .ui.statistic > .value,
+html.dark .block.row.has--style_name--statCards .row-column .ui.statistic .value,
+html.dark .block.row.has--style_name--statCards .row-column .ui.statistic .value > div,
+html.dark .block.row.has--style_name--statCardsPrimary .row-column .ui.statistic > .value,
+html.dark .block.row.has--style_name--statCardsPrimary .row-column .ui.statistic .value,
+html.dark .block.row.has--style_name--statCardsPrimary .row-column .ui.statistic .value > div,
+html.dark .row-edit-container.stat-cards-box .row-column .ui.statistic > .value,
+html.dark .row-edit-container.stat-cards-box .row-column .ui.statistic .value,
+html.dark .row-edit-container.stat-cards-primary-box .row-column .ui.statistic > .value,
+html.dark .row-edit-container.stat-cards-primary-box .row-column .ui.statistic .value,
+html.dark .row-edit-container.has--style_name--statCards .row-column .ui.statistic > .value,
+html.dark .row-edit-container.has--style_name--statCards .row-column .ui.statistic .value,
+html.dark .row-edit-container.has--style_name--statCardsPrimary .row-column .ui.statistic > .value,
+html.dark .row-edit-container.has--style_name--statCardsPrimary .row-column .ui.statistic .value {
+  color: #0f172a !important;
+}
+
+html.dark .block.row.stat-cards-box .row-column .ui.statistic > .label,
+html.dark .block.row.stat-cards-box .row-column .ui.statistic .label,
+html.dark .block.row.stat-cards-box .row-column .ui.statistic .label > p,
+html.dark .block.row.stat-cards-primary-box .row-column .ui.statistic > .label,
+html.dark .block.row.stat-cards-primary-box .row-column .ui.statistic .label,
+html.dark .block.row.stat-cards-primary-box .row-column .ui.statistic .label > p,
+html.dark .block.row.has--style_name--statCards .row-column .ui.statistic > .label,
+html.dark .block.row.has--style_name--statCards .row-column .ui.statistic .label,
+html.dark .block.row.has--style_name--statCards .row-column .ui.statistic .label > p,
+html.dark .block.row.has--style_name--statCardsPrimary .row-column .ui.statistic > .label,
+html.dark .block.row.has--style_name--statCardsPrimary .row-column .ui.statistic .label,
+html.dark .block.row.has--style_name--statCardsPrimary .row-column .ui.statistic .label > p,
+html.dark .row-edit-container.stat-cards-box .row-column .ui.statistic > .label,
+html.dark .row-edit-container.stat-cards-box .row-column .ui.statistic .label,
+html.dark .row-edit-container.stat-cards-primary-box .row-column .ui.statistic > .label,
+html.dark .row-edit-container.stat-cards-primary-box .row-column .ui.statistic .label,
+html.dark .row-edit-container.has--style_name--statCards .row-column .ui.statistic > .label,
+html.dark .row-edit-container.has--style_name--statCards .row-column .ui.statistic .label,
+html.dark .row-edit-container.has--style_name--statCardsPrimary .row-column .ui.statistic > .label,
+html.dark .row-edit-container.has--style_name--statCardsPrimary .row-column .ui.statistic .label {
+  color: #1e293b !important;
+  font-weight: 700 !important;
+}
+
+html.dark .block.row.stat-cards-box .row-column h1,
+html.dark .block.row.stat-cards-box .row-column h2,
+html.dark .block.row.stat-cards-box .row-column h3,
+html.dark .block.row.stat-cards-box .row-column h4,
+html.dark .block.row.stat-cards-box .row-column p,
+html.dark .block.row.stat-cards-primary-box .row-column h1,
+html.dark .block.row.stat-cards-primary-box .row-column h2,
+html.dark .block.row.stat-cards-primary-box .row-column h3,
+html.dark .block.row.stat-cards-primary-box .row-column h4,
+html.dark .block.row.stat-cards-primary-box .row-column p {
+  color: #0f172a !important;
 }
 
 /* --------------------------------------------------------------------------

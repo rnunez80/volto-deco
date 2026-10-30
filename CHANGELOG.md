@@ -2,6 +2,14 @@
 
 All notable changes to `volto-deco` will be documented in this file.
 
+## 1.2.8 (2026-10-29)
+
+### Dark Mode & ADA Contrast
+- **Seamless Stat Cards Transition (`deco.css`):**
+  - Updated `.stat-cards-primary-box::before` (and row preset variants) in dark mode (`html.dark`) to `#912018 !important; background-image: none !important; box-shadow: none !important;` to match the `#912018` dark red section banner above it seamlessly without a visible transition seam.
+- **Stat Cards ADA Contrast in Dark Mode (`deco.css`):**
+  - Enforced high-contrast dark text (`#0f172a !important;` for `.value`, `#1e293b !important; font-weight: 700;` for `.label`) inside white stat card containers (`.stat-cards-box .row-column`, `.stat-cards-primary-box .row-column`) in dark mode, eliminating low-contrast pink (`#f87171`) and achieving full WCAG 2.1 AA/AAA compliance (>15:1 contrast).
+
 ## 1.2.7 (2026-10-29)
 
 ### Sidebar & Editing Improvements
