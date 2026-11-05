@@ -94,8 +94,7 @@ const RowEdit: React.FC<RowEditProps> = (props) => {
     data.gridTemplate || deriveGridTemplate(data.blocks_layout, data.blocks);
 
   const bgImageUrl = getImageUrl(data.backgroundImage);
-  const hasBackground =
-    !!(styleName && styleName !== 'none') || !!bgImageUrl;
+  const hasBackground = !!(styleName && styleName !== 'none') || !!bgImageUrl;
 
   const rowStyle: React.CSSProperties = {
     ...(bgImageUrl
@@ -843,14 +842,13 @@ const RowEdit: React.FC<RowEditProps> = (props) => {
                 data.alignItems === 'top' ||
                 data.alignItems === 'flex-start'
                   ? 'flex-start'
-                  : data.alignItems === 'center' ||
-                    data.alignItems === 'middle'
-                  ? 'center'
-                  : data.alignItems === 'end' ||
-                    data.alignItems === 'bottom' ||
-                    data.alignItems === 'flex-end'
-                  ? 'flex-end'
-                  : 'stretch',
+                  : data.alignItems === 'center' || data.alignItems === 'middle'
+                    ? 'center'
+                    : data.alignItems === 'end' ||
+                        data.alignItems === 'bottom' ||
+                        data.alignItems === 'flex-end'
+                      ? 'flex-end'
+                      : 'stretch',
             }}
           >
             {columnIds.map((colId, index) => {

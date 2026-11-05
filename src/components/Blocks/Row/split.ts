@@ -110,8 +110,8 @@ export function extractBlockFromFormData(
           const newColBlocks = { ...innerBlocks };
           delete newColBlocks[blockId];
 
-          const colLayout =
-            col.blocks_layout || col.data?.blocks_layout || { items: [] };
+          const colLayout = col.blocks_layout ||
+            col.data?.blocks_layout || { items: [] };
           const newColItems = (colLayout.items || []).filter(
             (id: string) => id !== blockId,
           );
@@ -186,8 +186,7 @@ function removeEmptySourceColumn(
   const row = blocks[source.rowId];
   if (!row) return;
 
-  const colContainers =
-    row.blocks || row.data?.blocks || row.columnsBlocks;
+  const colContainers = row.blocks || row.data?.blocks || row.columnsBlocks;
   if (!colContainers) return;
 
   const col = colContainers[source.colId];
@@ -466,14 +465,13 @@ export function moveBlockIntoColumn(
   const row = nextBlocks[targetRowId];
   if (!row) return formData;
 
-  const colContainers =
-    row.blocks || row.data?.blocks || row.columnsBlocks;
+  const colContainers = row.blocks || row.data?.blocks || row.columnsBlocks;
   const targetCol = colContainers?.[targetColId];
   if (!targetCol) return formData;
 
   const targetColBlocks = targetCol.blocks || targetCol.data?.blocks || {};
-  const targetColLayout =
-    targetCol.blocks_layout || targetCol.data?.blocks_layout || { items: [] };
+  const targetColLayout = targetCol.blocks_layout ||
+    targetCol.data?.blocks_layout || { items: [] };
 
   const newTargetBlocks = {
     ...targetColBlocks,
@@ -549,13 +547,12 @@ export function insertBlockAsNewColumn(
   const row = nextBlocks[targetRowId];
   if (!row) return formData;
 
-  const colContainers =
-    row.blocks || row.data?.blocks || row.columnsBlocks;
+  const colContainers = row.blocks || row.data?.blocks || row.columnsBlocks;
   if (!colContainers) return formData;
 
   const { id: newColId, col } = makeColumn(sourceBlockId, sourceBlock);
-  const rowLayout =
-    row.blocks_layout || row.data?.blocks_layout || { items: [] };
+  const rowLayout = row.blocks_layout ||
+    row.data?.blocks_layout || { items: [] };
   const colIds: string[] = [...(rowLayout.items || Object.keys(colContainers))];
   const refIdx = colIds.indexOf(refColId);
   const insertAt =

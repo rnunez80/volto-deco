@@ -43,8 +43,7 @@ const RowView: React.FC<RowViewProps> = (props) => {
     data.gridTemplate || deriveGridTemplate(data.blocks_layout, data.blocks);
 
   const bgImageUrl = getImageUrl(data.backgroundImage);
-  const hasBackground =
-    !!(styleName && styleName !== 'none') || !!bgImageUrl;
+  const hasBackground = !!(styleName && styleName !== 'none') || !!bgImageUrl;
 
   const mergedStyle: React.CSSProperties = {
     ...style,
@@ -90,14 +89,13 @@ const RowView: React.FC<RowViewProps> = (props) => {
               data.alignItems === 'top' ||
               data.alignItems === 'flex-start'
                 ? 'flex-start'
-                : data.alignItems === 'center' ||
-                  data.alignItems === 'middle'
-                ? 'center'
-                : data.alignItems === 'end' ||
-                  data.alignItems === 'bottom' ||
-                  data.alignItems === 'flex-end'
-                ? 'flex-end'
-                : 'stretch',
+                : data.alignItems === 'center' || data.alignItems === 'middle'
+                  ? 'center'
+                  : data.alignItems === 'end' ||
+                      data.alignItems === 'bottom' ||
+                      data.alignItems === 'flex-end'
+                    ? 'flex-end'
+                    : 'stretch',
           }}
         >
           {columnIds.map((colId: string) => {

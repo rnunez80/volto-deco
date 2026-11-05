@@ -306,7 +306,9 @@ const EditBlockWrapper = (props) => {
         {
           [data.align]: data.align,
           [`has--block-width--${
-            data['@type'] === 'headerTitle' ? 'full' : (data.blockWidth || 'default')
+            data['@type'] === 'headerTitle'
+              ? 'full'
+              : data.blockWidth || 'default'
           }`]: !isNested,
           'is-selected': selected,
           'is-multi-selected': multiSelected,
@@ -360,7 +362,8 @@ const EditBlockWrapper = (props) => {
             onKeyDown={(e) => {
               if (e.key === 'Enter' || e.key === ' ') {
                 e.stopPropagation();
-                const isMultipleSelection = e.shiftKey || e.ctrlKey || e.metaKey;
+                const isMultipleSelection =
+                  e.shiftKey || e.ctrlKey || e.metaKey;
                 notifyRowContainerSelected(isMultipleSelection);
                 if (onSelectBlock) {
                   onSelectBlock(
@@ -404,7 +407,9 @@ const EditBlockWrapper = (props) => {
             })}
             aria-label={intl.formatMessage(messages.drag_block, { type })}
             title={
-              type === 'row' ? 'Drag entire Row' : 'Drag to reorder or move block'
+              type === 'row'
+                ? 'Drag entire Row'
+                : 'Drag to reorder or move block'
             }
           >
             <Icon name={dragSVG} size={type === 'row' ? '12px' : '16px'} />

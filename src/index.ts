@@ -112,4 +112,3 @@ export {
 } from './components/Widgets';
 export { default as installRowMigrationMiddleware } from './middleware/rowMigrationMiddleware';
 export { default as installBlockWidth } from './config/blockWidth';
-
