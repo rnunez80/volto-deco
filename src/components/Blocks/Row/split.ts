@@ -1,6 +1,12 @@
 import { v4 as uuid } from 'uuid';
-import cloneDeep from 'lodash/cloneDeep';
 import { RowBlockData, deriveGridTemplate } from './normalize';
+
+function cloneDeep<T>(obj: T): T {
+  if (obj === null || typeof obj !== 'object') {
+    return obj;
+  }
+  return JSON.parse(JSON.stringify(obj));
+}
 
 type FormData = {
   blocks: Record<string, any>;

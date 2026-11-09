@@ -2,7 +2,25 @@
 
 All notable changes to `volto-deco` will be documented in this file.
 
-## 1.2.8 (2026-10-29)
+## 1.2.9 (2026-11-09)
+
+### Standalone Decoupling & Complete Architecture Isolation
+- **Autonomous Deployment Architecture:**
+  - Consolidated all layout, blocks DnD, multi-column row grid, and container width styles directly into `volto-deco` so it can be deployed to any Volto site completely independent of `volto-yc-theme` or `volto-yc19`.
+- **Universal Layout & Container Width System (`deco.css`):**
+  - Added universal sideways scroll prevention (`overflow-x: clip !important`) across view and edit modes to eliminate horizontal scrolling caused by full-width edge-to-edge breakouts.
+  - Centralized `:root` container width system tokens (`--narrow-container-width: 720px`, `--default-container-width: 940px`, `--layout-container-width: 1440px`, `--full-container-width: 100%`) and vertical rhythm tokens (`--block-spacing-vertical`, `--grid-gap`).
+  - Added Volto admin toolbar and sidebar offset system (`--volto-toolbar-width`, `--volto-sidebar-width`) with responsive mobile rules for screen widths $\le 768\text{px}$.
+  - Added clean WYSIWYG canvas sizing and full-width breakout cancellation across all edit and add view modes.
+  - Added anti-duplication styling for block editors and row inner containers.
+  - Added centered inner container sizing (`max-width: 1440px`) for all full-width blocks and rows.
+  - Added button block layout sizing and modal/toolbar icon button resets.
+- **Brand-Neutral Theme Hooks (`deco.css`, `RowStylePresetWidget.tsx`):**
+  - Replaced hardcoded York red branding colors (`#cd291e`, `#912018`) and `--yc-radius-card` with themeable hooks: `var(--deco-primary-color, var(--primary-color, #007bc1))` and `var(--deco-radius-card, 8px)`.
+  - Updated `RowStylePresetWidget.tsx` options and descriptions to be completely brand-neutral.
+- **Zero-Dependency Core (`split.ts`):**
+  - Replaced external `lodash/cloneDeep` with an internal deep-clone utility, making `volto-deco` free of unnecessary third-party dependencies.
+  - Exported `getImageUrl` helper utility.
 
 ### Dark Mode & ADA Contrast
 - **Seamless Stat Cards Transition (`deco.css`):**
