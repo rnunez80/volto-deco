@@ -1,5 +1,6 @@
 import React from 'react';
 import { FormFieldWrapper } from '@plone/volto/components';
+import config from '@plone/volto/registry';
 
 export interface StylePresetOption {
   id: string;
@@ -81,21 +82,21 @@ export const STYLE_PRESETS: StylePresetOption[] = [
   },
   {
     id: 'statCardsPrimary',
-    title: 'Primary + Cards',
+    title: 'Red + Cards',
     cssClass: 'stat-cards-primary-box',
-    color: 'linear-gradient(to bottom, #007bc1 50%, transparent 50%)',
+    color: 'linear-gradient(to bottom, #9d162a 50%, transparent 50%)',
     textColor: '#ffffff',
     border: '1px solid rgba(0, 0, 0, 0.15)',
-    description: 'Primary banner with white elevated stat cards',
+    description: 'York Red banner with white elevated stat cards',
   },
   {
     id: 'redBlueBox',
-    title: 'Two-Tone',
+    title: 'Red / Blue',
     cssClass: 'red-blue-box',
     color:
-      'linear-gradient(102deg, #0284c7 0%, #0369a1 48%, #1e293b 49%, #0f172a 100%)',
+      'linear-gradient(102deg, #dc0022 0%, #e51e2d 48%, #1d3a82 49%, #2a4ea6 72%, #1d3a82 100%)',
     textColor: '#ffffff',
-    description: 'Two-tone geometric split background with white text',
+    description: 'York Red and Navy geometric split background with white text',
   },
 ];
 
@@ -115,6 +116,19 @@ const RowStylePresetWidget: React.FC<RowStylePresetWidgetProps> = (props) => {
   const { id = 'style_name', value = '', onChange } = props;
   const currentVal = value || '';
 
+  const configuredPresets =
+    config?.settings?.row_style_presets || config?.settings?.style_presets;
+
+  const presets: StylePresetOption[] = configuredPresets
+    ? configuredPresets.map((p: any) => {
+        const match = STYLE_PRESETS.find((sp) => sp.id === p.id);
+        return {
+          ...(match || {}),
+          ...p,
+        };
+      })
+    : STYLE_PRESETS;
+
   return (
     <FormFieldWrapper {...props} className="row-style-preset-field">
       <div className="row-style-preset-widget" style={{ marginTop: '0.25rem' }}>
@@ -125,7 +139,7 @@ const RowStylePresetWidget: React.FC<RowStylePresetWidgetProps> = (props) => {
             gap: '8px',
           }}
         >
-          {STYLE_PRESETS.map((preset) => {
+          {presets.map((preset) => {
             const isSelected = currentVal === preset.id;
 
             return (

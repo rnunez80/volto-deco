@@ -1850,8 +1850,8 @@ body.content-view-edit .block.row.has--style_name--statCardsPrimary {
   height: 75px !important;
   border: none !important;
   background-color: var(
-    --deco-primary-color,
-    var(--primary-color, #cd291e)
+    #cd291e,
+    var(#cd291e, #cd291e)
   ) !important;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 1000 1000' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.5' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)' opacity='.05'/%3E%3C/svg%3E"),
     radial-gradient(at 0% 100%, rgba(227, 24, 55, 0.8) 0, transparent 50%),
@@ -1874,7 +1874,7 @@ html.dark .ui.drag.block.inner .block.row.stat-cards-primary-box::before,
 html.dark
   .ui.drag.block.inner
   .block.row.has--style_name--statCardsPrimary::before {
-  background-color: var(--deco-primary-color-dark, #912018) !important;
+  background-color: var(#cd291e, #912018) !important;
   background-image: none !important;
   box-shadow: none !important;
 }
@@ -2396,7 +2396,9 @@ html.dark .block.row.stat-cards-primary-box .row-column p {
 #page-document
   .styled-slate:not(.has--block-width--full):not(.full-width):not(.contained),
 #page-document
-  .styled:not(.has--block-width--full):not(.full-width):not(.contained),
+  .styled:not(.accordion):not(.ui):not(.has--block-width--full):not(
+    .full-width
+  ):not(.contained),
 #page-document
   [class*='styled-']:not(.has--block-width--full):not(.full-width):not(
     .contained
@@ -2412,7 +2414,9 @@ html.dark .block.row.stat-cards-primary-box .row-column p {
 .view-wrapper
   .styled-slate:not(.has--block-width--full):not(.full-width):not(.contained),
 .view-wrapper
-  .styled:not(.has--block-width--full):not(.full-width):not(.contained),
+  .styled:not(.accordion):not(.ui):not(.has--block-width--full):not(
+    .full-width
+  ):not(.contained),
 .view-wrapper
   [class*='styled-']:not(.has--block-width--full):not(.full-width):not(
     .contained
@@ -2427,7 +2431,10 @@ html.dark .block.row.stat-cards-primary-box .row-column p {
   .styled-title:not(.has--block-width--full):not(.full-width):not(.contained),
 #view
   .styled-slate:not(.has--block-width--full):not(.full-width):not(.contained),
-#view .styled:not(.has--block-width--full):not(.full-width):not(.contained),
+#view
+  .styled:not(.accordion):not(.ui):not(.has--block-width--full):not(
+    .full-width
+  ):not(.contained),
 #view
   [class*='styled-']:not(.has--block-width--full):not(.full-width):not(
     .contained
@@ -2440,6 +2447,20 @@ html.dark .block.row.stat-cards-primary-box .row-column p {
   .block:not(.has--block-width--full):not(.row):not(.contained)[class*='-box'] {
   margin-top: var(--block-spacing-vertical, 1.75rem) !important;
   margin-bottom: var(--block-spacing-vertical, 1.75rem) !important;
+}
+
+/* Accordion block items spacing (View Mode matches Edit Mode) */
+.accordion-block .ui.accordion,
+.accordion-block .ui.styled.accordion,
+.accordion-block .accordion.ui.fluid.styled {
+  margin-top: 0 !important;
+  margin-bottom: 5px !important;
+}
+
+.accordion-block .ui.accordion:last-child,
+.accordion-block .ui.styled.accordion:last-child,
+.accordion-block .accordion.ui.fluid.styled:last-child {
+  margin-bottom: 0 !important;
 }
 
 /* Blocks inside row columns should not have outer vertical block spacing */

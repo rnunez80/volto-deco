@@ -2,6 +2,16 @@
 
 All notable changes to `volto-deco` will be documented in this file.
 
+## 1.2.10 (2026-11-09)
+
+### Accordion & Style Preset Enhancements
+- **Accordion Spacing View/Edit Parity (`deco.css`):**
+  - Excluded `:not(.accordion):not(.ui)` from `#page-document .styled:not(...)`, `.view-wrapper .styled:not(...)`, and `#view .styled:not(...)` block vertical rhythm rules, preventing Semantic UI styled accordions (`.ui.styled.accordion`) from inheriting the 1.75rem block vertical spacing between individual accordion panels.
+  - Added explicit `.accordion-block .ui.accordion`, `.accordion-block .ui.styled.accordion`, and `.accordion-block .accordion.ui.fluid.styled` spacing rules (`margin-top: 0 !important; margin-bottom: 5px !important;` with `margin-bottom: 0 !important` on `:last-child`), aligning View mode panel spacing to match Edit mode (~5px).
+- **Theme-Aware Style Preset Widget (`RowStylePresetWidget.tsx`):**
+  - Updated `RowStylePresetWidget.tsx` to read presets dynamically from `config.settings.row_style_presets` or `config.settings.style_presets` while smoothly falling back to built-in presets.
+  - Restored high-fidelity swatches and options for `statCardsPrimary` (`Red + Cards`) and `redBlueBox` (`Red / Blue`).
+
 ## 1.2.9 (2026-11-09)
 
 ### Standalone Decoupling & Complete Architecture Isolation
