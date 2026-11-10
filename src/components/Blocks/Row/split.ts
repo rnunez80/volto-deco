@@ -74,12 +74,40 @@ export function extractBlockFromFormData(
   newFormData: FormData;
   source: SourceLocation | null;
 } {
-  if (!formData || !formData.blocks || !formData.blocks_layout) {
+  if (!formData) {
     return { blockData: null, newFormData: formData, source: null };
   }
 
-  const nextBlocks = cloneDeep(formData.blocks);
-  const nextLayoutItems = [...(formData.blocks_layout.items || [])];
+  const rawBlocks =
+    formData.blocks && Object.keys(formData.blocks).length > 0
+      ? formData.blocks
+      : (formData as any).data?.blocks;
+  const rawLayout =
+    formData.blocks_layout?.items && formData.blocks_layout.items.length > 0
+      ? formData.blocks_layout
+      : (formData as any).data?.blocks_layout;
+  if (!rawBlocks) {
+    return { blockData: null, newFormData: formData, source: null };
+  }
+
+  const nextBlocks = cloneDeep(rawBlocks);
+  const nextLayoutItems = [...(rawLayout?.items || Object.keys(nextBlocks))];
+
+  const buildResult = (blockData: any, source: SourceLocation | null) => {
+    const newFormData: any = {
+      ...formData,
+      blocks: nextBlocks,
+      blocks_layout: { items: nextLayoutItems },
+    };
+    if ((formData as any).data && typeof (formData as any).data === 'object') {
+      newFormData.data = {
+        ...(formData as any).data,
+        blocks: nextBlocks,
+        blocks_layout: { items: nextLayoutItems },
+      };
+    }
+    return { blockData, newFormData, source };
+  };
 
   // 1. Root level
   if (nextBlocks[blockId]) {
@@ -87,15 +115,7 @@ export function extractBlockFromFormData(
     delete nextBlocks[blockId];
     const idx = nextLayoutItems.indexOf(blockId);
     if (idx > -1) nextLayoutItems.splice(idx, 1);
-    return {
-      blockData,
-      newFormData: {
-        ...formData,
-        blocks: nextBlocks,
-        blocks_layout: { items: nextLayoutItems },
-      },
-      source: null,
-    };
+    return buildResult(blockData, null);
   }
 
   // 2. Inside row columns (checking both .blocks and .data.blocks)
@@ -153,15 +173,7 @@ export function extractBlockFromFormData(
 
           nextBlocks[rId] = updatedRow;
 
-          return {
-            blockData,
-            newFormData: {
-              ...formData,
-              blocks: nextBlocks,
-              blocks_layout: { items: nextLayoutItems },
-            },
-            source: { rowId: rId, colId: cId },
-          };
+          return buildResult(blockData, { rowId: rId, colId: cId });
         }
       }
     }
@@ -169,11 +181,7 @@ export function extractBlockFromFormData(
 
   return {
     blockData: null,
-    newFormData: {
-      ...formData,
-      blocks: nextBlocks,
-      blocks_layout: { items: nextLayoutItems },
-    },
+    newFormData: formData,
     source: null,
   };
 }
@@ -280,9 +288,15 @@ export function splitBlocksIntoRow(
 
   // Case A: target is already a row -> add a column at the edge
   if (isRowType(targetBlock)) {
+    const colContainers =
+      targetBlock.blocks || targetBlock.data?.blocks || targetBlock.columnsBlocks;
+    const rowLayout =
+      targetBlock.blocks_layout ||
+      targetBlock.data?.blocks_layout || { items: [] };
+
     const { id: newColId, col } = makeColumn(sourceBlockId, sourceBlock);
-    const colIds = [...(targetBlock.blocks_layout?.items || [])];
-    const colBlocks: Record<string, any> = { ...(targetBlock.blocks || {}) };
+    const colIds = [...(rowLayout.items || Object.keys(colContainers || {}))];
+    const colBlocks: Record<string, any> = { ...(colContainers || {}) };
     colBlocks[newColId] = col;
     if (position === 'left') colIds.unshift(newColId);
     else colIds.push(newColId);
@@ -300,7 +314,7 @@ export function splitBlocksIntoRow(
             ? '4-col-equal'
             : 'custom';
 
-    nextBlocks[targetBlockId] = {
+    const updatedRow = {
       ...targetBlock,
       '@type': 'row',
       blocks_layout: { items: colIds },
@@ -308,6 +322,15 @@ export function splitBlocksIntoRow(
       gridTemplate: deriveGridTemplate({ items: colIds }, colBlocks),
       layoutPreset: preset,
     };
+    if (targetBlock.data && typeof targetBlock.data === 'object') {
+      updatedRow.data = {
+        ...targetBlock.data,
+        blocks: colBlocks,
+        blocks_layout: { items: colIds },
+      };
+    }
+    nextBlocks[targetBlockId] = updatedRow;
+
     // Only remove empty source column if it came from a different row
     if (source && source.rowId !== targetBlockId) {
       removeEmptySourceColumn(nextBlocks, source, nextLayoutItems);
@@ -523,11 +546,19 @@ export function moveBlockIntoColumn(
     removeEmptySourceColumn(nextBlocks, source, nextLayoutItems);
   }
 
-  return {
+  const result: any = {
     ...formData,
     blocks: nextBlocks,
     blocks_layout: { items: nextLayoutItems },
   };
+  if ((formData as any).data && typeof (formData as any).data === 'object') {
+    result.data = {
+      ...(formData as any).data,
+      blocks: nextBlocks,
+      blocks_layout: { items: nextLayoutItems },
+    };
+  }
+  return result;
 }
 
 /**
@@ -601,9 +632,17 @@ export function insertBlockAsNewColumn(
     removeEmptySourceColumn(nextBlocks, source, nextLayoutItems);
   }
 
-  return {
+  const result: any = {
     ...formData,
     blocks: nextBlocks,
     blocks_layout: { items: nextLayoutItems },
   };
+  if ((formData as any).data && typeof (formData as any).data === 'object') {
+    result.data = {
+      ...(formData as any).data,
+      blocks: nextBlocks,
+      blocks_layout: { items: nextLayoutItems },
+    };
+  }
+  return result;
 }

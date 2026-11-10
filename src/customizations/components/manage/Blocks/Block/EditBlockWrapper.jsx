@@ -181,8 +181,7 @@ const EditBlockWrapper = (props) => {
 
   const handleDrop = (e) => {
     if (e.nativeEvent.__voltoDropHandled) return;
-    if (isOverOwnRowColumn(e)) {
-      setDropPosition(null);
+    if (!dropPosition && isOverOwnRowColumn(e)) {
       return;
     }
     const draggingId =

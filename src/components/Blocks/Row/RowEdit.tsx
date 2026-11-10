@@ -488,21 +488,27 @@ const RowEdit: React.FC<RowEditProps> = (props) => {
 
   // ---- Mosaic drag & drop on columns ------------------------------------
 
-  const computeHint = (e: React.DragEvent, colId: string): DropHint => {
+  const computeHint = (
+    e: React.DragEvent,
+    colId: string,
+    dragId?: string | null,
+  ): DropHint => {
     const el = e.currentTarget as HTMLElement;
     const rect = el.getBoundingClientRect();
-    const draggingId = getDraggingId();
+    const draggingId = dragId !== undefined ? dragId : getDraggingId();
     const rawItems: string[] = data.blocks[colId]?.blocks_layout?.items || [];
     const isIntraCol = !!(draggingId && rawItems.includes(draggingId));
 
-    // Only allow creating a new column at the outer edges if dragging from OUTSIDE this column
-    // and only when hovering at the extreme left/right edges (outer 28px or 10%)
-    if (!isIntraCol) {
-      const edgeThreshold = Math.min(28, rect.width * 0.1);
-      const isLeftEdge = e.clientX - rect.left < edgeThreshold;
-      const isRightEdge = rect.right - e.clientX < edgeThreshold;
-      if (isLeftEdge) return { colId, mode: 'before' };
-      if (isRightEdge) return { colId, mode: 'after' };
+    // When hovering at outer edges (left/right), allow creating a new column.
+    const edgeThreshold = Math.max(36, Math.min(80, rect.width * 0.25));
+    const isLeftEdge = e.clientX - rect.left < edgeThreshold;
+    const isRightEdge = rect.right - e.clientX < edgeThreshold;
+
+    if (isLeftEdge) {
+      return { colId, mode: 'before' };
+    }
+    if (isRightEdge) {
+      return { colId, mode: 'after' };
     }
 
     // Filter out the dragged block so we don't compare against itself
@@ -549,7 +555,7 @@ const RowEdit: React.FC<RowEditProps> = (props) => {
     if (!draggingId || native.__voltoDropHandled) return;
     native.__voltoDropHandled = true;
     e.preventDefault();
-    const hint = computeHint(e, colId);
+    const hint = computeHint(e, colId, draggingId);
     if (!sameHint(dropHint, hint)) setDropHint(hint);
   };
 
@@ -573,7 +579,11 @@ const RowEdit: React.FC<RowEditProps> = (props) => {
     e.preventDefault();
     e.stopPropagation();
 
-    const hint = computeHint(e, colId);
+    // Use active dropHint if it matches this column, otherwise compute
+    const hint =
+      dropHint && dropHint.colId === colId
+        ? dropHint
+        : computeHint(e, colId, draggingId);
     setDropHint(null);
     if (typeof document !== 'undefined') {
       document.body.classList.remove('is-dragging-volto-block');
@@ -712,11 +722,8 @@ const RowEdit: React.FC<RowEditProps> = (props) => {
         [newColId]: newCol,
       };
 
-      if (newSourceItems.length === 0) {
-        const sIdx = newColIds.indexOf(sourceColId);
-        if (sIdx > -1) newColIds.splice(sIdx, 1);
-        delete newBlocks[sourceColId];
-      }
+      // Keep source column even if emptied, matching Mosaic column split behavior
+      // (a drop at the edge explicitly requests a new column, expanding column count).
 
       newColIds.forEach((cid) => {
         if (newBlocks[cid])
@@ -729,18 +736,24 @@ const RowEdit: React.FC<RowEditProps> = (props) => {
     }
 
     // 4. Dragging a block from OUTSIDE the row into this row
-    if (!props.properties || !props.onChangeFormData) return;
+    const rootFormData = props.properties || props.content || props.metadata;
+    if (!rootFormData || !props.onChangeFormData) return;
+
+    const rootBlocks = rootFormData.blocks || rootFormData.data?.blocks || {};
+    const rootLayout = rootFormData.blocks_layout ||
+      rootFormData.data?.blocks_layout || { items: Object.keys(rootBlocks) };
 
     const currentRootFormData = {
-      ...props.properties,
+      ...rootFormData,
       blocks: {
-        ...(props.properties?.blocks || {}),
+        ...rootBlocks,
         [block]: {
           ...data,
           blocks: data.blocks,
           blocks_layout: data.blocks_layout,
         },
       },
+      blocks_layout: rootLayout,
     };
 
     const next =
@@ -759,6 +772,13 @@ const RowEdit: React.FC<RowEditProps> = (props) => {
             colId,
             hint.mode,
           );
+
+    if (next?.blocks?.[block]) {
+      latestDataRef.current = next.blocks[block];
+      if (onChangeBlock) {
+        onChangeBlock(block, next.blocks[block]);
+      }
+    }
     props.onChangeFormData(next);
     handleSelectInnerBlock(draggingId);
   };

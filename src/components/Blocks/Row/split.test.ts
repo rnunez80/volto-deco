@@ -392,4 +392,89 @@ describe('splitBlocksIntoRow', () => {
     expect(col.blocks_layout.items).toEqual(['existing-item', 'dragged-item']);
     expect(col.blocks['dragged-item']).toBeDefined();
   });
+
+  it('appends a column to a 2-column row where data is inside targetBlock.data', () => {
+    const formData = {
+      blocks: {
+        'row-1': {
+          '@type': 'row',
+          data: {
+            blocks_layout: { items: ['col-1', 'col-2'] },
+            blocks: {
+              'col-1': {
+                '@type': 'rowColumn',
+                width: '1fr',
+                blocks: { 'block-1': { '@type': 'slate' } },
+                blocks_layout: { items: ['block-1'] },
+              },
+              'col-2': {
+                '@type': 'rowColumn',
+                width: '1fr',
+                blocks: { 'block-2': { '@type': 'slate' } },
+                blocks_layout: { items: ['block-2'] },
+              },
+            },
+          },
+        },
+        'block-3': { '@type': 'image' },
+      },
+      blocks_layout: { items: ['row-1', 'block-3'] },
+    };
+
+    const result = splitBlocksIntoRow(formData, 'row-1', 'block-3', 'right');
+    const updatedRow = result.blocks['row-1'];
+    expect(updatedRow.blocks_layout.items.length).toBe(3);
+    expect(updatedRow.gridTemplate).toBe('1fr 1fr 1fr');
+    expect(updatedRow.data.blocks_layout.items.length).toBe(3);
+    const newColId = updatedRow.blocks_layout.items[2];
+    expect(updatedRow.blocks[newColId].blocks['block-3']).toBeDefined();
+    expect(updatedRow.data.blocks[newColId].blocks['block-3']).toBeDefined();
+  });
+
+  it('inserts a column to the right of column 2 when formData has data object', () => {
+    const formData = {
+      data: {
+        blocks: {
+          'row-1': {
+            '@type': 'row',
+            blocks_layout: { items: ['col-1', 'col-2'] },
+            blocks: {
+              'col-1': {
+                '@type': 'rowColumn',
+                width: '1fr',
+                blocks: { 'block-1': { '@type': 'slate' } },
+                blocks_layout: { items: ['block-1'] },
+              },
+              'col-2': {
+                '@type': 'rowColumn',
+                width: '1fr',
+                blocks: { 'block-2': { '@type': 'slate' } },
+                blocks_layout: { items: ['block-2'] },
+              },
+            },
+          },
+          'block-outside': { '@type': 'video' },
+        },
+        blocks_layout: { items: ['row-1', 'block-outside'] },
+      },
+      blocks: {},
+      blocks_layout: { items: [] },
+    };
+
+    const result = insertBlockAsNewColumn(
+      formData,
+      'block-outside',
+      'row-1',
+      'col-2',
+      'after',
+    );
+
+    const row = result.blocks['row-1'];
+    expect(row.blocks_layout.items.length).toBe(3);
+    expect(row.blocks_layout.items[0]).toBe('col-1');
+    expect(row.blocks_layout.items[1]).toBe('col-2');
+    const thirdColId = row.blocks_layout.items[2];
+    expect(row.blocks[thirdColId].blocks['block-outside']).toBeDefined();
+    expect(result.data.blocks['row-1'].blocks_layout.items.length).toBe(3);
+  });
 });
