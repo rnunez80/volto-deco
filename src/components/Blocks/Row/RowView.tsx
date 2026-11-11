@@ -63,7 +63,9 @@ const RowView: React.FC<RowViewProps> = (props) => {
         'block',
         'row',
         `has--block-width--${blockWidth}`,
-        styleName ? `has--style_name--${styleName}` : null,
+        styleName && styleName !== 'none'
+          ? `has--style_name--${styleName}`
+          : null,
         hasBackground ? 'has--background' : null,
         bgImageUrl ? 'has--background-image' : null,
         customClass,
@@ -79,23 +81,21 @@ const RowView: React.FC<RowViewProps> = (props) => {
             'gap--small': data.gridGap === 'small',
             'gap--large': data.gridGap === 'large',
             'gap--none': data.gridGap === 'none',
-            [`align--${data.alignItems || 'stretch'}`]: true,
+            [`align--${data.alignItems || 'start'}`]: true,
             'reverse-mobile': !!data.reverseMobile,
           })}
           style={{
             gridTemplateColumns: gridTemplate,
             alignItems:
-              data.alignItems === 'start' ||
-              data.alignItems === 'top' ||
-              data.alignItems === 'flex-start'
-                ? 'flex-start'
+              data.alignItems === 'stretch'
+                ? 'stretch'
                 : data.alignItems === 'center' || data.alignItems === 'middle'
                   ? 'center'
                   : data.alignItems === 'end' ||
                       data.alignItems === 'bottom' ||
                       data.alignItems === 'flex-end'
                     ? 'flex-end'
-                    : 'stretch',
+                    : 'flex-start',
           }}
         >
           {columnIds.map((colId: string) => {

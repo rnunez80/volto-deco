@@ -133,7 +133,7 @@ const StandaloneRowSettings: React.FC<StandaloneRowSettingsProps> = ({
       gridGap: '1.5rem',
       gridTemplate: '1fr 1fr',
       layoutPreset: '2-col-equal',
-      alignItems: currentBlockData.alignItems || 'stretch',
+      alignItems: currentBlockData.alignItems || 'start',
       blocks_layout: {
         items: [col1Id, col2Id],
       },
@@ -234,7 +234,7 @@ const StandaloneRowSettings: React.FC<StandaloneRowSettingsProps> = ({
           description={intl.formatMessage(
             messages.verticalAlignmentDescription,
           )}
-          value={data.alignItems || 'stretch'}
+          value={data.alignItems || 'start'}
           onChange={(id, val) =>
             onChangeBlock(block, { ...data, alignItems: val })
           }

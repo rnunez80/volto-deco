@@ -223,7 +223,7 @@ export const RowSchema = ({ intl }: any = {}) => ({
         : 'Align column contents vertically within this row',
       type: 'string',
       widget: 'row_vertical_align',
-      default: 'stretch',
+      default: 'start',
     },
     reverseMobile: {
       title: intl?.formatMessage

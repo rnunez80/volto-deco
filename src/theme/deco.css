@@ -390,7 +390,7 @@ body.is-dragging-volto-block .row-column .ui.drag.block.inner {
   display: grid;
   width: 100%;
   box-sizing: border-box;
-  align-items: stretch;
+  align-items: flex-start;
 }
 
 .row-inner-container.gap--small {
@@ -488,7 +488,7 @@ body.content-view-edit .block.image {
 .row-column .advancedView,
 .row-column .advancedSlider,
 .row-column .slick-slider,
-.row-column .slick-list {
+.row-column .column1 > .slick-list {
   position: relative !important;
   width: 100% !important;
   max-width: 100% !important;
@@ -576,7 +576,19 @@ body.view-editview
   margin-bottom: 0 !important;
 }
 
-/* In edit mode, full-width row with background fills canvas edge-to-edge */
+/* In view and edit modes, full-width row with background fills canvas edge-to-edge (inner .block-inner-container provides 1.5rem side padding) */
+.block.row.has--block-width--full.has--background,
+.block.row.has--block-width--full.has--background-image,
+.block.row.has--block-width--full[class*='has--style_name--'],
+.block.row.has--block-width--full[class*='-box'],
+#page-document .block.row.has--block-width--full.has--background,
+#page-document .block.row.has--block-width--full.has--background-image,
+#page-document .block.row.has--block-width--full[class*='has--style_name--'],
+#page-document .block.row.has--block-width--full[class*='-box'],
+.view-wrapper .block.row.has--block-width--full.has--background,
+.view-wrapper .block.row.has--block-width--full.has--background-image,
+.view-wrapper .block.row.has--block-width--full[class*='has--style_name--'],
+.view-wrapper .block.row.has--block-width--full[class*='-box'],
 .blocks-form
   .block-editor-row.has--block-width--full
   .block.row.has--background,
@@ -915,12 +927,22 @@ body:not(.view-editview):not(.content-view-edit) .block.has--block-width--full {
 
 /* Protect nested inner blocks inside row columns from breaking out or auto margins */
 .row-column [class*='has--block-width-'],
-.row-column .block,
 .row-column [class*='block-editor-'],
 .row-column .ui.drag.block.inner,
 #page-document .row-column [class*='has--block-width-'],
 .view-wrapper .row-column [class*='has--block-width-'] {
   position: static !important;
+  left: auto !important;
+  right: auto !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  box-sizing: border-box !important;
+}
+
+.row-column .block {
+  position: relative !important;
   left: auto !important;
   right: auto !important;
   width: 100% !important;
@@ -1095,19 +1117,7 @@ body.view-addview
   [class*='block-editor-'].has--block-width--layout:not(.row-column *),
 body.content-view-edit
   .blocks-form
-  [class*='block-editor-'].has--block-width--layout:not(.row-column *),
-body.view-editview
-  .block.row.has--block-width--layout:not([class*='has--style_name--']):not(
-    [class*='-box']
-  ),
-body.view-addview
-  .block.row.has--block-width--layout:not([class*='has--style_name--']):not(
-    [class*='-box']
-  ),
-body.content-view-edit
-  .block.row.has--block-width--layout:not([class*='has--style_name--']):not(
-    [class*='-box']
-  ) {
+  [class*='block-editor-'].has--block-width--layout:not(.row-column *) {
   padding-left: 0 !important;
   padding-right: 0 !important;
 }
@@ -1225,19 +1235,7 @@ body.content-view-edit
   .blocks-form
   [class*='block-editor-']:not(.block-editor-cinematicSlider):not(
     .block-editor-cinematicHorizontalScroll
-  ).has--block-width--default,
-body.view-editview
-  .block.row.has--block-width--default:not([class*='has--style_name--']):not(
-    [class*='-box']
-  ),
-body.view-addview
-  .block.row.has--block-width--default:not([class*='has--style_name--']):not(
-    [class*='-box']
-  ),
-body.content-view-edit
-  .block.row.has--block-width--default:not([class*='has--style_name--']):not(
-    [class*='-box']
-  ) {
+  ).has--block-width--default {
   padding-left: 0 !important;
   padding-right: 0 !important;
 }
@@ -1282,19 +1280,7 @@ body.view-addview
   [class*='block-editor-'].has--block-width--narrow:not(.row-column *),
 body.content-view-edit
   .blocks-form
-  [class*='block-editor-'].has--block-width--narrow:not(.row-column *),
-body.view-editview
-  .block.row.has--block-width--narrow:not([class*='has--style_name--']):not(
-    [class*='-box']
-  ),
-body.view-addview
-  .block.row.has--block-width--narrow:not([class*='has--style_name--']):not(
-    [class*='-box']
-  ),
-body.content-view-edit
-  .block.row.has--block-width--narrow:not([class*='has--style_name--']):not(
-    [class*='-box']
-  ) {
+  [class*='block-editor-'].has--block-width--narrow:not(.row-column *) {
   padding-left: 0 !important;
   padding-right: 0 !important;
 }
@@ -1358,11 +1344,82 @@ body.view-editview .block.row.has--block-width--full .block-inner-container,
   padding: 3rem 1.5rem !important;
 }
 
+/* Reset Volto's outer .block.row wrapper in Edit Mode so it never adds duplicate padding or borders */
+.ui.drag.block.inner.row,
+.ui.drag.block.inner.row > .block.row:not(.row-edit-container) {
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  outline: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Suppress Volto's default -9px expanded ::before selection/hover boxes on Row wrappers
+   so selecting or hovering a Row or an item inside a Row shows only a single clean line */
+.ui.drag.block.inner.row > .block.row:not(.row-edit-container)::before,
+.row-edit-container:not(.stat-cards-primary-box):not(
+    .has--style_name--statCardsPrimary
+  )::before {
+  content: none !important;
+  display: none !important;
+  border: none !important;
+}
+
+/* Keep Volto's block selection/hover ::before outline flush with the block edge in Edit Mode
+   instead of expanding 9px outside and overlapping adjacent/parent borders */
+body.view-editview
+  .block
+  .block:not(.inner):not(.stat-cards-primary-box):not(
+    .has--style_name--statCardsPrimary
+  )::before,
+body.view-addview
+  .block
+  .block:not(.inner):not(.stat-cards-primary-box):not(
+    .has--style_name--statCardsPrimary
+  )::before,
+body.content-view-edit
+  .block
+  .block:not(.inner):not(.stat-cards-primary-box):not(
+    .has--style_name--statCardsPrimary
+  )::before,
+.blocks-form
+  .block
+  .block:not(.inner):not(.stat-cards-primary-box):not(
+    .has--style_name--statCardsPrimary
+  )::before {
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 3px !important;
+  box-sizing: border-box !important;
+  pointer-events: none !important;
+}
+
+/* Avoid double border on listing preview inside Edit Mode */
+.blocks-form .block.listing .empty-listing {
+  border: none !important;
+}
+
 .row-edit-container {
   position: relative;
   border: none;
   padding: 0;
   background: transparent;
+  outline: 1px solid transparent;
+  outline-offset: -1px;
+  transition: outline-color 0.15s ease;
+}
+
+.row-edit-container.is-selected:not(.has-inner-selection) {
+  outline-color: rgba(120, 192, 215, 0.85);
+}
+
+.row-edit-container:hover:not(.is-selected):not(.has-inner-selection) {
+  outline-color: rgba(120, 192, 215, 0.4);
 }
 
 .row-edit-container .row-column-edit {
@@ -1370,14 +1427,13 @@ body.view-editview .block.row.has--block-width--full .block-inner-container,
   min-height: 2.5rem;
   border-radius: 2px;
   outline: 1px dashed transparent;
-  outline-offset: 4px;
+  outline-offset: -1px;
   transition: outline-color 0.15s ease;
 }
 
-.row-edit-container.is-selected .row-column-edit,
-.row-edit-container:hover .row-column-edit,
+.row-edit-container.is-selected:not(.has-inner-selection) .row-column-edit,
 .row-edit-container.is-dragging-over .row-column-edit {
-  outline-color: rgba(0, 123, 193, 0.25);
+  outline-color: rgba(0, 123, 193, 0.28);
 }
 
 /* --------------------------------------------------------------------------
@@ -1666,6 +1722,11 @@ body.is-resizing-columns * {
   display: none !important;
 }
 
+/* Ensure SidebarPopup (e.g. Block Style palette) always stacks above #sidebar */
+aside.sidebar-container {
+  z-index: 11002 !important;
+}
+
 #sidebar-row,
 #sidebar-row.tab-wrapper {
   overflow-y: auto !important;
@@ -1814,7 +1875,15 @@ body.is-resizing-columns * {
 .row-edit-container.has--style_name--statCards {
   background: transparent !important;
   background-color: transparent !important;
-  padding: 2.5rem 0 !important;
+  padding: 2.5rem 1.5rem !important;
+}
+
+.block.row.has--block-width--full.stat-cards-box,
+.block.row.has--block-width--full.has--style_name--statCards,
+.row-edit-container.has--block-width--full.stat-cards-box,
+.row-edit-container.has--block-width--full.has--style_name--statCards {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
 }
 
 .block.row.stat-cards-primary-box,
@@ -1831,6 +1900,21 @@ body.content-view-edit .block.row.has--style_name--statCardsPrimary {
   background-image: none !important;
   padding: 1.25rem 1.5rem 2.5rem 1.5rem !important;
   box-shadow: none !important;
+}
+
+.block.row.has--block-width--full.stat-cards-primary-box,
+.block.row.has--block-width--full.has--style_name--statCardsPrimary,
+.row-edit-container.has--block-width--full.stat-cards-primary-box,
+.row-edit-container.has--block-width--full.has--style_name--statCardsPrimary,
+body.view-editview .block.row.has--block-width--full.stat-cards-primary-box,
+body.view-editview
+  .block.row.has--block-width--full.has--style_name--statCardsPrimary,
+body.content-view-edit
+  .block.row.has--block-width--full.stat-cards-primary-box,
+body.content-view-edit
+  .block.row.has--block-width--full.has--style_name--statCardsPrimary {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
 }
 
 .block.row.stat-cards-primary-box::before,
@@ -2341,10 +2425,10 @@ html.dark .block.row.stat-cards-primary-box .row-column p {
 .styled.blue-box,
 .styled.purple-box,
 .styled.red-blue-box,
-.styled[class*='has--style_name--'],
+.styled[class*='has--style_name--']:not(.has--style_name--none),
 .styled[class*='-box'],
 [class*='styled-'][class*='-box'],
-[class*='styled-'][class*='has--style_name--'],
+[class*='styled-'][class*='has--style_name--']:not(.has--style_name--none),
 .block.primary-box:not(.row),
 .block.gray-box:not(.row),
 .block.secondary-box:not(.row),
@@ -2352,10 +2436,80 @@ html.dark .block.row.stat-cards-primary-box .row-column p {
 .block.blue-box:not(.row),
 .block.purple-box:not(.row),
 .block.red-blue-box:not(.row),
-.block[class*='has--style_name--']:not(.row):not(.stat-cards-box):not(
-    .stat-cards-primary-box
-  ) {
-  padding: 1.75rem 1.75rem !important;
+.block[class*='has--style_name--']:not(.has--style_name--none):not(.row):not(
+    .stat-cards-box
+  ):not(.stat-cards-primary-box) {
+  padding: 1.75rem 1.5rem !important;
+  box-sizing: border-box !important;
+}
+
+/* Prevent double-padding when a styled wrapper (.styled-*) wraps a .block child */
+.styled > .block:not(.row),
+[class*='styled-'] > .block:not(.row) {
+  padding: 0 !important;
+}
+
+/* 2b. Uniform side padding (1.5rem) on unstyled rows and unstyled standalone blocks
+   across both Desktop and Mobile in View and Edit modes.
+   In Edit Mode, target only .row-edit-container (not Volto's outer .block.row wrapper)
+   so unstyled rows don't get double side padding and styled rows don't get inner wrapper padding. */
+#page-document
+  .block.row:not(.row-edit-container):not(.has--block-width--full):not(
+    .has--background
+  ):not(.has--background-image):not([class*='has--style_name--']):not(
+    [class*='-box']
+  ),
+.view-wrapper
+  .block.row:not(.row-edit-container):not(.has--block-width--full):not(
+    .has--background
+  ):not(.has--background-image):not([class*='has--style_name--']):not(
+    [class*='-box']
+  ),
+#view
+  .block.row:not(.row-edit-container):not(.has--block-width--full):not(
+    .has--background
+  ):not(.has--background-image):not([class*='has--style_name--']):not(
+    [class*='-box']
+  ),
+.row-edit-container:not(.has--block-width--full):not(.has--background):not(
+    .has--background-image
+  ):not([class*='has--style_name--']):not([class*='-box']),
+#page-document
+  > *:not(.row):not(.has--block-width--full):not(.full-width):not(
+    .has--background
+  ):not(.has--background-image):not([class*='has--style_name--']):not(
+    [class*='-box']
+  ):not(.video-hero):not(.header-title):not(.cinematicSlider):not(
+    .cinematicHorizontalScroll
+  ):not(.cinematic-slider-wrapper):not(.cinematic-horizontal-scroll),
+.blocks-form
+  fieldset
+  > div
+  > [class*='block-editor-']:not(.block-editor-row):not(
+    .block-editor-headerTitle
+  ):not(.block-editor-videohero):not(.block-editor-cinematicSlider):not(
+    .block-editor-cinematicHorizontalScroll
+  ):not(.has--block-width--full):not(.has--background):not(
+    .has--background-image
+  ):not([class*='has--style_name--']):not([class*='-box']):not(.row-column *)
+  > div
+  > .ui.drag.block.inner {
+  padding-left: 1.5rem !important;
+  padding-right: 1.5rem !important;
+  box-sizing: border-box !important;
+}
+
+/* Preserve list marker indentation inside the 1.5rem horizontal gutter for root-level unstyled lists */
+#page-document
+  > ul:not(.has--block-width--full):not(.full-width):not(.has--background):not(
+    .has--background-image
+  ):not([class*='has--style_name--']):not([class*='-box']),
+#page-document
+  > ol:not(.has--block-width--full):not(.full-width):not(.has--background):not(
+    .has--background-image
+  ):not([class*='has--style_name--']):not([class*='-box']) {
+  padding-left: 3rem !important;
+  padding-right: 1.5rem !important;
   box-sizing: border-box !important;
 }
 
@@ -2473,57 +2627,64 @@ html.dark .block.row.stat-cards-primary-box .row-column p {
   margin-bottom: 0 !important;
 }
 
-/* 5. Vertical spacing between blocks in Edit Mode */
+/* 5. Compact vertical spacing between blocks and rows in Edit Mode
+   so rows and blocks sit closer together without extra bottom gaps */
+.blocks-form [data-rbd-draggable-context-id],
+body.view-editview [data-rbd-draggable-context-id],
+body.view-addview [data-rbd-draggable-context-id],
+body.content-view-edit [data-rbd-draggable-context-id],
+.blocks-form .ui.drag.block,
+.blocks-form .ui.drag.block:not(:last-child) {
+  margin-bottom: 0 !important;
+}
+
+/* Prevent row columns from stretching inner block wrappers to 100% height in Edit Mode,
+   which caused large empty whitespace below shorter blocks inside rows */
+.row-column > .blocks-form,
+.row-column > .blocks-form > fieldset,
+.row-column > .blocks-form > fieldset > div,
+.row-column .ui.drag.block.inner:not(.teaser),
+.row-column [class*='block-editor-']:not(.block-editor-teaser) {
+  height: auto !important;
+  flex-grow: 0 !important;
+}
+
+/* Root-level blocks and rows in Edit Mode: zero vertical gap */
 .blocks-form
-  [class*='block-editor-']:not(.block-editor-row):not(
-    .has--block-width--full
-  ).has--background,
-.blocks-form
-  [class*='block-editor-']:not(.block-editor-row):not(
-    .has--block-width--full
-  )[class*='has--style_name--'],
-.blocks-form
-  [class*='block-editor-']:not(.block-editor-row):not(
-    .has--block-width--full
-  )[class*='-box'],
+  > fieldset
+  > div
+  > [class*='block-editor-']:not(.row-column *),
 body.content-view-edit
-  [class*='block-editor-']:not(.block-editor-row):not(
-    .has--block-width--full
-  ).has--background,
-body.content-view-edit
-  [class*='block-editor-']:not(.block-editor-row):not(
-    .has--block-width--full
-  )[class*='has--style_name--'],
-body.content-view-edit
-  [class*='block-editor-']:not(.block-editor-row):not(
-    .has--block-width--full
-  )[class*='-box'],
+  .blocks-form
+  > fieldset
+  > div
+  > [class*='block-editor-']:not(.row-column *),
 body.view-editview
-  [class*='block-editor-']:not(.block-editor-row):not(
-    .has--block-width--full
-  ).has--background,
-body.view-editview
-  [class*='block-editor-']:not(.block-editor-row):not(
-    .has--block-width--full
-  )[class*='has--style_name--'],
-body.view-editview
-  [class*='block-editor-']:not(.block-editor-row):not(
-    .has--block-width--full
-  )[class*='-box'],
+  .blocks-form
+  > fieldset
+  > div
+  > [class*='block-editor-']:not(.row-column *),
 #page-edit
-  [class*='block-editor-']:not(.block-editor-row):not(
-    .has--block-width--full
-  ).has--background,
-#page-edit
-  [class*='block-editor-']:not(.block-editor-row):not(
-    .has--block-width--full
-  )[class*='has--style_name--'],
-#page-edit
-  [class*='block-editor-']:not(.block-editor-row):not(
-    .has--block-width--full
-  )[class*='-box'] {
-  margin-top: var(--block-spacing-vertical, 1.75rem) !important;
-  margin-bottom: var(--block-spacing-vertical, 1.75rem) !important;
+  .blocks-form
+  > fieldset
+  > div
+  > [class*='block-editor-']:not(.row-column *) {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* Blocks stacked inside a row column in Edit Mode: zero vertical gap */
+.row-column .blocks-form > fieldset > div > [class*='block-editor-'] {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.row-column
+  .blocks-form
+  > fieldset
+  > div
+  > [class*='block-editor-']:last-child {
+  margin-bottom: 0 !important;
 }
 
 /* 6. Reset inner block bottom margin in edit mode so outer margin is the sole vertical margin */
@@ -2641,6 +2802,17 @@ body.view-addview .block-editor-row[class*='has--style_name--'],
 /* Full-width block inner container centered with up to 1440px layout width */
 #page-document .block.has--block-width--full .block-inner-container,
 .view-wrapper .block.has--block-width--full .block-inner-container,
+#page-document
+  > .has--block-width--full:not(.row):not(.header-title):not(.video-hero):not(
+    .image
+  ):not(.video):not(figure):not(.cinematicSlider):not(
+    .cinematicHorizontalScroll
+  ):not(.cinematic-slider-wrapper):not(.cinematic-horizontal-scroll):not(
+    .has--background
+  ):not(.has--background-image):not([class*='has--style_name--']):not(
+    [class*='-box']
+  )
+  > *:not(.block-inner-container),
 .blocks-form .block.row.has--block-width--full .block-inner-container,
 body.content-view-edit .block.row.has--block-width--full .block-inner-container,
 body.view-editview .block.row.has--block-width--full .block-inner-container,
@@ -2652,32 +2824,44 @@ body.view-addview .block.row.has--block-width--full .block-inner-container,
 .blocks-form
   [class*='block-editor-']:not(.block-editor-row):not(
     .block-editor-headerTitle
-  ).has--block-width--full
+  ):not(.block-editor-videohero):not(.block-editor-cinematicSlider):not(
+    .block-editor-cinematicHorizontalScroll
+  ).has--block-width--full:not([class*='has--style_name--']):not([class*='-box'])
   .ui.drag.block.inner,
 body.content-view-edit
   [class*='block-editor-']:not(.block-editor-row):not(
     .block-editor-headerTitle
-  ).has--block-width--full
+  ):not(.block-editor-videohero):not(.block-editor-cinematicSlider):not(
+    .block-editor-cinematicHorizontalScroll
+  ).has--block-width--full:not([class*='has--style_name--']):not([class*='-box'])
   .ui.drag.block.inner,
 body.view-editview
   [class*='block-editor-']:not(.block-editor-row):not(
     .block-editor-headerTitle
-  ).has--block-width--full
+  ):not(.block-editor-videohero):not(.block-editor-cinematicSlider):not(
+    .block-editor-cinematicHorizontalScroll
+  ).has--block-width--full:not([class*='has--style_name--']):not([class*='-box'])
   .ui.drag.block.inner,
 body.view-addview
   [class*='block-editor-']:not(.block-editor-row):not(
     .block-editor-headerTitle
-  ).has--block-width--full
+  ):not(.block-editor-videohero):not(.block-editor-cinematicSlider):not(
+    .block-editor-cinematicHorizontalScroll
+  ).has--block-width--full:not([class*='has--style_name--']):not([class*='-box'])
   .ui.drag.block.inner,
 #page-edit
   [class*='block-editor-']:not(.block-editor-row):not(
     .block-editor-headerTitle
-  ).has--block-width--full
+  ):not(.block-editor-videohero):not(.block-editor-cinematicSlider):not(
+    .block-editor-cinematicHorizontalScroll
+  ).has--block-width--full:not([class*='has--style_name--']):not([class*='-box'])
   .ui.drag.block.inner,
 #page-add
   [class*='block-editor-']:not(.block-editor-row):not(
     .block-editor-headerTitle
-  ).has--block-width--full
+  ):not(.block-editor-videohero):not(.block-editor-cinematicSlider):not(
+    .block-editor-cinematicHorizontalScroll
+  ).has--block-width--full:not([class*='has--style_name--']):not([class*='-box'])
   .ui.drag.block.inner {
   max-width: var(--layout-container-width, 1440px) !important;
   margin-left: auto !important;

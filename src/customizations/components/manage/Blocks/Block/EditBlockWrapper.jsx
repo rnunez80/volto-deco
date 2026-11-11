@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { useDispatch } from 'react-redux';
+import { setSidebarTab } from '@plone/volto/actions/sidebar/sidebar';
 import Icon from '@plone/volto/components/theme/Icon/Icon';
 import {
   applyBlockDefaults,
@@ -98,6 +100,33 @@ const EditBlockWrapper = (props) => {
     !!blockProps.isContainer ||
     blockProps.properties?.['@type'] === 'rowColumn';
 
+  const dispatch = useDispatch();
+  const prevSelectedRef = useRef(selected);
+
+  // Volto's Edit.jsx skips setSidebarTab when sidebarTab === 2 (which in stock Volto was Order,
+  // but in volto-deco is the Row tab). Ensure selecting a standalone non-row block switches to its tab.
+  useEffect(() => {
+    if (
+      !prevSelectedRef.current &&
+      selected &&
+      !isNested &&
+      type !== 'row' &&
+      editable
+    ) {
+      const tab = blockProps.manage ? 1 : blocksConfig?.[type]?.sidebarTab || 0;
+      dispatch(setSidebarTab(tab));
+    }
+    prevSelectedRef.current = selected;
+  }, [
+    selected,
+    isNested,
+    type,
+    editable,
+    blockProps.manage,
+    blocksConfig,
+    dispatch,
+  ]);
+
   useEffect(() => {
     const clear = () => {
       setDropPosition(null);
@@ -113,10 +142,22 @@ const EditBlockWrapper = (props) => {
     };
   }, []);
 
+  const ROW_BETWEEN_DROP_ZONE = 14;
+
+  const isAtRowVerticalEdge = (e) => {
+    if (type !== 'row' || isNested) return false;
+    const rect = e.currentTarget.getBoundingClientRect();
+    if (rect.height < ROW_BETWEEN_DROP_ZONE * 3) return false;
+    return (
+      e.clientY - rect.top <= ROW_BETWEEN_DROP_ZONE ||
+      rect.bottom - e.clientY <= ROW_BETWEEN_DROP_ZONE
+    );
+  };
+
   const computeDropPosition = (e) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const relY = (e.clientY - rect.top) / rect.height;
-    if (isNested) {
+    if (isNested || type === 'row') {
       return relY < 0.5 ? 'top' : 'bottom';
     }
     const relX = (e.clientX - rect.left) / rect.width;
@@ -125,11 +166,14 @@ const EditBlockWrapper = (props) => {
     return relY < 0.5 ? 'top' : 'bottom';
   };
 
-  // When the pointer is over a column of a row living inside this wrapper,
-  // let the column (RowEdit) handle the drop so blocks can be inserted
-  // above/below items inside that column instead of around the whole row.
+  // When the pointer is over a row (except its top/bottom 14px row-to-row drop zone),
+  // let the row/column (RowEdit) handle the drop so blocks can be inserted
+  // inside columns or as new outer columns without double drop indicators.
   const isOverOwnRowColumn = (e) => {
     if (isNested) return false;
+    if (type === 'row') {
+      return !isAtRowVerticalEdge(e);
+    }
     const target = e.target;
     if (!target || typeof target.closest !== 'function') return false;
     const col = target.closest('.row-column');
@@ -276,6 +320,7 @@ const EditBlockWrapper = (props) => {
   };
 
   const handleModifierClick = (e) => {
+    if (!e.currentTarget.contains(e.target)) return;
     if (isInsideInnerBlock(e)) return;
     const isMultipleSelection = e.shiftKey || e.ctrlKey || e.metaKey;
     if (isMultipleSelection && onSelectBlock) {
@@ -316,6 +361,7 @@ const EditBlockWrapper = (props) => {
         },
       )}
       onMouseDownCapture={(e) => {
+        if (!e.currentTarget.contains(e.target)) return;
         if (isInsideInnerBlock(e)) return;
         if (e.shiftKey || e.ctrlKey || e.metaKey) {
           e.preventDefault();

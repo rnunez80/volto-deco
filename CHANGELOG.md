@@ -2,6 +2,34 @@
 
 All notable changes to `volto-deco` will be documented in this file.
 
+## 1.2.11 (2026-11-11)
+
+### Layout & Horizontal Gutter Parity (`deco.css`, `blockWidth.ts`, `RowView.tsx`, `RowEdit.tsx`)
+- **Unstyled Blocks & Rows Side Padding:**
+  - Added consistent `1.5rem` horizontal side padding (`padding-left: 1.5rem !important; padding-right: 1.5rem !important; box-sizing: border-box !important;`) to unstyled rows and root-level unstyled standalone blocks across both View (`#page-document > *`) and Edit (`.row-edit-container`, `.blocks-form fieldset > div > [class*='block-editor-'] > div > .ui.drag.block.inner`) modes on desktop and mobile.
+  - Scoped Edit-mode unstyled row side padding strictly to `.row-edit-container` and reset Volto's outer `.ui.drag.block.inner.row > .block.row:not(.row-edit-container)` wrapper to `padding: 0 !important`, eliminating unwanted inner padding on styled rows and double (`1.5rem + 1.5rem`) side padding on unstyled rows.
+  - Ignored `style_name: 'none'` (`has--style_name--none`) in `blockWidth.ts`, `RowView.tsx`, `RowEdit.tsx`, and `deco.css` so blocks with `.styled-*` wrappers and no active style preset align flush with rows and columns instead of receiving box padding.
+  - Preserved list marker indentation (`padding-left: 3rem !important; padding-right: 1.5rem !important;`) on root-level unstyled `ul` and `ol` blocks.
+- **Full-Width Rows & Standalone Blocks Alignment:**
+  - Enforced `0` outer horizontal padding (`padding-left: 0 !important; padding-right: 0 !important;`) on full-width styled/background rows (`.block.row.has--block-width--full`) in both View and Edit modes while `.block-inner-container` provides the single `1.5rem` side padding.
+  - Added View-mode support for unstyled full-width standalone content blocks (`#page-document > .has--block-width--full:not(...) > *:not(.block-inner-container)`) so their inner content receives the centered `1440px` max-width and `1.5rem` side padding.
+- **Styled Standalone Blocks & Stat Cards Alignment:**
+  - Standardized horizontal padding on styled standalone blocks and `statCards` rows (`padding: 2.5rem 1.5rem !important;`, with `0` outer horizontal padding when `.has--block-width--full`) to align with the `1.5rem` gutter across all container widths.
+
+### Edit Mode UX, Spacing, Selection Outlines & Drag-and-Drop (`RowEdit.tsx`, `EditBlockWrapper.jsx`, `deco.css`, `schema.ts`)
+- **Zero Vertical Gap & Row-to-Row Drop Zone in Edit Mode:**
+  - Set the vertical gap (`margin-top: 0 !important; margin-bottom: 0 !important;`) between root-level blocks/rows and stacked column blocks in Edit Mode to `0`, and removed Volto's default `2rem` bottom margin on `[data-rbd-draggable-context-id]` and `.ui.drag.block`.
+  - Reset forced `height: 100%; flex-grow: 1` on `.row-column > .blocks-form` wrappers in Edit Mode to eliminate extra empty bottom space inside columns.
+  - Added a `14px` top/bottom row edge drop zone (`isAtRowVerticalEdge`) in `EditBlockWrapper.jsx` so items can be dropped cleanly between rows even with `0` vertical gap.
+- **Default Row Vertical Alignment (`schema.ts`, `RowVerticalAlignWidget.tsx`, `StandaloneRowSettings.tsx`, `RowEdit.tsx`, `RowView.tsx`, `deco.css`):**
+  - Changed the default row `alignItems` ("Vertical Alignment") setting from `'stretch'` to `'start'` (Top).
+- **Single Clean Selection Outline (`deco.css`, `RowEdit.tsx`):**
+  - Suppressed Volto's `-9px` expanded `::before` pseudo-element on outer row wrappers and `.row-edit-container`, kept inner block `::before` outlines flush with the block edge (`top: 0; left: 0; width: 100%; height: 100%`), and added `.has-inner-selection` so selecting an item inside a row displays only a single selection line.
+- **Single Vertical Drop Indicator on Outer Row Edges (`RowEdit.tsx`, `EditBlockWrapper.jsx`):**
+  - Fixed `onDragLeave` in `RowEdit.tsx` to pass `colId` so column drop hints clear properly when leaving a column, and added `handleRowOuterDragOver` / `handleRowOuterDrop` on `.row-edit-container` while delegating non-top/bottom row drags away from `EditBlockWrapper.jsx` to prevent double vertical `.mosaic-drop-line` indicators.
+- **Block Style Sidebar Navigation (`RowEdit.tsx`, `EditBlockWrapper.jsx`, `deco.css`):**
+  - Fixed clicking "Style palette for slate" (`.open-styles-button`) by ignoring portal clicks outside `.row-edit-container` in `RowEdit.tsx` and switching to the Block sidebar tab (`setSidebarTab(1)`) when selecting standalone non-row blocks in `EditBlockWrapper.jsx`.
+
 ## 1.2.10 (2026-11-09)
 
 ### Accordion & Style Preset Enhancements

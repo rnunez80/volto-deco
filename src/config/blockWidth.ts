@@ -145,7 +145,7 @@ export default function installBlockWidth(config: ConfigType) {
       }
 
       const styleName = data?.style_name || data?.styles?.style_name;
-      if (styleName) {
+      if (styleName && styleName !== 'none') {
         const styleNameClass = `has--style_name--${styleName}`;
         if (!classNames.includes(styleNameClass)) {
           extra.push(styleNameClass);

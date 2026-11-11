@@ -552,7 +552,10 @@ const RowEdit: React.FC<RowEditProps> = (props) => {
   const handleColumnDragOver = (e: React.DragEvent, colId: string) => {
     const draggingId = getDraggingId();
     const native = e.nativeEvent as any;
-    if (!draggingId || native.__voltoDropHandled) return;
+    if (!draggingId || native.__voltoDropHandled) {
+      if (dropHint) setDropHint(null);
+      return;
+    }
     native.__voltoDropHandled = true;
     e.preventDefault();
     const hint = computeHint(e, colId, draggingId);
@@ -566,6 +569,50 @@ const RowEdit: React.FC<RowEditProps> = (props) => {
     ) {
       setDropHint(null);
     }
+  };
+
+  const handleRowOuterDragOver = (e: React.DragEvent) => {
+    const draggingId = getDraggingId();
+    const native = e.nativeEvent as any;
+    if (!draggingId || native.__voltoDropHandled || columnIds.length === 0) {
+      if (native.__voltoDropHandled && dropHint) setDropHint(null);
+      return;
+    }
+    const target = e.target as HTMLElement;
+    if (target && typeof target.closest === 'function' && target.closest('.row-column')) {
+      return;
+    }
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    const isLeft = e.clientX - rect.left < rect.width / 2;
+    const targetColId = isLeft
+      ? columnIds[0]
+      : columnIds[columnIds.length - 1];
+    const mode = isLeft ? 'before' : 'after';
+    native.__voltoDropHandled = true;
+    e.preventDefault();
+    const hint: DropHint = { colId: targetColId, mode };
+    if (!sameHint(dropHint, hint)) setDropHint(hint);
+  };
+
+  const handleRowOuterDragLeave = (e: React.DragEvent) => {
+    if (!e.currentTarget.contains(e.relatedTarget as Node) && dropHint) {
+      setDropHint(null);
+    }
+  };
+
+  const handleRowOuterDrop = (e: React.DragEvent) => {
+    const native = e.nativeEvent as any;
+    if (native.__voltoDropHandled || columnIds.length === 0) return;
+    const target = e.target as HTMLElement;
+    if (target && typeof target.closest === 'function' && target.closest('.row-column')) {
+      return;
+    }
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    const isLeft = e.clientX - rect.left < rect.width / 2;
+    const targetColId =
+      dropHint?.colId ||
+      (isLeft ? columnIds[0] : columnIds[columnIds.length - 1]);
+    handleColumnDrop(e, targetColId);
   };
 
   const handleColumnDrop = (e: React.DragEvent, colId: string) => {
@@ -820,24 +867,34 @@ const RowEdit: React.FC<RowEditProps> = (props) => {
           'block',
           'row',
           `has--block-width--${blockWidth}`,
-          styleName ? `has--style_name--${styleName}` : null,
+          styleName && styleName !== 'none'
+            ? `has--style_name--${styleName}`
+            : null,
           hasBackground ? 'has--background' : null,
           bgImageUrl ? 'has--background-image' : null,
           customClass,
           'row-edit-container',
           {
             'is-selected': isRowActive && !selectedInnerBlock,
+            'has-inner-selection': isRowActive && !!selectedInnerBlock,
             'is-dragging-over': !!dropHint,
           },
         )}
         style={rowStyle}
+        onDragOverCapture={handleRowOuterDragOver}
+        onDragLeave={handleRowOuterDragLeave}
+        onDropCapture={handleRowOuterDrop}
         onClick={(e) => {
-          // Deselect inner block and switch to Row tab when clicking row container outside any inner block
+          // Deselect inner block and switch to Row tab when clicking row container outside any inner block.
+          // Ignore clicks that originated inside React portals (e.g. #sidebar, Style palette button, SidebarPopup).
           const target = e.target as HTMLElement;
           if (
             target &&
             typeof target.closest === 'function' &&
-            !target.closest('.row-column [data-block-id], .row-col-chooser')
+            e.currentTarget.contains(target) &&
+            !target.closest(
+              '.row-column [data-block-id], .row-col-chooser, #sidebar, .sidebar-container, .open-styles-button',
+            )
           ) {
             handleSelectInnerBlock(null);
             dispatch(setSidebarTab(2));
@@ -852,23 +909,21 @@ const RowEdit: React.FC<RowEditProps> = (props) => {
               'gap--small': data.gridGap === 'small',
               'gap--large': data.gridGap === 'large',
               'gap--none': data.gridGap === 'none',
-              [`align--${data.alignItems || 'stretch'}`]: true,
+              [`align--${data.alignItems || 'start'}`]: true,
               'reverse-mobile': !!data.reverseMobile,
             })}
             style={{
               gridTemplateColumns: gridTemplate,
               alignItems:
-                data.alignItems === 'start' ||
-                data.alignItems === 'top' ||
-                data.alignItems === 'flex-start'
-                  ? 'flex-start'
+                data.alignItems === 'stretch'
+                  ? 'stretch'
                   : data.alignItems === 'center' || data.alignItems === 'middle'
                     ? 'center'
                     : data.alignItems === 'end' ||
                         data.alignItems === 'bottom' ||
                         data.alignItems === 'flex-end'
                       ? 'flex-end'
-                      : 'stretch',
+                      : 'flex-start',
             }}
           >
             {columnIds.map((colId, index) => {
@@ -890,7 +945,7 @@ const RowEdit: React.FC<RowEditProps> = (props) => {
                     'is-empty': !hasBlocks,
                   })}
                   onDragOverCapture={(e) => handleColumnDragOver(e, colId)}
-                  onDragLeave={handleColumnDragLeave}
+                  onDragLeave={(e) => handleColumnDragLeave(e, colId)}
                   onDropCapture={(e) => handleColumnDrop(e, colId)}
                   role="presentation"
                 >
