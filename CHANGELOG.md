@@ -2,6 +2,36 @@
 
 All notable changes to `volto-deco` will be documented in this file.
 
+## 1.2.13 (2026-11-11)
+
+### Drop Indicators, Slate Block Spacing & Row Image Gap (`RowEdit.tsx`, `EditBlockWrapper.jsx`, `deco.css`)
+- **Single Vertical Drop Line Guarantee:**
+  - Fixed double vertical `.mosaic-drop-line` indicators when dragging over rows/columns by explicitly passing `isContainer={true}` and ensuring `colData` retains `'@type': 'rowColumn'` in `RowEdit.tsx`.
+  - Added strict `!isNested` guard (`{!isNested && dropPosition && ...}`) in `EditBlockWrapper.jsx` to prevent inner column blocks from ever rendering outer canvas vertical drop lines.
+- **Slate Text Block Spacing in Edit Mode:**
+  - Resolved text blocks collapsing directly against each other in Edit mode by adding high-specificity `#page-edit` rules with `margin-bottom: 1rem !important;` for `.block-editor-slate`, perfectly mirroring View mode paragraph rhythm.
+  - Added `:not(.block-editor-slate):not(.block-editor-image)` exclusion to root-level zero-gap rules under `#page-edit`.
+- **Row Column Image Spacing & Zero Gap Between Rows:**
+  - Set image blocks inside `.row-column` to default to `margin-bottom: 0 !important;` (applying `1.5rem` only when followed by a sibling block with `:has(~ [class*='block-editor-'])`).
+  - Reset all inner edit-mode image block elements (`#page-edit .block.image`, `.blocks-form .block-editor-image .block.image`, `figure`, `p`, `img`) to `margin-bottom: 0 !important;` to eliminate stacked bottom margins pushing subsequent rows down.
+
+## 1.2.12 (2026-11-11)
+
+### Image & Text Block Spacing and Column Text Wrapping (`deco.css`)
+- **Image Block Vertical Spacing Parity:**
+  - Standardized image block bottom spacing to `1.5rem` (`margin-bottom: 1.5rem !important;`) applied strictly once to root containers (`.blocks-form .block-editor-image` in Edit mode and `#page-document .block.image`, `.view-wrapper .block.image` in View mode).
+  - Reset all nested inner elements (`.block-editor-image .block.image`, `.ui.drag.block.inner`, `figure`, `p`, `img`) to `margin-bottom: 0 !important;` in Edit mode, completely eliminating stacked/triple bottom margins.
+  - Added `:last-child` reset (`margin-bottom: 0 !important;`) for image blocks at the end of row columns.
+- **Text Block (Slate) Spacing in Edit Mode:**
+  - Updated unstyled Slate text blocks in Edit Mode (`.blocks-form .block-editor-slate`, `.blocks-form .block.slate`, and paragraphs) to match View mode paragraph rhythm (`margin-top: 0 !important; margin-bottom: 1em !important;`), preventing text blocks from collapsing directly against adjacent blocks.
+- **Image Alignment & Text Wrapping in Row Columns:**
+  - Restored block-level document flow in row columns (`.row-column`, `.row-column > .blocks-form > fieldset > div` with clearfix) so floated elements do not get trapped in flex lines.
+  - Fixed image alignment behavior without floating the outer editor wrapper (`.block-editor-image { float: none !important; }`), floating the `img` elements directly so drag handles, block controls, and bounding outlines remain stable:
+    - `align: right`: floats right (`img { float: right !important; max-width: 50% !important; margin-left: 1.5rem !important; margin-bottom: 1rem !important; }`) with `text-align: right !important` and sibling text wrapping on the left.
+    - `align: left`: floats left (`img { float: left !important; max-width: 50% !important; margin-right: 1.5rem !important; margin-bottom: 1rem !important; }`) with `text-align: left !important` and sibling text wrapping on the right.
+    - `align: center`: centered with `text-align: center !important; clear: both !important;` and `img { float: none !important; margin: 0 auto; display: inline-block !important; }`.
+    - `align: full`: full column width with `width: 100% !important; clear: both !important;` and `img { float: none !important; width: 100% !important; max-width: 100% !important; }`.
+
 ## 1.2.11 (2026-11-11)
 
 ### Layout & Horizontal Gutter Parity (`deco.css`, `blockWidth.ts`, `RowView.tsx`, `RowEdit.tsx`)

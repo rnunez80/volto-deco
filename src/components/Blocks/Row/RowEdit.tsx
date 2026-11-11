@@ -929,9 +929,9 @@ const RowEdit: React.FC<RowEditProps> = (props) => {
             {columnIds.map((colId, index) => {
               const rawCol = data.blocks?.[colId] || {};
               const colData = {
-                '@type': 'rowColumn',
                 id: colId,
                 ...rawCol,
+                '@type': 'rowColumn',
                 blocks: rawCol.blocks || {},
                 blocks_layout: rawCol.blocks_layout || { items: [] },
               };
@@ -964,6 +964,7 @@ const RowEdit: React.FC<RowEditProps> = (props) => {
 
                   {hasBlocks ? (
                     <BlocksForm
+                      isContainer={true}
                       metadata={metadata}
                       properties={colData}
                       manage={manage}

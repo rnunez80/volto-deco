@@ -443,9 +443,14 @@ body.is-dragging-volto-block .row-column .ui.drag.block.inner {
 .row-column {
   position: relative !important;
   min-width: 0;
-  display: flex;
-  flex-direction: column;
+  display: block !important;
   box-sizing: border-box;
+}
+
+.row-column::after {
+  content: '';
+  display: table;
+  clear: both;
 }
 
 .row-column fieldset,
@@ -462,26 +467,159 @@ body.is-dragging-volto-block .row-column .ui.drag.block.inner {
   box-sizing: border-box !important;
 }
 
-/* Ensure image block in view mode matches the 2rem spacing of edit mode */
-figure.block.image,
-p.block.image,
-.block.image {
-  margin-bottom: 2rem;
+/* Image block bottom margin (1.5rem) across View and Edit modes */
+.view-wrapper figure.block.image,
+.view-wrapper p.block.image,
+.view-wrapper .block.image,
+.blocks-form > fieldset > div > .block-editor-image,
+#page-edit .blocks-form > fieldset > div > .block-editor-image {
+  margin-bottom: 1.5rem !important;
+}
+
+/* Reset inner elements in Edit mode so 1.5rem spacing is applied only once */
+.blocks-form .block-editor-image .block.image,
+.blocks-form .block-editor-image .ui.drag.block.inner,
+.blocks-form .block-editor-image figure,
+.blocks-form .block-editor-image p,
+.blocks-form .block-editor-image img,
+#page-edit .block.image,
+body.view-editview .block.image,
+body.content-view-edit .block.image {
+  margin-bottom: 0 !important;
 }
 
 .row-column > figure.block.image:last-child,
 .row-column > p.block.image:last-child,
 .row-column > .block.image:last-child {
-  margin-bottom: 0;
+  margin-bottom: 0 !important;
 }
 
-body.view-editview figure.block.image,
-body.view-editview p.block.image,
-body.view-editview .block.image,
-body.content-view-edit figure.block.image,
-body.content-view-edit p.block.image,
-body.content-view-edit .block.image {
-  margin-bottom: 0;
+/* Inside row columns in Edit mode: image blocks default to 0 bottom margin
+   (preventing extra gap below single/last images in a column),
+   and only receive 1.5rem when followed by another block */
+.row-column .block-editor-image,
+.row-column .block-editor-image:last-child,
+.row-column .block-editor-image:nth-last-child(2),
+.row-column .block-editor-image:not(:has(~ [class*='block-editor-'])) {
+  margin-bottom: 0 !important;
+}
+
+.row-column .block-editor-image:has(~ [class*='block-editor-']) {
+  margin-bottom: 1.5rem !important;
+}
+
+/* Image alignment & text wrap parity across single rows, root blocks, and row columns */
+/* Do NOT float the block editor wrapper; float and align the image elements */
+.block-editor-image,
+.row-column .block-editor-image {
+  float: none !important;
+}
+
+/* Right alignment: image floats right, adjacent text wraps on left */
+.block.image.align.right,
+p.block.image.align.right,
+figure.block.image.align.right,
+.row-column .block.image.align.right,
+.row-column p.block.image.align.right,
+.row-column figure.block.image.align.right,
+.block-editor-image.right .block.image,
+.row-column .block-editor-image.right .block.image {
+  text-align: right !important;
+}
+
+.block.image.align.right img,
+p.block.image.align.right img,
+figure.block.image.align.right img,
+.row-column .block.image.align.right img,
+.row-column p.block.image.align.right img,
+.row-column figure.block.image.align.right img,
+.block-editor-image.right img,
+.row-column .block-editor-image.right img {
+  float: right !important;
+  max-width: 50% !important;
+  width: auto !important;
+  margin-left: 1.5rem !important;
+  margin-right: 0 !important;
+  margin-bottom: 1rem !important;
+  display: block !important;
+}
+
+/* Left alignment: image floats left, adjacent text wraps on right */
+.block.image.align.left,
+p.block.image.align.left,
+figure.block.image.align.left,
+.row-column .block.image.align.left,
+.row-column p.block.image.align.left,
+.row-column figure.block.image.align.left,
+.block-editor-image.left .block.image,
+.row-column .block-editor-image.left .block.image {
+  text-align: left !important;
+}
+
+.block.image.align.left img,
+p.block.image.align.left img,
+figure.block.image.align.left img,
+.row-column .block.image.align.left img,
+.row-column p.block.image.align.left img,
+.row-column figure.block.image.align.left img,
+.block-editor-image.left img,
+.row-column .block-editor-image.left img {
+  float: left !important;
+  max-width: 50% !important;
+  width: auto !important;
+  margin-right: 1.5rem !important;
+  margin-left: 0 !important;
+  margin-bottom: 1rem !important;
+  display: block !important;
+}
+
+/* Center alignment: image is centered horizontally */
+.block.image.align.center,
+p.block.image.align.center,
+figure.block.image.align.center,
+.row-column .block.image.align.center,
+.row-column p.block.image.align.center,
+.row-column figure.block.image.align.center,
+.block-editor-image.center,
+.row-column .block-editor-image.center,
+.block-editor-image.center .ui.drag.block.inner,
+.row-column .block-editor-image.center .ui.drag.block.inner,
+.block-editor-image.center .block.image,
+.row-column .block-editor-image.center .block.image {
+  text-align: center !important;
+  clear: both !important;
+}
+
+.block.image.align.center img,
+p.block.image.align.center img,
+figure.block.image.align.center img,
+.row-column .block.image.align.center img,
+.row-column p.block.image.align.center img,
+.row-column figure.block.image.align.center img,
+.block-editor-image.center img,
+.row-column .block-editor-image.center img {
+  float: none !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  display: inline-block !important;
+}
+
+/* Full alignment: image fills full width */
+.block.image.align.full,
+.block-editor-image.full,
+.block-editor-image.full .block.image {
+  text-align: center !important;
+  clear: both !important;
+  width: 100% !important;
+}
+
+.block.image.align.full img,
+.block-editor-image.full img {
+  float: none !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+  display: block !important;
 }
 
 /* Ensure carousels and sliders stay strictly within column boundaries in both view and edit modes */
@@ -2639,57 +2777,92 @@ body.content-view-edit [data-rbd-draggable-context-id],
 }
 
 /* Prevent row columns from stretching inner block wrappers to 100% height in Edit Mode,
-   which caused large empty whitespace below shorter blocks inside rows */
+   which caused large empty whitespace below shorter blocks inside rows.
+   Use block display so floated images allow text in adjacent blocks to wrap naturally. */
 .row-column > .blocks-form,
 .row-column > .blocks-form > fieldset,
-.row-column > .blocks-form > fieldset > div,
-.row-column .ui.drag.block.inner:not(.teaser),
-.row-column [class*='block-editor-']:not(.block-editor-teaser) {
+.row-column > .blocks-form > fieldset > div {
+  display: block !important;
   height: auto !important;
   flex-grow: 0 !important;
 }
 
-/* Root-level blocks and rows in Edit Mode: zero vertical gap */
+.row-column > .blocks-form > fieldset > div::after {
+  content: '';
+  display: table;
+  clear: both;
+}
+
+.row-column .ui.drag.block.inner:not(.teaser),
+.row-column [class*='block-editor-']:not(.block-editor-teaser) {
+  height: auto !important;
+  flex-grow: 0 !important;
+  display: block !important;
+}
+
+/* Root-level blocks and rows in Edit Mode: compact spacing */
 .blocks-form
   > fieldset
   > div
-  > [class*='block-editor-']:not(.row-column *),
+  > [class*='block-editor-']:not(.row-column *):not(.block-editor-slate):not(.block-editor-image),
 body.content-view-edit
   .blocks-form
   > fieldset
   > div
-  > [class*='block-editor-']:not(.row-column *),
+  > [class*='block-editor-']:not(.row-column *):not(.block-editor-slate):not(.block-editor-image),
 body.view-editview
   .blocks-form
   > fieldset
   > div
-  > [class*='block-editor-']:not(.row-column *),
+  > [class*='block-editor-']:not(.row-column *):not(.block-editor-slate):not(.block-editor-image),
 #page-edit
   .blocks-form
   > fieldset
   > div
-  > [class*='block-editor-']:not(.row-column *) {
+  > [class*='block-editor-']:not(.row-column *):not(.block-editor-slate):not(.block-editor-image) {
   margin-top: 0 !important;
   margin-bottom: 0 !important;
 }
 
-/* Blocks stacked inside a row column in Edit Mode: zero vertical gap */
-.row-column .blocks-form > fieldset > div > [class*='block-editor-'] {
+/* Text block (Slate) in Edit Mode: match View mode paragraph margin (0 0 1em 0) */
+.blocks-form .block-editor-slate:not([class*='-box']):not([class*='has--style_name--']),
+body.content-view-edit .blocks-form .block-editor-slate:not([class*='-box']):not([class*='has--style_name--']),
+body.view-editview .blocks-form .block-editor-slate:not([class*='-box']):not([class*='has--style_name--']),
+#page-edit .blocks-form .block-editor-slate:not([class*='-box']):not([class*='has--style_name--']),
+#page-edit .blocks-form > fieldset > div > .block-editor-slate:not([class*='-box']):not([class*='has--style_name--']) {
+  margin-top: 0 !important;
+  margin-bottom: 1em !important;
+}
+
+.blocks-form .block-editor-slate:not([class*='-box']):not([class*='has--style_name--']) p,
+.blocks-form .block.slate:not([class*='-box']):not([class*='has--style_name--']) p {
+  margin-top: 0 !important;
+  margin-bottom: 1em !important;
+}
+
+/* Blocks stacked inside a row column in Edit Mode */
+.row-column .blocks-form > fieldset > div > [class*='block-editor-']:not(.block-editor-slate):not(.block-editor-image) {
   margin-top: 0 !important;
   margin-bottom: 0 !important;
 }
 
-.row-column
-  .blocks-form
-  > fieldset
-  > div
-  > [class*='block-editor-']:last-child {
+/* In row columns: slate blocks default to 0 bottom margin when last,
+   and 1em when followed by another block */
+.row-column .block-editor-slate,
+.row-column .block-editor-slate:last-child,
+.row-column .block-editor-slate:nth-last-child(2),
+.row-column .block-editor-slate:not(:has(~ [class*='block-editor-'])),
+.row-column .blocks-form > fieldset > div > [class*='block-editor-']:last-child {
   margin-bottom: 0 !important;
+}
+
+.row-column .block-editor-slate:has(~ [class*='block-editor-']) {
+  margin-bottom: 1em !important;
 }
 
 /* 6. Reset inner block bottom margin in edit mode so outer margin is the sole vertical margin */
 .blocks-form .ui.drag.block.inner,
-.blocks-form .block:not(.row) {
+.blocks-form .block:not(.row):not(.slate) {
   margin-bottom: 0 !important;
 }
 

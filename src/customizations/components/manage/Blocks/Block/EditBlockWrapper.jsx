@@ -98,7 +98,11 @@ const EditBlockWrapper = (props) => {
   // (RowEdit), so only one drop line is ever visible.
   const isNested =
     !!blockProps.isContainer ||
-    blockProps.properties?.['@type'] === 'rowColumn';
+    blockProps.isMainForm === false ||
+    blockProps.properties?.['@type'] === 'rowColumn' ||
+    properties?.['@type'] === 'rowColumn' ||
+    String(blockProps.id || blockProps.block || '').startsWith('col-') ||
+    String(properties?.id || '').startsWith('col-');
 
   const dispatch = useDispatch();
   const prevSelectedRef = useRef(selected);
@@ -373,7 +377,7 @@ const EditBlockWrapper = (props) => {
       onDropCapture={handleDrop}
     >
       {/* Mosaic drop line: vertical = new column, horizontal = above/below */}
-      {dropPosition && (
+      {!isNested && dropPosition && (
         <div
           className={cx(
             'mosaic-drop-line',
