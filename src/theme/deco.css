@@ -467,45 +467,59 @@ body.is-dragging-volto-block .row-column .ui.drag.block.inner {
   box-sizing: border-box !important;
 }
 
-/* Image block bottom margin (1.5rem) across View and Edit modes */
+/* Image block bottom spacing across View and Edit modes */
 .view-wrapper figure.block.image,
 .view-wrapper p.block.image,
-.view-wrapper .block.image,
-.blocks-form > fieldset > div > .block-editor-image,
-#page-edit .blocks-form > fieldset > div > .block-editor-image {
+.view-wrapper .block.image {
   margin-bottom: 1.5rem !important;
 }
 
-/* Reset inner elements in Edit mode so 1.5rem spacing is applied only once */
+/* In Edit mode: block editor has zero margin, image block uses padding-bottom so borders touch */
+.blocks-form > fieldset > div > .block-editor-image,
+#page-edit .blocks-form > fieldset > div > .block-editor-image {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.blocks-form > fieldset > div > .block-editor-image .block.image:not(.inner),
+#page-edit
+  .blocks-form
+  > fieldset
+  > div
+  > .block-editor-image
+  .block.image:not(.inner) {
+  padding-bottom: 1.5rem !important;
+  margin-bottom: 0 !important;
+}
+
+/* Reset inner elements in Edit mode so block.image itself has 0 margin */
+.blocks-form .block.image,
+#page-edit .block.image,
+body.view-editview .block.image,
+body.content-view-edit .block.image,
 .blocks-form .block-editor-image .block.image,
+.row-column .block.image,
+.row-column .block-editor-image .block.image,
 .blocks-form .block-editor-image .ui.drag.block.inner,
 .blocks-form .block-editor-image figure,
 .blocks-form .block-editor-image p,
 .blocks-form .block-editor-image img,
-#page-edit .block.image,
-body.view-editview .block.image,
-body.content-view-edit .block.image {
+#page-edit .block.image img,
+body.view-editview .block.image img,
+body.content-view-edit .block.image img {
   margin-bottom: 0 !important;
 }
 
-.row-column > figure.block.image:last-child,
-.row-column > p.block.image:last-child,
-.row-column > .block.image:last-child {
+/* All image blocks inside a column keep bottom padding (including the last item) */
+.row-column .block-editor-image {
+  margin-top: 0 !important;
   margin-bottom: 0 !important;
 }
 
-/* Inside row columns in Edit mode: image blocks default to 0 bottom margin
-   (preventing extra gap below single/last images in a column),
-   and only receive 1.5rem when followed by another block */
-.row-column .block-editor-image,
-.row-column .block-editor-image:last-child,
-.row-column .block-editor-image:nth-last-child(2),
-.row-column .block-editor-image:not(:has(~ [class*='block-editor-'])) {
+.row-column .block-editor-image .block.image:not(.inner),
+#page-edit .row-column .block-editor-image .block.image:not(.inner) {
+  padding-bottom: 1.5rem !important;
   margin-bottom: 0 !important;
-}
-
-.row-column .block-editor-image:has(~ [class*='block-editor-']) {
-  margin-bottom: 1.5rem !important;
 }
 
 /* Image alignment & text wrap parity across single rows, root blocks, and row columns */
@@ -1508,22 +1522,22 @@ body.view-editview .block.row.has--block-width--full .block-inner-container,
    instead of expanding 9px outside and overlapping adjacent/parent borders */
 body.view-editview
   .block
-  .block:not(.inner):not(.stat-cards-primary-box):not(
+  .block:not(.inner):not(.row-edit-container):not(.row):not(.stat-cards-primary-box):not(
     .has--style_name--statCardsPrimary
   )::before,
 body.view-addview
   .block
-  .block:not(.inner):not(.stat-cards-primary-box):not(
+  .block:not(.inner):not(.row-edit-container):not(.row):not(.stat-cards-primary-box):not(
     .has--style_name--statCardsPrimary
   )::before,
 body.content-view-edit
   .block
-  .block:not(.inner):not(.stat-cards-primary-box):not(
+  .block:not(.inner):not(.row-edit-container):not(.row):not(.stat-cards-primary-box):not(
     .has--style_name--statCardsPrimary
   )::before,
 .blocks-form
   .block
-  .block:not(.inner):not(.stat-cards-primary-box):not(
+  .block:not(.inner):not(.row-edit-container):not(.row):not(.stat-cards-primary-box):not(
     .has--style_name--statCardsPrimary
   )::before {
   top: 0 !important;
@@ -2630,11 +2644,15 @@ html.dark .block.row.stat-cards-primary-box .row-column p {
   ):not(.has--block-width--full):not(.has--background):not(
     .has--background-image
   ):not([class*='has--style_name--']):not([class*='-box']):not(.row-column *)
-  > div
-  > .ui.drag.block.inner {
+  .block:not(.inner) {
   padding-left: 1.5rem !important;
   padding-right: 1.5rem !important;
   box-sizing: border-box !important;
+}
+
+.blocks-form .ui.drag.block.inner {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
 }
 
 /* Preserve list marker indentation inside the 1.5rem horizontal gutter for root-level unstyled lists */
@@ -2800,69 +2818,183 @@ body.content-view-edit [data-rbd-draggable-context-id],
   display: block !important;
 }
 
-/* Root-level blocks and rows in Edit Mode: compact spacing */
-.blocks-form
-  > fieldset
-  > div
-  > [class*='block-editor-']:not(.row-column *):not(.block-editor-slate):not(.block-editor-image),
-body.content-view-edit
-  .blocks-form
-  > fieldset
-  > div
-  > [class*='block-editor-']:not(.row-column *):not(.block-editor-slate):not(.block-editor-image),
-body.view-editview
-  .blocks-form
-  > fieldset
-  > div
-  > [class*='block-editor-']:not(.row-column *):not(.block-editor-slate):not(.block-editor-image),
-#page-edit
-  .blocks-form
-  > fieldset
-  > div
-  > [class*='block-editor-']:not(.row-column *):not(.block-editor-slate):not(.block-editor-image) {
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
-}
-
-/* Text block (Slate) in Edit Mode: match View mode paragraph margin (0 0 1em 0) */
-.blocks-form .block-editor-slate:not([class*='-box']):not([class*='has--style_name--']),
-body.content-view-edit .blocks-form .block-editor-slate:not([class*='-box']):not([class*='has--style_name--']),
-body.view-editview .blocks-form .block-editor-slate:not([class*='-box']):not([class*='has--style_name--']),
-#page-edit .blocks-form .block-editor-slate:not([class*='-box']):not([class*='has--style_name--']),
-#page-edit .blocks-form > fieldset > div > .block-editor-slate:not([class*='-box']):not([class*='has--style_name--']) {
-  margin-top: 0 !important;
-  margin-bottom: 1em !important;
-}
-
-.blocks-form .block-editor-slate:not([class*='-box']):not([class*='has--style_name--']) p,
-.blocks-form .block.slate:not([class*='-box']):not([class*='has--style_name--']) p {
-  margin-top: 0 !important;
-  margin-bottom: 1em !important;
-}
-
-/* Blocks stacked inside a row column in Edit Mode */
-.row-column .blocks-form > fieldset > div > [class*='block-editor-']:not(.block-editor-slate):not(.block-editor-image) {
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
-}
-
-/* In row columns: slate blocks default to 0 bottom margin when last,
-   and 1em when followed by another block */
-.row-column .block-editor-slate,
-.row-column .block-editor-slate:last-child,
-.row-column .block-editor-slate:nth-last-child(2),
-.row-column .block-editor-slate:not(:has(~ [class*='block-editor-'])),
-.row-column .blocks-form > fieldset > div > [class*='block-editor-']:last-child {
-  margin-bottom: 0 !important;
-}
-
-.row-column .block-editor-slate:has(~ [class*='block-editor-']) {
-  margin-bottom: 1em !important;
-}
-
-/* 6. Reset inner block bottom margin in edit mode so outer margin is the sole vertical margin */
+/* Root-level blocks, wrappers, and rows in Edit Mode: zero outer margin so borders touch */
+.blocks-form [data-rbd-draggable-context-id],
+.blocks-form [class*='block-editor-'],
+.blocks-form [class*='block-editor-'] > div,
+.blocks-form .ui.drag.block,
 .blocks-form .ui.drag.block.inner,
-.blocks-form .block:not(.row):not(.slate) {
+.blocks-form .block,
+#page-edit .blocks-form [data-rbd-draggable-context-id],
+#page-edit .blocks-form [class*='block-editor-'],
+#page-edit .blocks-form [class*='block-editor-'] > div,
+#page-edit .blocks-form .ui.drag.block,
+#page-edit .blocks-form .ui.drag.block.inner,
+#page-edit .blocks-form .block,
+body.content-view-edit .blocks-form [class*='block-editor-'],
+body.view-editview .blocks-form [class*='block-editor-'],
+.block-editor-row,
+#page-edit .block-editor-row,
+.row-edit-container,
+#page-edit .row-edit-container {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* Title block in Edit Mode: zero outer margin & zero heading margin collapse; padding-bottom matches text block */
+.blocks-form .block.title:not(.inner),
+#page-edit .block.title:not(.inner),
+body.view-editview .block.title:not(.inner),
+body.content-view-edit .block.title:not(.inner) {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-bottom: 1rem !important;
+}
+
+.blocks-form .block.title h1,
+.blocks-form .block.title h1.documentFirstHeading,
+.blocks-form .block.title h2,
+.blocks-form .block.title h3,
+.blocks-form .block.title h4,
+.blocks-form .block.title h5,
+.blocks-form .block.title h6,
+#page-edit .block.title h1,
+#page-edit .block.title h1.documentFirstHeading,
+#page-edit .block.title h2,
+#page-edit .block.title h3,
+#page-edit .block.title h4,
+#page-edit .block.title h5,
+#page-edit .block.title h6 {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* Standalone & column Slate (text) block in Edit Mode: padding-bottom instead of margin-bottom
+   so the blue outline spans the spacing and touches adjacent rows/blocks */
+.blocks-form .block.slate:not(.inner),
+#page-edit .block.slate:not(.inner),
+body.view-editview .block.slate:not(.inner),
+body.content-view-edit .block.slate:not(.inner) {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-bottom: 1rem !important;
+}
+
+.blocks-form .block.slate h1,
+.blocks-form .block.slate h2,
+.blocks-form .block.slate h3,
+.blocks-form .block.slate h4,
+.blocks-form .block.slate h5,
+.blocks-form .block.slate h6,
+#page-edit .block.slate h1,
+#page-edit .block.slate h2,
+#page-edit .block.slate h3,
+#page-edit .block.slate h4,
+#page-edit .block.slate h5,
+#page-edit .block.slate h6 {
+  margin-top: 0 !important;
+}
+
+.blocks-form .block.slate h1:last-child,
+.blocks-form .block.slate h2:last-child,
+.blocks-form .block.slate h3:last-child,
+.blocks-form .block.slate h4:last-child,
+.blocks-form .block.slate h5:last-child,
+.blocks-form .block.slate h6:last-child,
+.blocks-form .block.slate p:last-child,
+#page-edit .block.slate h1:last-child,
+#page-edit .block.slate h2:last-child,
+#page-edit .block.slate h3:last-child,
+#page-edit .block.slate h4:last-child,
+#page-edit .block.slate h5:last-child,
+#page-edit .block.slate h6:last-child,
+#page-edit .block.slate p:last-child {
+  margin-bottom: 0 !important;
+}
+
+.blocks-form .block.slate p,
+#page-edit .block.slate p,
+body.view-editview .block.slate p,
+body.content-view-edit .block.slate p,
+.blocks-form .block-editor-slate p {
+  margin-top: 0 !important;
+}
+
+.blocks-form .block.slate p:not(:last-child),
+#page-edit .block.slate p:not(:last-child),
+body.view-editview .block.slate p:not(:last-child),
+body.content-view-edit .block.slate p:not(:last-child) {
+  margin-bottom: 1rem !important;
+}
+
+.blocks-form .block.slate p:last-child,
+#page-edit .block.slate p:last-child,
+body.view-editview .block.slate p:last-child,
+body.content-view-edit .block.slate p:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* Accordion block in Edit Mode: padding-bottom so borders touch */
+.blocks-form .block.accordion:not(.inner),
+#page-edit .block.accordion:not(.inner),
+body.view-editview .block.accordion:not(.inner),
+body.content-view-edit .block.accordion:not(.inner) {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-bottom: 1rem !important;
+}
+
+/* Unstyled Row in Edit Mode: zero bottom margin & padding so bottom border touches following block */
+.row-edit-container:not(.has--background):not(.has--background-image):not([class*='has--style_name--']):not([class*='-box']) {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* All block editors stacked inside a row column in Edit Mode have zero margin */
+.row-column [class*='block-editor-'] {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* All items inside a column (including the last item) keep padding-bottom for separation */
+.row-column .block-editor-slate .block.slate:not(.inner),
+#page-edit .row-column .block-editor-slate .block.slate:not(.inner) {
+  padding-bottom: 1rem !important;
+  margin-bottom: 0 !important;
+}
+
+.row-column .block-editor-accordion .block.accordion:not(.inner),
+#page-edit .row-column .block-editor-accordion .block.accordion:not(.inner) {
+  padding-bottom: 1rem !important;
+  margin-bottom: 0 !important;
+}
+
+.row-column .block-editor-title .block.title:not(.inner),
+#page-edit .row-column .block-editor-title .block.title:not(.inner) {
+  padding-bottom: 1rem !important;
+  margin-bottom: 0 !important;
+}
+
+/* In View Mode: unstyled rows have zero margin/padding bottom so the column's last item
+   provides the single bottom spacing without doubling */
+#page-document .block.row:not(.has--background):not(.has--background-image):not([class*='has--style_name--']):not([class*='-box']),
+.view-wrapper .block.row:not(.has--background):not(.has--background-image):not([class*='has--style_name--']):not([class*='-box']),
+#view .block.row:not(.has--background):not(.has--background-image):not([class*='has--style_name--']):not([class*='-box']) {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* Reset inner block wrapper padding & margin in edit mode so padding-bottom stays inside .block:not(.inner) */
+.blocks-form .ui.drag.block.inner,
+#page-edit .blocks-form .ui.drag.block.inner {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.blocks-form .block:not(.row):not(.slate):not(.accordion):not(.image):not(.title) {
+  margin-top: 0 !important;
   margin-bottom: 0 !important;
 }
 
@@ -2957,7 +3089,9 @@ body.view-addview .block-editor-row[class*='has--style_name--'],
 #page-edit .block.row .row-column .ui.drag.block.inner {
   background: transparent !important;
   background-color: transparent !important;
-  padding: 0 !important;
+  padding-top: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
   border-radius: 0 !important;
   box-shadow: none !important;
 }

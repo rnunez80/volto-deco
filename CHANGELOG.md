@@ -2,6 +2,30 @@
 
 All notable changes to `volto-deco` will be documented in this file.
 
+## 1.2.15 (2026-11-12)
+
+### Edit Mode Zero-Gap Block Borders & Column Last-Item Padding (`deco.css`)
+- **Zero Outer Gap Between Adjacent Blocks in Edit Mode:**
+  - Excluded `.inner` (`:not(.inner)`) from Edit-mode `padding-bottom` rules on `.block.slate`, `.block.image`, `.block.accordion`, and `.block.title` (and explicitly set `padding-bottom: 0 !important;` on `.blocks-form .ui.drag.block.inner`) so `padding-bottom` stays strictly inside the blue `::before` outline instead of creating a duplicate gap outside `.ui.drag.block.inner`.
+  - Zeroed `margin-top` and `margin-bottom` on all Edit-mode wrappers (`.blocks-form [data-rbd-draggable-context-id]`, `[class*='block-editor-']`, `[class*='block-editor-'] > div`, `.ui.drag.block`, `.ui.drag.block.inner`, `.block`, and `.row-edit-container`), as well as heading margins inside `.block.title` and `.block.slate` (`.block.title` now uses `padding-bottom: 1rem !important;` like text blocks).
+- **Preserve Column Last-Item Bottom Padding:**
+  - Restored `padding-bottom` on the last item inside `.row-column` (`1rem` for slate/title/accordion, `1.5rem` for image in Edit mode; natural bottom spacing in View mode), and changed `.block.row .row-column .block` reset from `padding: 0 !important;` to `padding-top/left/right: 0 !important;` so it does not override `padding-bottom`.
+  - Set unstyled `.block.row` in View mode to `margin-bottom: 0 !important; padding-bottom: 0 !important;` so the column's last item provides the single bottom spacing without doubling.
+
+## 1.2.14 (2026-11-12)
+
+### Block Border Consistency & Spacing Polish (`deco.css`)
+- **Block Selection/Hover Blue Border Consistency:**
+  - Shifted edit-mode vertical spacing from wrapper `margin-bottom` to internal `padding-bottom` across `.block.slate`, `.block.image`, and `.block.accordion`, ensuring that selection/hover blue borders touch adjacent rows and blocks seamlessly.
+  - Zeroed outer editor wrapper margins (`margin-top: 0 !important; margin-bottom: 0 !important;`) for all root and nested blocks in Edit mode.
+  - Moved the 1.5rem side padding on unstyled standalone blocks from `.ui.drag.block.inner` to `.block:not(.inner)`, ensuring that the blue selection outline expands to the full 100% width, perfectly aligning with row borders.
+  - Excluded `.row-edit-container` from nested `.block .block:not(.inner)::before` outline rules, guaranteeing a single clean outline on row blocks.
+- **Last Item & Row Bottom Spacing Reset (View and Edit Modes):**
+  - Reset `margin-bottom: 0 !important; padding-bottom: 0 !important;` on the last item inside every `.row-column` (covering `.block`, `.block.slate`, `p:last-child`, `figure:last-child`, `.block.image:last-child`, and `[class*='block-editor-']:last-child`).
+  - Standardized unstyled rows in View mode to single paragraph margin (`margin-bottom: 1rem !important; padding-bottom: 0 !important;`), completely eliminating double-sized gaps between rows and subsequent content.
+- **Edit-Mode Image Margin Elimination:**
+  - Explicitly reset `.block.image` (and `.row-column .block.image`) to `margin-bottom: 0 !important;` in Edit mode, eliminating default theme bottom margins on images.
+
 ## 1.2.13 (2026-11-11)
 
 ### Drop Indicators, Slate Block Spacing & Row Image Gap (`RowEdit.tsx`, `EditBlockWrapper.jsx`, `deco.css`)
