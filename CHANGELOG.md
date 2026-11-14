@@ -2,6 +2,17 @@
 
 All notable changes to `volto-deco` will be documented in this file.
 
+## 1.2.16 (2026-11-14)
+
+### Image Block View & Edit Vertical Spacing Parity (`deco.css`)
+- **View Mode Image Spacing (`#page-document`, `.view-wrapper`, `#view`):**
+  - Added `#page-document` and `#view` to the View-mode `margin-bottom: 1.5rem !important;` rule for `figure.block.image`, `p.block.image`, and `.block.image`, set `margin-bottom: 0 !important; padding-bottom: 0 !important;` for `align.left` / `align.right` floated image blocks in View mode, and scoped `.row-column .block.image` margin resets strictly to Edit-mode ancestors so centered/full images inside multi-column rows keep `1.5rem` bottom spacing in View mode.
+  - Changed `.block.image.align.center img` (and variants) from `display: inline-block !important;` to `display: block !important;` to eliminate extra inline baseline space below centered images.
+- **Edit Mode Single Image Padding & Row Column Flow:**
+  - Restricted Edit-mode `padding-bottom: 1.5rem !important;` to `.ui.drag.block.inner > .block.image:not(.inner)` (both at root and inside `.row-column`), set `padding-bottom: 0 !important;` for `left`/`right`-aligned image blocks so floated images do not leave an empty strip above wrapped text, and explicitly reset nested `.block.image:not(.inner) .block.image` to `padding-bottom: 0 !important; margin-bottom: 0 !important;` so `EditBlockWrapper`'s outer `div.block.image` and `Image/Edit`'s inner `div.block.image` do not double the bottom padding.
+  - Zeroed `margin-top`, `margin-bottom`, `padding-top`, and `padding-bottom` on `.blocks-form .block-editor-image`, `.blocks-form .block-editor-image > div`, `.row-column .block-editor-image`, and `.row-column .block-editor-image > div`.
+  - Increased specificity on `.row-column.row-column-edit > .blocks-form`, `> fieldset`, and `> fieldset > div` (plus `#page-edit`, `#page-add`, and `.blocks-form` scoped selectors) so `display: block !important; height: auto !important; flex-grow: 0 !important;` overrides `site.overrides`.
+
 ## 1.2.15 (2026-11-12)
 
 ### Edit Mode Zero-Gap Block Borders & Column Last-Item Padding (`deco.css`)

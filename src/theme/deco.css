@@ -468,26 +468,67 @@ body.is-dragging-volto-block .row-column .ui.drag.block.inner {
 }
 
 /* Image block bottom spacing across View and Edit modes */
+#page-document figure.block.image,
+#page-document p.block.image,
+#page-document .block.image,
 .view-wrapper figure.block.image,
 .view-wrapper p.block.image,
-.view-wrapper .block.image {
+.view-wrapper .block.image,
+#view figure.block.image,
+#view p.block.image,
+#view .block.image {
   margin-bottom: 1.5rem !important;
 }
 
-/* In Edit mode: block editor has zero margin, image block uses padding-bottom so borders touch */
-.blocks-form > fieldset > div > .block-editor-image,
-#page-edit .blocks-form > fieldset > div > .block-editor-image {
-  margin-top: 0 !important;
+/* Left/right floated image blocks in View mode must have 0 bottom margin/padding so wrapped text aligns cleanly */
+#page-document figure.block.image.align.left,
+#page-document figure.block.image.align.right,
+#page-document p.block.image.align.left,
+#page-document p.block.image.align.right,
+#page-document .block.image.align.left,
+#page-document .block.image.align.right,
+.view-wrapper figure.block.image.align.left,
+.view-wrapper figure.block.image.align.right,
+.view-wrapper p.block.image.align.left,
+.view-wrapper p.block.image.align.right,
+.view-wrapper .block.image.align.left,
+.view-wrapper .block.image.align.right,
+#view figure.block.image.align.left,
+#view figure.block.image.align.right,
+#view p.block.image.align.left,
+#view p.block.image.align.right,
+#view .block.image.align.left,
+#view .block.image.align.right {
   margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
 }
 
-.blocks-form > fieldset > div > .block-editor-image .block.image:not(.inner),
+/* In Edit mode: block editor wrappers have zero margin/padding; .block.image:not(.inner) owns the 1.5rem padding-bottom */
+.blocks-form > fieldset > div > .block-editor-image,
+#page-edit .blocks-form > fieldset > div > .block-editor-image,
+.blocks-form .block-editor-image,
+.blocks-form .block-editor-image > div,
+.row-column .block-editor-image,
+.row-column .block-editor-image > div {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.blocks-form
+  > fieldset
+  > div
+  > .block-editor-image
+  .ui.drag.block.inner
+  > .block.image:not(.inner),
 #page-edit
   .blocks-form
   > fieldset
   > div
   > .block-editor-image
-  .block.image:not(.inner) {
+  .ui.drag.block.inner
+  > .block.image:not(.inner) {
   padding-bottom: 1.5rem !important;
   margin-bottom: 0 !important;
 }
@@ -495,10 +536,15 @@ body.is-dragging-volto-block .row-column .ui.drag.block.inner {
 /* Reset inner elements in Edit mode so block.image itself has 0 margin */
 .blocks-form .block.image,
 #page-edit .block.image,
+#page-add .block.image,
 body.view-editview .block.image,
+body.view-addview .block.image,
 body.content-view-edit .block.image,
 .blocks-form .block-editor-image .block.image,
-.row-column .block.image,
+.blocks-form .row-column .block.image,
+#page-edit .row-column .block.image,
+body.view-editview .row-column .block.image,
+body.content-view-edit .row-column .block.image,
 .row-column .block-editor-image .block.image,
 .blocks-form .block-editor-image .ui.drag.block.inner,
 .blocks-form .block-editor-image figure,
@@ -510,15 +556,77 @@ body.content-view-edit .block.image img {
   margin-bottom: 0 !important;
 }
 
-/* All image blocks inside a column keep bottom padding (including the last item) */
-.row-column .block-editor-image {
-  margin-top: 0 !important;
+/* Prevent nested .block.image (from Image/Edit.jsx) inside EditBlockWrapper's .block.image from doubling padding */
+.blocks-form .block.image:not(.inner) .block.image,
+#page-edit .block.image:not(.inner) .block.image,
+.row-column .block.image:not(.inner) .block.image {
+  padding-bottom: 0 !important;
   margin-bottom: 0 !important;
 }
 
-.row-column .block-editor-image .block.image:not(.inner),
-#page-edit .row-column .block-editor-image .block.image:not(.inner) {
+/* All image blocks inside a column keep bottom padding (including the last item) */
+.row-column .block-editor-image .ui.drag.block.inner > .block.image:not(.inner),
+#page-edit
+  .row-column
+  .block-editor-image
+  .ui.drag.block.inner
+  > .block.image:not(.inner) {
   padding-bottom: 1.5rem !important;
+  margin-bottom: 0 !important;
+}
+
+/* Left/right floated image blocks must have 0 bottom padding so they do not leave an empty strip above wrapped text */
+.blocks-form
+  .block-editor-image.left
+  .ui.drag.block.inner
+  > .block.image:not(.inner),
+.blocks-form
+  .block-editor-image.right
+  .ui.drag.block.inner
+  > .block.image:not(.inner),
+#page-edit
+  .blocks-form
+  .block-editor-image.left
+  .ui.drag.block.inner
+  > .block.image:not(.inner),
+#page-edit
+  .blocks-form
+  .block-editor-image.right
+  .ui.drag.block.inner
+  > .block.image:not(.inner),
+.row-column
+  .block-editor-image.left
+  .ui.drag.block.inner
+  > .block.image:not(.inner),
+.row-column
+  .block-editor-image.right
+  .ui.drag.block.inner
+  > .block.image:not(.inner),
+#page-edit
+  .row-column
+  .block-editor-image.left
+  .ui.drag.block.inner
+  > .block.image:not(.inner),
+#page-edit
+  .row-column
+  .block-editor-image.right
+  .ui.drag.block.inner
+  > .block.image:not(.inner),
+.blocks-form
+  .block-editor-image
+  .ui.drag.block.inner
+  > .block.image:not(.inner):has(.align.left, .align.right),
+#page-edit
+  .blocks-form
+  .block-editor-image
+  .ui.drag.block.inner
+  > .block.image:not(.inner):has(.align.left, .align.right),
+#page-edit
+  .row-column
+  .block-editor-image
+  .ui.drag.block.inner
+  > .block.image:not(.inner):has(.align.left, .align.right) {
+  padding-bottom: 0 !important;
   margin-bottom: 0 !important;
 }
 
@@ -615,7 +723,7 @@ figure.block.image.align.center img,
   float: none !important;
   margin-left: auto !important;
   margin-right: auto !important;
-  display: inline-block !important;
+  display: block !important;
 }
 
 /* Full alignment: image fills full width */
@@ -2797,9 +2905,18 @@ body.content-view-edit [data-rbd-draggable-context-id],
 /* Prevent row columns from stretching inner block wrappers to 100% height in Edit Mode,
    which caused large empty whitespace below shorter blocks inside rows.
    Use block display so floated images allow text in adjacent blocks to wrap naturally. */
-.row-column > .blocks-form,
-.row-column > .blocks-form > fieldset,
-.row-column > .blocks-form > fieldset > div {
+.row-column.row-column-edit > .blocks-form,
+.row-column.row-column-edit > .blocks-form > fieldset,
+.row-column.row-column-edit > .blocks-form > fieldset > div,
+#page-edit .row-column > .blocks-form,
+#page-edit .row-column > .blocks-form > fieldset,
+#page-edit .row-column > .blocks-form > fieldset > div,
+#page-add .row-column > .blocks-form,
+#page-add .row-column > .blocks-form > fieldset,
+#page-add .row-column > .blocks-form > fieldset > div,
+.blocks-form .row-column > .blocks-form,
+.blocks-form .row-column > .blocks-form > fieldset,
+.blocks-form .row-column > .blocks-form > fieldset > div {
   display: block !important;
   height: auto !important;
   flex-grow: 0 !important;
