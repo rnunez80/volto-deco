@@ -40,6 +40,7 @@ export default function installBlockWidth(config: ConfigType) {
   const defaultTargetBlocks = [
     'row',
     'slate',
+    'description',
     'image',
     'video',
     'listing',

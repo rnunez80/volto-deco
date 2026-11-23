@@ -1224,13 +1224,27 @@ body:not(.view-editview):not(.content-view-edit)
   position: relative !important;
   left: 50% !important;
   right: 50% !important;
-  width: min(var(--layout-container-width, 1440px), 100vw) !important;
-  max-width: min(var(--layout-container-width, 1440px), 100vw) !important;
+  width: min(
+    var(--layout-container-width, 1440px),
+    calc(100vw - var(--volto-toolbar-width, 0px) - var(--volto-sidebar-width, 0px))
+  ) !important;
+  max-width: min(
+    var(--layout-container-width, 1440px),
+    calc(100vw - var(--volto-toolbar-width, 0px) - var(--volto-sidebar-width, 0px))
+  ) !important;
   margin-left: calc(
-    -1 * min(var(--layout-container-width, 1440px), 100vw) / 2
+    -1 *
+      min(
+        var(--layout-container-width, 1440px),
+        calc(100vw - var(--volto-toolbar-width, 0px) - var(--volto-sidebar-width, 0px))
+      ) / 2
   ) !important;
   margin-right: calc(
-    -1 * min(var(--layout-container-width, 1440px), 100vw) / 2
+    -1 *
+      min(
+        var(--layout-container-width, 1440px),
+        calc(100vw - var(--volto-toolbar-width, 0px) - var(--volto-sidebar-width, 0px))
+      ) / 2
   ) !important;
   box-sizing: border-box !important;
   transition: all 0.2s ease-in-out;
