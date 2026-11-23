@@ -2,6 +2,17 @@
 
 All notable changes to `volto-deco` will be documented in this file.
 
+## 1.2.17 (2026-11-23)
+
+### Date Picker Overlay, Root List Gutter & Edit-Mode Title/Description Spacing (`deco.css`)
+- **Date/Time Picker Popups Above Sidebar Sections:**
+  - Added `z-index: 15000 !important;` for `.SingleDatePicker_picker`, `.DateRangePicker_picker`, `.DayPicker`, `.DayPicker__withBorder`, `.rc-calendar`, and `.rc-time-picker-panel` so calendar and time-picker popups always render above sidebar sections and all other UI.
+  - Raised the sidebar segment / accordion / field / date-time wrapper containing an active picker to `position: relative !important; z-index: 50 !important; overflow: visible !important;` (scoped via `:has(...)`) so the popups are not clipped.
+- **Root-Level List Gutter:**
+  - Excluded `ul` and `ol` from the generic `#page-document > *:not(.row)` padding-reset rule, and increased the marker-indent padding on root-level unstyled lists from `3rem` to `4rem` (1.5rem block gutter + 40px standard list indent) to match Edit Mode.
+- **Title, Description & Summary Blocks in Edit Mode:**
+  - Extended the zero-outer-margin / zero-heading-collapse rule from `.block.title` to `.block.description` and `.block.summary` (at root and inside `.row-column`), zeroed inner `p` / `.documentDescription` margins on those blocks, and excluded `.description` / `.summary` from the generic `.blocks-form .block:not(.row)...` margin reset.
+
 ## 1.2.16 (2026-11-14)
 
 ### Image Block View & Edit Vertical Spacing Parity (`deco.css`)

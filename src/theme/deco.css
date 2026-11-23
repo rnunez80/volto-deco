@@ -1987,6 +1987,35 @@ aside.sidebar-container {
   z-index: 11002 !important;
 }
 
+/* Ensure calendar & date/time picker popups always render on top of sidebar sections and all other UI */
+.SingleDatePicker_picker,
+.DateRangePicker_picker,
+.DayPicker,
+.DayPicker__withBorder,
+.rc-calendar,
+.rc-time-picker-panel {
+  z-index: 15000 !important;
+}
+
+.sidebar-container .ui.segment:has(.SingleDatePicker_picker),
+.sidebar-container .ui.segment:has(.DateRangePicker_picker),
+.sidebar-container .ui.accordion:has(.SingleDatePicker_picker),
+.sidebar-container .ui.accordion:has(.DateRangePicker_picker),
+.sidebar-container .field:has(.SingleDatePicker_picker),
+.sidebar-container .field:has(.DateRangePicker_picker),
+.sidebar-container .date-time-widget-wrapper:has(.SingleDatePicker_picker),
+.sidebar-container .date-time-widget-wrapper:has(.DateRangePicker_picker),
+#sidebar-metadata .ui.segment:has(.SingleDatePicker_picker),
+#sidebar-metadata .ui.segment:has(.DateRangePicker_picker),
+#sidebar-metadata .ui.accordion .content:has(.SingleDatePicker_picker),
+#sidebar-metadata .ui.accordion .content:has(.DateRangePicker_picker),
+#sidebar-properties .ui.segment:has(.SingleDatePicker_picker),
+#sidebar-properties .ui.segment:has(.DateRangePicker_picker) {
+  position: relative !important;
+  z-index: 50 !important;
+  overflow: visible !important;
+}
+
 #sidebar-row,
 #sidebar-row.tab-wrapper {
   overflow-y: auto !important;
@@ -2735,7 +2764,7 @@ html.dark .block.row.stat-cards-primary-box .row-column p {
     .has--background-image
   ):not([class*='has--style_name--']):not([class*='-box']),
 #page-document
-  > *:not(.row):not(.has--block-width--full):not(.full-width):not(
+  > *:not(.row):not(ul):not(ol):not(.has--block-width--full):not(.full-width):not(
     .has--background
   ):not(.has--background-image):not([class*='has--style_name--']):not(
     [class*='-box']
@@ -2763,7 +2792,8 @@ html.dark .block.row.stat-cards-primary-box .row-column p {
   padding-right: 0 !important;
 }
 
-/* Preserve list marker indentation inside the 1.5rem horizontal gutter for root-level unstyled lists */
+/* Preserve list marker indentation inside the 1.5rem horizontal gutter for root-level unstyled lists
+   (1.5rem block gutter + 2.5rem / 40px standard list indent to match Edit Mode) */
 #page-document
   > ul:not(.has--block-width--full):not(.full-width):not(.has--background):not(
     .has--background-image
@@ -2772,7 +2802,7 @@ html.dark .block.row.stat-cards-primary-box .row-column p {
   > ol:not(.has--block-width--full):not(.full-width):not(.has--background):not(
     .has--background-image
   ):not([class*='has--style_name--']):not([class*='-box']) {
-  padding-left: 3rem !important;
+  padding-left: 4rem !important;
   padding-right: 1.5rem !important;
   box-sizing: border-box !important;
 }
@@ -2958,14 +2988,38 @@ body.view-editview .blocks-form [class*='block-editor-'],
   margin-bottom: 0 !important;
 }
 
-/* Title block in Edit Mode: zero outer margin & zero heading margin collapse; padding-bottom matches text block */
+/* Title & Description/Summary blocks in Edit Mode: zero outer margin & zero inner margin collapse; padding-bottom matches text block */
 .blocks-form .block.title:not(.inner),
 #page-edit .block.title:not(.inner),
 body.view-editview .block.title:not(.inner),
-body.content-view-edit .block.title:not(.inner) {
+body.content-view-edit .block.title:not(.inner),
+.blocks-form .block.description:not(.inner),
+#page-edit .block.description:not(.inner),
+body.view-editview .block.description:not(.inner),
+body.content-view-edit .block.description:not(.inner),
+.blocks-form .block.summary:not(.inner),
+#page-edit .block.summary:not(.inner),
+body.view-editview .block.summary:not(.inner),
+body.content-view-edit .block.summary:not(.inner) {
   margin-top: 0 !important;
   margin-bottom: 0 !important;
   padding-bottom: 1rem !important;
+}
+
+.blocks-form .block.description p,
+.blocks-form .block.description .documentDescription,
+#page-edit .block.description p,
+#page-edit .block.description .documentDescription,
+body.view-editview .block.description p,
+body.view-editview .block.description .documentDescription,
+body.content-view-edit .block.description p,
+body.content-view-edit .block.description .documentDescription,
+.blocks-form .block.summary p,
+#page-edit .block.summary p,
+body.view-editview .block.summary p,
+body.content-view-edit .block.summary p {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
 }
 
 .blocks-form .block.title h1,
@@ -3088,7 +3142,11 @@ body.content-view-edit .block.accordion:not(.inner) {
 }
 
 .row-column .block-editor-title .block.title:not(.inner),
-#page-edit .row-column .block-editor-title .block.title:not(.inner) {
+#page-edit .row-column .block-editor-title .block.title:not(.inner),
+.row-column .block-editor-description .block.description:not(.inner),
+#page-edit .row-column .block-editor-description .block.description:not(.inner),
+.row-column .block-editor-summary .block.summary:not(.inner),
+#page-edit .row-column .block-editor-summary .block.summary:not(.inner) {
   padding-bottom: 1rem !important;
   margin-bottom: 0 !important;
 }
@@ -3110,7 +3168,7 @@ body.content-view-edit .block.accordion:not(.inner) {
   padding-bottom: 0 !important;
 }
 
-.blocks-form .block:not(.row):not(.slate):not(.accordion):not(.image):not(.title) {
+.blocks-form .block:not(.row):not(.slate):not(.accordion):not(.image):not(.title):not(.description):not(.summary) {
   margin-top: 0 !important;
   margin-bottom: 0 !important;
 }
