@@ -666,6 +666,28 @@ figure.block.image.align.right img,
   display: block !important;
 }
 
+.block.image.align.right img.medium,
+p.block.image.align.right img.medium,
+figure.block.image.align.right img.medium,
+.row-column .block.image.align.right img.medium,
+.row-column p.block.image.align.right img.medium,
+.row-column figure.block.image.align.right img.medium,
+.block-editor-image.right img.medium,
+.row-column .block-editor-image.right img.medium {
+  max-width: 25% !important;
+}
+
+.block.image.align.right img.small,
+p.block.image.align.right img.small,
+figure.block.image.align.right img.small,
+.row-column .block.image.align.right img.small,
+.row-column p.block.image.align.right img.small,
+.row-column figure.block.image.align.right img.small,
+.block-editor-image.right img.small,
+.row-column .block-editor-image.right img.small {
+  max-width: 12.5% !important;
+}
+
 /* Left alignment: image floats left, adjacent text wraps on right */
 .block.image.align.left,
 p.block.image.align.left,
@@ -693,6 +715,28 @@ figure.block.image.align.left img,
   margin-left: 0 !important;
   margin-bottom: 1rem !important;
   display: block !important;
+}
+
+.block.image.align.left img.medium,
+p.block.image.align.left img.medium,
+figure.block.image.align.left img.medium,
+.row-column .block.image.align.left img.medium,
+.row-column p.block.image.align.left img.medium,
+.row-column figure.block.image.align.left img.medium,
+.block-editor-image.left img.medium,
+.row-column .block-editor-image.left img.medium {
+  max-width: 25% !important;
+}
+
+.block.image.align.left img.small,
+p.block.image.align.left img.small,
+figure.block.image.align.left img.small,
+.row-column .block.image.align.left img.small,
+.row-column p.block.image.align.left img.small,
+.row-column figure.block.image.align.left img.small,
+.block-editor-image.left img.small,
+.row-column .block-editor-image.left img.small {
+  max-width: 12.5% !important;
 }
 
 /* Center alignment: image is centered horizontally */
@@ -726,17 +770,52 @@ figure.block.image.align.center img,
   display: block !important;
 }
 
-/* Full alignment: image fills full width */
+/* Full alignment: image fills 100vw in View Mode (ignoring image size) and 100% of canvas in Edit Mode */
 .block.image.align.full,
 .block-editor-image.full,
 .block-editor-image.full .block.image {
   text-align: center !important;
   clear: both !important;
   width: 100% !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+#page-document > .block.image.align.full,
+.view-wrapper .block.image.align.full:not(.row-column *),
+#view .block.image.align.full:not(.row-column *),
+body:not(.view-editview):not(.content-view-edit):not(.view-addview)
+  .block.image.align.full:not(.row-column *) {
+  position: relative !important;
+  left: 50% !important;
+  right: 50% !important;
+  width: calc(
+    100vw - var(--volto-toolbar-width, 0px) - var(--volto-sidebar-width, 0px)
+  ) !important;
+  max-width: calc(
+    100vw - var(--volto-toolbar-width, 0px) - var(--volto-sidebar-width, 0px)
+  ) !important;
+  margin-left: calc(
+    -50vw +
+      ((var(--volto-toolbar-width, 0px) + var(--volto-sidebar-width, 0px)) / 2)
+  ) !important;
+  margin-right: calc(
+    -50vw +
+      ((var(--volto-toolbar-width, 0px) + var(--volto-sidebar-width, 0px)) / 2)
+  ) !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  box-sizing: border-box !important;
 }
 
 .block.image.align.full img,
-.block-editor-image.full img {
+.block.image.align.full img.large,
+.block.image.align.full img.medium,
+.block.image.align.full img.small,
+.block-editor-image.full img,
+.block-editor-image.full img.large,
+.block-editor-image.full img.medium,
+.block-editor-image.full img.small {
   float: none !important;
   width: 100% !important;
   max-width: 100% !important;
@@ -995,7 +1074,18 @@ body.has-sidebar-collapsed {
   #view [class*='has--block-width--full'],
   #view .has--block-width--full,
   body:not(.view-editview):not(.content-view-edit):not(.view-addview)
-    .block.has--block-width--full {
+    .block.has--block-width--full,
+  body:not(.view-editview):not(.content-view-edit):not(.view-addview)
+    #page-document
+    .block.image.align.full:not(.row-column *),
+  body:not(.view-editview):not(.content-view-edit):not(.view-addview)
+    .view-wrapper
+    .block.image.align.full:not(.row-column *),
+  body:not(.view-editview):not(.content-view-edit):not(.view-addview)
+    #view
+    .block.image.align.full:not(.row-column *),
+  body:not(.view-editview):not(.content-view-edit):not(.view-addview)
+    .block.image.align.full:not(.row-column *) {
     width: 100vw !important;
     max-width: 100vw !important;
     left: 50% !important;
@@ -1153,14 +1243,59 @@ body:not(.view-editview):not(.content-view-edit)
 .view-wrapper .has--block-width--full,
 #view [class*='has--block-width--full'],
 #view .has--block-width--full,
-body:not(.view-editview):not(.content-view-edit) .block.has--block-width--full {
+body:not(.view-editview):not(.content-view-edit) .block.has--block-width--full,
+body:not(.view-editview):not(.content-view-edit):not(.view-addview)
+  #page-document
+  .block.image.align.full:not(.row-column *),
+body:not(.view-editview):not(.content-view-edit):not(.view-addview)
+  #page-document
+  figure.block.image.align.full:not(.row-column *),
+body:not(.view-editview):not(.content-view-edit):not(.view-addview)
+  #page-document
+  p.block.image.align.full:not(.row-column *),
+body:not(.view-editview):not(.content-view-edit):not(.view-addview)
+  .view-wrapper
+  .block.image.align.full:not(.row-column *),
+body:not(.view-editview):not(.content-view-edit):not(.view-addview)
+  .view-wrapper
+  figure.block.image.align.full:not(.row-column *),
+body:not(.view-editview):not(.content-view-edit):not(.view-addview)
+  .view-wrapper
+  p.block.image.align.full:not(.row-column *),
+body:not(.view-editview):not(.content-view-edit):not(.view-addview)
+  #view
+  .block.image.align.full:not(.row-column *),
+body:not(.view-editview):not(.content-view-edit):not(.view-addview)
+  #view
+  figure.block.image.align.full:not(.row-column *),
+body:not(.view-editview):not(.content-view-edit):not(.view-addview)
+  #view
+  p.block.image.align.full:not(.row-column *),
+body:not(.view-editview):not(.content-view-edit):not(.view-addview)
+  .block.image.align.full:not(.row-column *),
+body:not(.view-editview):not(.content-view-edit):not(.view-addview)
+  figure.block.image.align.full:not(.row-column *),
+body:not(.view-editview):not(.content-view-edit):not(.view-addview)
+  p.block.image.align.full:not(.row-column *) {
   position: relative !important;
   left: 50% !important;
   right: 50% !important;
-  width: calc(100vw - var(--volto-toolbar-width, 0px)) !important;
-  max-width: calc(100vw - var(--volto-toolbar-width, 0px)) !important;
-  margin-left: calc(-50vw + (var(--volto-toolbar-width, 0px) / 2)) !important;
-  margin-right: calc(-50vw + (var(--volto-toolbar-width, 0px) / 2)) !important;
+  width: calc(
+    100vw - var(--volto-toolbar-width, 0px) - var(--volto-sidebar-width, 0px)
+  ) !important;
+  max-width: calc(
+    100vw - var(--volto-toolbar-width, 0px) - var(--volto-sidebar-width, 0px)
+  ) !important;
+  margin-left: calc(
+    -50vw +
+      ((var(--volto-toolbar-width, 0px) + var(--volto-sidebar-width, 0px)) / 2)
+  ) !important;
+  margin-right: calc(
+    -50vw +
+      ((var(--volto-toolbar-width, 0px) + var(--volto-sidebar-width, 0px)) / 2)
+  ) !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
   box-sizing: border-box !important;
   transition: all 0.2s ease-in-out;
 }
@@ -1325,7 +1460,25 @@ body.view-addview .block.row.has--block-width--full,
 body.content-view-edit .block.row.has--block-width--full,
 body.view-editview .row-edit-container.has--block-width--full,
 body.view-addview .row-edit-container.has--block-width--full,
-body.content-view-edit .row-edit-container.has--block-width--full {
+body.content-view-edit .row-edit-container.has--block-width--full,
+body.view-editview .blocks-form .block-editor-image.full:not(.row-column *),
+body.view-addview .blocks-form .block-editor-image.full:not(.row-column *),
+body.content-view-edit .blocks-form .block-editor-image.full:not(.row-column *),
+body.view-editview .blocks-form .block-editor-image.full:not(.row-column *) > div,
+body.view-addview .blocks-form .block-editor-image.full:not(.row-column *) > div,
+body.content-view-edit .blocks-form .block-editor-image.full:not(.row-column *) > div,
+body.view-editview .blocks-form .block-editor-image:has(.block.image.align.full):not(.row-column *),
+body.view-addview .blocks-form .block-editor-image:has(.block.image.align.full):not(.row-column *),
+body.content-view-edit .blocks-form .block-editor-image:has(.block.image.align.full):not(.row-column *),
+body.view-editview .blocks-form .block-editor-image:has(.block.image.align.full):not(.row-column *) > div,
+body.view-addview .blocks-form .block-editor-image:has(.block.image.align.full):not(.row-column *) > div,
+body.content-view-edit .blocks-form .block-editor-image:has(.block.image.align.full):not(.row-column *) > div,
+body.view-editview .blocks-form .block-editor-image.full .ui.drag.block.inner,
+body.view-addview .blocks-form .block-editor-image.full .ui.drag.block.inner,
+body.content-view-edit .blocks-form .block-editor-image.full .ui.drag.block.inner,
+body.view-editview .blocks-form .block-editor-image:has(.block.image.align.full) .ui.drag.block.inner,
+body.view-addview .blocks-form .block-editor-image:has(.block.image.align.full) .ui.drag.block.inner,
+body.content-view-edit .blocks-form .block-editor-image:has(.block.image.align.full) .ui.drag.block.inner {
   width: 100% !important;
   max-width: 100% !important;
   margin-left: 0 !important;
@@ -1543,6 +1696,58 @@ body.content-view-edit
   [class*='block-editor-'].has--block-width--narrow:not(.row-column *) {
   padding-left: 0 !important;
   padding-right: 0 !important;
+}
+
+/* Full-aligned image block in edit mode: spans 100% of edit canvas edge-to-edge regardless of blockWidth */
+body.view-editview .blocks-form fieldset > div > .block-editor-image.full:not(.row-column *),
+body.view-addview .blocks-form fieldset > div > .block-editor-image.full:not(.row-column *),
+body.content-view-edit .blocks-form fieldset > div > .block-editor-image.full:not(.row-column *),
+body.view-editview .blocks-form fieldset > div > .block-editor-image:has(.block.image.align.full):not(.row-column *),
+body.view-addview .blocks-form fieldset > div > .block-editor-image:has(.block.image.align.full):not(.row-column *),
+body.content-view-edit .blocks-form fieldset > div > .block-editor-image:has(.block.image.align.full):not(.row-column *),
+body.view-editview .blocks-form .block-editor-image.full:not(.row-column *) > div,
+body.view-addview .blocks-form .block-editor-image.full:not(.row-column *) > div,
+body.content-view-edit .blocks-form .block-editor-image.full:not(.row-column *) > div,
+body.view-editview .blocks-form .block-editor-image:has(.block.image.align.full):not(.row-column *) > div,
+body.view-addview .blocks-form .block-editor-image:has(.block.image.align.full):not(.row-column *) > div,
+body.content-view-edit .blocks-form .block-editor-image:has(.block.image.align.full):not(.row-column *) > div,
+body.view-editview .blocks-form .block-editor-image.full .ui.drag.block.inner,
+body.view-addview .blocks-form .block-editor-image.full .ui.drag.block.inner,
+body.content-view-edit .blocks-form .block-editor-image.full .ui.drag.block.inner,
+body.view-editview .blocks-form .block-editor-image:has(.block.image.align.full) .ui.drag.block.inner,
+body.view-addview .blocks-form .block-editor-image:has(.block.image.align.full) .ui.drag.block.inner,
+body.content-view-edit .blocks-form .block-editor-image:has(.block.image.align.full) .ui.drag.block.inner,
+body.view-editview .blocks-form .block-editor-image.full .block.image:not(.inner),
+body.view-addview .blocks-form .block-editor-image.full .block.image:not(.inner),
+body.content-view-edit .blocks-form .block-editor-image.full .block.image:not(.inner),
+body.view-editview .blocks-form .block-editor-image:has(.block.image.align.full) .block.image:not(.inner),
+body.view-addview .blocks-form .block-editor-image:has(.block.image.align.full) .block.image:not(.inner),
+body.content-view-edit .blocks-form .block-editor-image:has(.block.image.align.full) .block.image:not(.inner),
+body.view-editview .block.image.align.full,
+body.view-addview .block.image.align.full,
+body.content-view-edit .block.image.align.full,
+#page-edit .block.image.align.full,
+#page-add .block.image.align.full,
+body.view-editview .block.image.align.full img,
+body.view-addview .block.image.align.full img,
+body.content-view-edit .block.image.align.full img,
+#page-edit .block.image.align.full img,
+#page-add .block.image.align.full img,
+body.view-editview .block-editor-image.full img,
+body.view-addview .block-editor-image.full img,
+body.content-view-edit .block-editor-image.full img,
+#page-edit .block-editor-image.full img,
+#page-add .block-editor-image.full img {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  left: auto !important;
+  right: auto !important;
+  transform: none !important;
+  box-sizing: border-box !important;
 }
 
 /* Full-width row inner container centered with up to 1440px layout width */
@@ -2765,6 +2970,8 @@ html.dark .block.row.stat-cards-primary-box .row-column p {
   ):not([class*='has--style_name--']):not([class*='-box']),
 #page-document
   > *:not(.row):not(ul):not(ol):not(.has--block-width--full):not(.full-width):not(
+    .full
+  ):not(
     .has--background
   ):not(.has--background-image):not([class*='has--style_name--']):not(
     [class*='-box']
@@ -2778,10 +2985,10 @@ html.dark .block.row.stat-cards-primary-box .row-column p {
     .block-editor-headerTitle
   ):not(.block-editor-videohero):not(.block-editor-cinematicSlider):not(
     .block-editor-cinematicHorizontalScroll
-  ):not(.has--block-width--full):not(.has--background):not(
+  ):not(.has--block-width--full):not(.full):not(.has--background):not(
     .has--background-image
   ):not([class*='has--style_name--']):not([class*='-box']):not(.row-column *)
-  .block:not(.inner) {
+  .block:not(.inner):not(.full) {
   padding-left: 1.5rem !important;
   padding-right: 1.5rem !important;
   box-sizing: border-box !important;
