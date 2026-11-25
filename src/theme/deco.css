@@ -556,12 +556,35 @@ body.content-view-edit .block.image img {
   margin-bottom: 0 !important;
 }
 
-/* Prevent nested .block.image (from Image/Edit.jsx) inside EditBlockWrapper's .block.image from doubling padding */
+/* Prevent nested .block.image or .block.slateTable/.block.table inside EditBlockWrapper from doubling padding or borders */
 .blocks-form .block.image:not(.inner) .block.image,
 #page-edit .block.image:not(.inner) .block.image,
 .row-column .block.image:not(.inner) .block.image {
   padding-bottom: 0 !important;
   margin-bottom: 0 !important;
+}
+
+.blocks-form .block.slateTable:not(.inner) .block,
+#page-edit .block.slateTable:not(.inner) .block,
+.row-column .block.slateTable:not(.inner) .block,
+.blocks-form .block.table:not(.inner) .block,
+#page-edit .block.table:not(.inner) .block,
+.row-column .block.table:not(.inner) .block {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  margin: 0 !important;
+}
+
+.blocks-form .block.slateTable:not(.inner) .block::before,
+#page-edit .block.slateTable:not(.inner) .block::before,
+.row-column .block.slateTable:not(.inner) .block::before,
+.blocks-form .block.table:not(.inner) .block::before,
+#page-edit .block.table:not(.inner) .block::before,
+.row-column .block.table:not(.inner) .block::before {
+  display: none !important;
+  content: none !important;
 }
 
 /* All image blocks inside a column keep bottom padding (including the last item) */
@@ -3294,28 +3317,54 @@ body.content-view-edit .block.slate:not(.inner) {
 .blocks-form .block.slate h5:last-child,
 .blocks-form .block.slate h6:last-child,
 .blocks-form .block.slate p:last-child,
+.blocks-form .block.slate ul:last-child,
+.blocks-form .block.slate ol:last-child,
 #page-edit .block.slate h1:last-child,
 #page-edit .block.slate h2:last-child,
 #page-edit .block.slate h3:last-child,
 #page-edit .block.slate h4:last-child,
 #page-edit .block.slate h5:last-child,
 #page-edit .block.slate h6:last-child,
-#page-edit .block.slate p:last-child {
+#page-edit .block.slate p:last-child,
+#page-edit .block.slate ul:last-child,
+#page-edit .block.slate ol:last-child,
+body.view-editview .block.slate ul:last-child,
+body.view-editview .block.slate ol:last-child,
+body.content-view-edit .block.slate ul:last-child,
+body.content-view-edit .block.slate ol:last-child {
   margin-bottom: 0 !important;
 }
 
 .blocks-form .block.slate p,
+.blocks-form .block.slate ul,
+.blocks-form .block.slate ol,
 #page-edit .block.slate p,
+#page-edit .block.slate ul,
+#page-edit .block.slate ol,
 body.view-editview .block.slate p,
+body.view-editview .block.slate ul,
+body.view-editview .block.slate ol,
 body.content-view-edit .block.slate p,
-.blocks-form .block-editor-slate p {
+body.content-view-edit .block.slate ul,
+body.content-view-edit .block.slate ol,
+.blocks-form .block-editor-slate p,
+.blocks-form .block-editor-slate ul,
+.blocks-form .block-editor-slate ol {
   margin-top: 0 !important;
 }
 
 .blocks-form .block.slate p:not(:last-child),
+.blocks-form .block.slate ul:not(:last-child),
+.blocks-form .block.slate ol:not(:last-child),
 #page-edit .block.slate p:not(:last-child),
+#page-edit .block.slate ul:not(:last-child),
+#page-edit .block.slate ol:not(:last-child),
 body.view-editview .block.slate p:not(:last-child),
-body.content-view-edit .block.slate p:not(:last-child) {
+body.view-editview .block.slate ul:not(:last-child),
+body.view-editview .block.slate ol:not(:last-child),
+body.content-view-edit .block.slate p:not(:last-child),
+body.content-view-edit .block.slate ul:not(:last-child),
+body.content-view-edit .block.slate ol:not(:last-child) {
   margin-bottom: 1rem !important;
 }
 
@@ -3324,6 +3373,20 @@ body.content-view-edit .block.slate p:not(:last-child) {
 body.view-editview .block.slate p:last-child,
 body.content-view-edit .block.slate p:last-child {
   margin-bottom: 0 !important;
+}
+
+/* Table block in Edit Mode: padding-bottom so borders don't touch following block */
+.blocks-form .block.slateTable:not(.inner),
+#page-edit .block.slateTable:not(.inner),
+body.view-editview .block.slateTable:not(.inner),
+body.content-view-edit .block.slateTable:not(.inner),
+.blocks-form .block.table:not(.inner),
+#page-edit .block.table:not(.inner),
+body.view-editview .block.table:not(.inner),
+body.content-view-edit .block.table:not(.inner) {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-bottom: 1rem !important;
 }
 
 /* Accordion block in Edit Mode: padding-bottom so borders touch */
@@ -3367,7 +3430,11 @@ body.content-view-edit .block.accordion:not(.inner) {
 .row-column .block-editor-description .block.description:not(.inner),
 #page-edit .row-column .block-editor-description .block.description:not(.inner),
 .row-column .block-editor-summary .block.summary:not(.inner),
-#page-edit .row-column .block-editor-summary .block.summary:not(.inner) {
+#page-edit .row-column .block-editor-summary .block.summary:not(.inner),
+.row-column .block-editor-slateTable .block.slateTable:not(.inner),
+#page-edit .row-column .block-editor-slateTable .block.slateTable:not(.inner),
+.row-column .block-editor-table .block.table:not(.inner),
+#page-edit .row-column .block-editor-table .block.table:not(.inner) {
   padding-bottom: 1rem !important;
   margin-bottom: 0 !important;
 }
@@ -3389,7 +3456,7 @@ body.content-view-edit .block.accordion:not(.inner) {
   padding-bottom: 0 !important;
 }
 
-.blocks-form .block:not(.row):not(.slate):not(.accordion):not(.image):not(.title):not(.description):not(.summary) {
+.blocks-form .block:not(.row):not(.slate):not(.accordion):not(.image):not(.title):not(.description):not(.summary):not(.slateTable):not(.table) {
   margin-top: 0 !important;
   margin-bottom: 0 !important;
 }
